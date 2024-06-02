@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/codergeek42/wordle-solver/issues"
   },
-  "homepage": "https://github.com/codergeek42/wordle-solver#readme"
+  "homepage": "https://github.com/codergeek42/wordle-solver#readme",
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.4"
+  }
 }
