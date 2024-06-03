@@ -5,5 +5,3 @@ export async function helloWorld(): Promise<void> {
 export async function goodByeWorld(): Promise<void> {
 	console.log('Goodbye, World! ...')
 }
-
-helloWorld().then(goodByeWorld);
