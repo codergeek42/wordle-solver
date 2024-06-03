@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Create source tarball artifact
-        run: tar -cvf source.tar ./
+        run: tar -cf source.tar ./
       - name: Upload source tarball artifact
         uses: actions/upload-artifact@v4
         with:
@@ -35,7 +35,7 @@ jobs:
         with:
           name: source-checkout
       - name: Unpack source tarball
-        run: tar -xvf source.tar 
+        run: tar -xf source.tar 
       - name: Run Lint
         run: npm run lint
     
@@ -48,7 +48,7 @@ jobs:
         with:
           name: source-checkout
       - name: Unpack source tarball
-        run: tar -xvf source.tar
+        run: tar -xf source.tar
       - name: Run Unit Tests
         run: npm run test:unit 
 
@@ -61,11 +61,11 @@ jobs:
         with:
           name: source-checkout
       - name: Unpack source tarball
-        run: tar -xvf source.tar
+        run: tar -xf source.tar
       - name: Run Build
         run: npm run build
       - name: Create built tarball artifact
-        run: tar -cvf built.tar ./
+        run: tar -cf built.tar ./
       - name: Upload built tarball artifact
         uses: actions/upload-artifact@v4
         with:
