@@ -4,6 +4,14 @@ module.exports = {
   testEnvironment: 'node',
   verbose: true,
   collectCoverage: true,
-  coverageDirectory: 'coverage',
-  coverageReporters: ['json-summary', 'text']
+  collectCoverageFrom: ['src/**.ts'],
+  coverageReporters: ['text'],
+  coverageThreshold: {
+    global: {
+      branches: 95,
+      functions: 95,
+      lines: 95,
+      statements: 95
+    }
+  }
 };
