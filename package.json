@@ -6,7 +6,7 @@
     "build": "tsc",
     "cli": "node dist/index.js",
     "lint": "eslint src/ __tests__/",
-    "test:unit": "jest __tests__/*.test.ts",
+    "test:unit": "jest --coverage __tests__/**.test.ts",
     "test": "npm run test:unit",
     "prepare": "husky"
   },
