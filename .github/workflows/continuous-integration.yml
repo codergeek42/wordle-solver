@@ -6,7 +6,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  Checkout:
+  checkout:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
@@ -26,9 +26,9 @@ jobs:
           name: source-checkout
           path: source.tar
 
-  Lint:
+  lint:
     runs-on: ubuntu-latest
-    needs: Checkout
+    needs: checkout
     steps:
       - name: Download source tarball
         uses: actions/download-artifact@v4
@@ -39,9 +39,9 @@ jobs:
       - name: Run Lint
         run: npm run lint
     
-  Unit Tests:
+  test:
     runs-on: ubuntu-latest
-    needs: Checkout
+    needs: checkout
     steps:
       - name: Download source tarball
         uses: actions/download-artifact@v4
@@ -50,11 +50,11 @@ jobs:
       - name: Unpack source tarball
         run: tar -xf source.tar
       - name: Run Unit Tests
-        run: npm run test:unit
+        run: npm run test:unit 
 
-  Build:
+  build:
     runs-on: ubuntu-latest
-    needs: [Lint, Unit Tests]
+    needs: [lint, test]
     steps:
       - name: Download source tarball
         uses: actions/download-artifact@v4
