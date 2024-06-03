@@ -46,6 +46,5 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: source-checkout
-    steps:
-    - name: Run Build
-      run: npm run build
+      - name: Run Build
+        run: npm run build
