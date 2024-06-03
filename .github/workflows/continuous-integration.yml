@@ -33,7 +33,9 @@ jobs:
         with:
           name: source-checkout
       - name: Run Lint
-        run: npm run lint 
+        # FIXME: Needs root to run lint? GitHub...what the heck?
+        # https://stackoverflow.com/a/68627860
+        run: sudo npm run lint 
 
   build:
     runs-on: ubuntu-latest
