@@ -4,7 +4,7 @@ module.exports = {
   testEnvironment: 'node',
   verbose: true,
   collectCoverage: true,
-  collectCoverageFrom: ['src/**.ts'],
+  collectCoverageFrom: ['src/**/*.ts'],
   coverageReporters: ['text'],
   coverageThreshold: {
     global: {
