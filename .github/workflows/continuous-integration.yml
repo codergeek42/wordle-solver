@@ -48,6 +48,18 @@ jobs:
         with:
           name: source-checkout
       - name: Unpack source tarball
-        run: tar -xvf source.tar 
+        run: tar -xvf source.tar
       - name: Run Build
         run: npm run build
+  
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download source tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: source-checkout
+      - name: Unpack source tarball
+        run: tar -xvf source.tar
+      - name: Run Unit Tests
+        run: npm run test:unit
