@@ -37,9 +37,9 @@ jobs:
       - name: Unpack source tarball
         run: tar -xvf source.tar 
       - name: Run Lint
-        run: npm run lint 
-
-  build:
+        run: npm run lint
+    
+  test:
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -49,12 +49,12 @@ jobs:
           name: source-checkout
       - name: Unpack source tarball
         run: tar -xvf source.tar
-      - name: Run Build
-        run: npm run build
-  
-  test:
+      - name: Run Unit Tests
+        run: npm run test:unit 
+
+  build:
     runs-on: ubuntu-latest
-    needs: checkout
+    needs: [lint, test]
     steps:
       - name: Download source tarball
         uses: actions/download-artifact@v4
@@ -62,5 +62,12 @@ jobs:
           name: source-checkout
       - name: Unpack source tarball
         run: tar -xvf source.tar
-      - name: Run Unit Tests
-        run: npm run test:unit
+      - name: Run Build
+        run: npm run build
+      - name: Create built tarball artifact
+        run: tar -cvf built.tar ./
+      - name: Upload built tarball artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-built
+          path: built.tar
