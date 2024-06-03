@@ -1,0 +1,8 @@
+###########################################################
+# List of approved reviewers for the wordle-solver project.
+#
+# Learn about CODEOWNERS file format: 
+#  https://help.github.com/en/articles/about-code-owners
+#
+###########################################################
+* @codergeek42
