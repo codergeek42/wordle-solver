@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Create source tarball artifact
-        run: tar -cf source.tar ./
+        run: tar -cf source.tar ./*
       - name: Upload source tarball artifact
         uses: actions/upload-artifact@v4
         with:
@@ -65,7 +65,7 @@ jobs:
       - name: Run Build
         run: npm run build
       - name: Create built tarball artifact
-        run: tar -cf built.tar ./
+        run: tar -cf built.tar ./*
       - name: Upload built tarball artifact
         uses: actions/upload-artifact@v4
         with:
