@@ -3,8 +3,11 @@
   "version": "0.0.1",
   "description": "A clever algorithm and automated tool to solve the NYTimes daily Wordle puzzle game.",
   "scripts": {
-    "build": "tsc",
+    "build:compile": "tsc",
+    "build": "npm run fmt && npm run build:compile",
     "cli": "node dist/index.js",
+    "fmt": "prettier --write .",
+    "fmt:check": "prettier --check .",
     "lint": "eslint src/ __tests__/",
     "test:unit": "jest --coverage __tests__/**.test.ts",
     "test": "npm run test:unit",
