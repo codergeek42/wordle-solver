@@ -5,7 +5,7 @@ module.exports = {
     verbose: true,
     testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/dist/'],
     collectCoverage: true,
-    collectCoverageFrom: ['src/**/*.ts'],
+    collectCoverageFrom: ['src/**/*.ts', '__data__/**/*.ts'],
     coverageReporters: ['text'],
     coverageThreshold: {
         global: {
