@@ -6,7 +6,7 @@
     "build:compile": "tsc",
     "build": "npm run fmt && npm run build:compile",
     "cli": "node dist/index.js",
-    "fmt": "prettier --write .",
+    "fmt": "prettier --write --log-level warn .",
     "fmt:check": "prettier --check .",
     "lint": "eslint src/ __tests__/",
     "test:unit": "jest --coverage __tests__/**.test.ts",
