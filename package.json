@@ -1,41 +1,41 @@
 {
-  "name": "wordle-solver",
-  "version": "0.0.1",
-  "description": "A clever algorithm and automated tool to solve the NYTimes daily Wordle puzzle game.",
-  "scripts": {
-    "build:compile": "tsc",
-    "build": "npm run fmt && npm run build:compile",
-    "cli": "node dist/index.js",
-    "fmt": "prettier --write --log-level warn .",
-    "fmt:check": "prettier --check .",
-    "lint": "eslint src/ __tests__/",
-    "test:unit": "jest --coverage __tests__/**.test.ts",
-    "test": "npm run test:unit",
-    "prepare": "husky"
-  },
-  "keywords": [
-    "wordle",
-    "solver"
-  ],
-  "author": "Peter Gordon <codergeek42@gmail.com>",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/codergeek42/wordle-solver/issues"
-  },
-  "homepage": "https://github.com/codergeek42/wordle-solver#readme",
-  "devDependencies": {
-    "@eslint/js": "^9.4.0",
-    "@tsconfig/node20": "^20.1.4",
-    "@types/jest": "^29.5.12",
-    "eslint": "^8.57.0",
-    "git-format-staged": "^3.1.1",
-    "globals": "^15.3.0",
-    "husky": "^9.0.11",
-    "jest": "^29.7.0",
-    "jest-mock": "^29.7.0",
-    "jest-mock-console": "^2.0.0",
-    "prettier": "^3.3.0",
-    "ts-jest": "^29.1.4",
-    "typescript-eslint": "^7.11.0"
-  }
+    "name": "wordle-solver",
+    "version": "0.0.1",
+    "description": "A clever algorithm and automated tool to solve the NYTimes daily Wordle puzzle game.",
+    "scripts": {
+        "build:compile": "tsc",
+        "build": "npm run fmt && npm run build:compile",
+        "cli": "node dist/index.js",
+        "fmt": "prettier --write --log-level warn .",
+        "fmt:check": "prettier --check .",
+        "lint": "eslint src/ __tests__/",
+        "test:unit": "jest --coverage __tests__/**.test.ts",
+        "test": "npm run test:unit",
+        "prepare": "husky"
+    },
+    "keywords": [
+        "wordle",
+        "solver"
+    ],
+    "author": "Peter Gordon <codergeek42@gmail.com>",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/codergeek42/wordle-solver/issues"
+    },
+    "homepage": "https://github.com/codergeek42/wordle-solver#readme",
+    "devDependencies": {
+        "@eslint/js": "^9.4.0",
+        "@tsconfig/node20": "^20.1.4",
+        "@types/jest": "^29.5.12",
+        "eslint": "^8.57.0",
+        "git-format-staged": "^3.1.1",
+        "globals": "^15.3.0",
+        "husky": "^9.0.11",
+        "jest": "^29.7.0",
+        "jest-mock": "^29.7.0",
+        "jest-mock-console": "^2.0.0",
+        "prettier": "^3.3.0",
+        "ts-jest": "^29.1.4",
+        "typescript-eslint": "^7.11.0"
+    }
 }
