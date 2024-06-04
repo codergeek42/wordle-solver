@@ -9,7 +9,7 @@
         "fmt": "prettier --write --log-level warn .",
         "fmt:check": "prettier --check .",
         "lint": "eslint src/ __tests__/",
-        "test:unit": "jest --coverage __tests__/**.test.ts",
+        "test:unit": "jest --coverage",
         "test": "npm run test:unit",
         "prepare": "husky"
     },
