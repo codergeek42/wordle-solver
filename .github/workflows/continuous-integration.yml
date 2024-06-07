@@ -49,6 +49,11 @@ jobs:
           name: source-checkout
       - name: Unpack source tarball
         run: tar -xf source.tar
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
       - name: Run Unit Tests
         run: npm run test:unit 
 
