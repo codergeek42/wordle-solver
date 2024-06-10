@@ -25,9 +25,6 @@ export function doesLetterMatchRule(letter: string, rule: LetterRule): boolean {
     }
 }
 
-export function doesWordMatchLetterAtPosition(
-    word: string,
-    rule: LetterAtPositionRule
-) {
+export function doesWordMatchLetterAtPosition(word: string, rule: LetterAtPositionRule) {
     return doesLetterMatchRule(word[rule.position], omit(rule, 'position'));
 }
