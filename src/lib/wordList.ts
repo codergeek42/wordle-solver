@@ -1,5 +1,8 @@
 import { readFile } from 'node:fs/promises';
-import { LetterAtPositionRule, doesWordMatchLetterAtPosition } from './letterAtPosition';
+import {
+    LetterAtPositionRule,
+    doesWordMatchLetterAtPosition
+} from './letterAtPosition';
 import { every } from 'lodash';
 
 export class WordList {
@@ -21,10 +24,17 @@ export class WordList {
         return new WordList(fileData.split(newline));
     }
 
-    public withPositionLetterRules(lettersAtPositionsRules: LetterAtPositionRule[]) {
-        return this.myWords.filter((candidateWord) =>
-            every(lettersAtPositionsRules, (letterAtPositionRule) =>
-                doesWordMatchLetterAtPosition(candidateWord, letterAtPositionRule)
+    public withPositionLetterRules(
+        lettersAtPositionsRules: LetterAtPositionRule[]
+    ) {
+        return new WordList(
+            this.myWords.filter((candidateWord) =>
+                every(lettersAtPositionsRules, (letterAtPositionRule) =>
+                    doesWordMatchLetterAtPosition(
+                        candidateWord,
+                        letterAtPositionRule
+                    )
+                )
             )
         );
     }

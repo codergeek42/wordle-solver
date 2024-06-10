@@ -29,9 +29,7 @@ describe(WordList.name, () => {
 
         it('should uppercase, trim, and sort the given list of words', () => {
             const badWords = ['unsorted', 'lowercase', ' not trimmed '];
-            const goodWords = badWords
-                .map((word) => word.trim().toUpperCase())
-                .toSorted();
+            const goodWords = badWords.map((word) => word.trim().toUpperCase()).toSorted();
 
             const goodWordList = new WordList(badWords);
 
@@ -87,9 +85,7 @@ describe(WordList.name, () => {
                 }
             ]);
 
-            const retainStartingBs = new WordList(
-                excludeStartingAs
-            ).withPositionLetterRules([
+            const retainStartingBs = excludeStartingAs.withPositionLetterRules([
                 {
                     letter: 'B',
                     position: 0,
@@ -97,9 +93,7 @@ describe(WordList.name, () => {
                 }
             ]);
 
-            const enforceStartingCs = new WordList(
-                retainStartingBs
-            ).withPositionLetterRules([
+            const enforceStartingCs = retainStartingBs.withPositionLetterRules([
                 {
                     letter: 'C',
                     position: 0,
@@ -107,9 +101,7 @@ describe(WordList.name, () => {
                 }
             ]);
 
-            const withOnlyEndingDs = new WordList(
-                enforceStartingCs
-            ).withPositionLetterRules([
+            const withOnlyEndingDs = enforceStartingCs.withPositionLetterRules([
                 {
                     letter: 'K',
                     position: 4,
@@ -127,9 +119,7 @@ describe(WordList.name, () => {
                 }
             ]);
 
-            const enforceOnlyCrowdRemaining = new WordList(
-                withOnlyEndingDs
-            ).withPositionLetterRules([
+            const enforceOnlyCrowdRemaining = withOnlyEndingDs.withPositionLetterRules([
                 {
                     letter: 'O',
                     position: 2,
@@ -143,16 +133,14 @@ describe(WordList.name, () => {
             ]);
 
             expect(testWordList.words).toEqual(initialWords);
-            expect(excludeStartingAs).toEqual(
-                reject(initialWords, (word) => word.startsWith('A'))
-            );
+            expect(excludeStartingAs).toEqual(reject(initialWords, (word) => word.startsWith('A')));
             expect(retainStartingBs).toEqual(excludeStartingAs);
             expect(enforceStartingCs).toEqual(
-                filter(retainStartingBs, (word) => word.startsWith('C'))
+                filter(retainStartingBs.words, (word) => word.startsWith('C'))
             );
             expect(withOnlyEndingDs).toEqual(
-                reject(enforceStartingCs, (word) => word.endsWith('K')).filter(
-                    (word) => word.endsWith('D')
+                reject(enforceStartingCs.words, (word) => word.endsWith('K')).filter((word) =>
+                    word.endsWith('D')
                 )
             );
             expect(enforceOnlyCrowdRemaining).toEqual(['CROWD']);
