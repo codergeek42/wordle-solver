@@ -133,17 +133,19 @@ describe(WordList.name, () => {
             ]);
 
             expect(testWordList.words).toEqual(initialWords);
-            expect(excludeStartingAs).toEqual(reject(initialWords, (word) => word.startsWith('A')));
-            expect(retainStartingBs).toEqual(excludeStartingAs);
-            expect(enforceStartingCs).toEqual(
+            expect(excludeStartingAs.words).toEqual(
+                reject(initialWords, (word) => word.startsWith('A'))
+            );
+            expect(retainStartingBs.words).toEqual(excludeStartingAs.words);
+            expect(enforceStartingCs.words).toEqual(
                 filter(retainStartingBs.words, (word) => word.startsWith('C'))
             );
-            expect(withOnlyEndingDs).toEqual(
+            expect(withOnlyEndingDs.words).toEqual(
                 reject(enforceStartingCs.words, (word) => word.endsWith('K')).filter((word) =>
                     word.endsWith('D')
                 )
             );
-            expect(enforceOnlyCrowdRemaining).toEqual(['CROWD']);
+            expect(enforceOnlyCrowdRemaining.words).toEqual(['CROWD']);
         });
     });
 });
