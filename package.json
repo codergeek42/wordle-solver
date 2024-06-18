@@ -35,7 +35,7 @@
         "jest-mock": "^29.7.0",
         "jest-mock-console": "^2.0.0",
         "prettier": "^3.3.2",
-        "ts-jest": "^29.1.4",
+        "ts-jest": "^29.1.5",
         "typescript-eslint": "^7.13.1"
     }
 }
