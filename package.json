@@ -10,7 +10,7 @@
         "cli": "node dist/index.js",
         "fmt": "prettier --write --log-level warn .",
         "fmt:check": "prettier --check .",
-        "lint": "eslint src/ __tests__/",
+        "lint": "eslint __data__/ __tests__/ src/",
         "test:unit": "jest --coverage",
         "test": "npm run test:unit",
         "prepare": "husky"
