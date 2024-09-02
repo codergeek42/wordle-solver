@@ -3,6 +3,7 @@
     "compilerOptions": {
         "sourceMap": true,
         "outDir": "dist",
-        "types": ["node", "jest"]
-    }
+        "types": ["node", "jest", "jest-extended"],
+    },
+    "files": ["node_modules/jest-extended/types/index.d.ts"]
 }
