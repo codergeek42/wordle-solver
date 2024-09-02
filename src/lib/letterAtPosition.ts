@@ -1,30 +1,27 @@
-import { omit } from 'lodash';
-
-export enum LetterAtPosition {
-    Impossible,
-    Possible,
-    Mandatory
+export enum LetterAtPositionInWord {
+    // Right letter, right position.
+    Mandatory = 'Mandatory',
+    // Right letter, wrong position.
+    Misplaced = 'Misplaced',
+    // Wrong letter entirely (not in word).
+    Impossible = 'Impossible'
 }
+
+export function letterAtPositionInWordRuleComparator(
+    posRuleA: LetterAtPositionInWordRule,
+    posRuleB: LetterAtPositionInWordRule
+): number {
+    if (posRuleA.required === LetterAtPositionInWord.Mandatory) {
+        return posRuleB.required === LetterAtPositionInWord.Mandatory ? 0 : +1;
+    }
+    return posRuleB.required == LetterAtPositionInWord.Mandatory ? -1 : 0;
+}
+
 export type LetterRule = {
     letter: string;
-    required: LetterAtPosition;
+    required: LetterAtPositionInWord;
 };
 
-export type LetterAtPositionRule = LetterRule & {
-    position: number;
+export type LetterAtPositionInWordRule = LetterRule & {
+    position?: number;
 };
-
-export function doesLetterMatchRule(letter: string, rule: LetterRule): boolean {
-    switch (rule.required) {
-        case LetterAtPosition.Impossible:
-            return letter != rule.letter;
-        case LetterAtPosition.Possible:
-            return true;
-        case LetterAtPosition.Mandatory:
-            return letter == rule.letter;
-    }
-}
-
-export function doesWordMatchLetterAtPosition(word: string, rule: LetterAtPositionRule) {
-    return doesLetterMatchRule(word[rule.position], omit(rule, 'position'));
-}

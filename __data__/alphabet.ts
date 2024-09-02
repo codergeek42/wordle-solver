@@ -1,4 +1,9 @@
 // export const Alphabet = [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'];
+export const Alphabet = ['A', 'B', 'C', 'Z', 'T', 'E', 'S'];
+
+// TODO: Make this configurable, or match from input words somehow.
+export const WordLength = 5;
+
 /**
  * TODO: Solve styles:
  * 1. guess word by eliminating highest count of distinct letters (e.g., BREAD (5) > BREED (4) = BLEED (4) > PAPAS (3))

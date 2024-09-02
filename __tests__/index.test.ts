@@ -1,5 +1,6 @@
 import mockConsole from 'jest-mock-console';
 import { helloWorld, goodByeWorld } from '../src/index';
+import 'jest-extended';
 
 describe('index', () => {
     let restoreConsole: ReturnType<typeof mockConsole>;
