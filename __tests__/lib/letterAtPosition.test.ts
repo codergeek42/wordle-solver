@@ -47,10 +47,10 @@ describe(letterAtPositionInWordRuleComparator, () => {
         expect(sortResultRightAssoc).toBeNegative();
     });
 
-    const equalPriorityTestCases: Array<{
+    const equalPriorityTestCases: {
         caseName: string;
-        twoRules: Array<LetterAtPositionInWordRule>;
-    }> = [
+        twoRules: LetterAtPositionInWordRule[];
+    }[] = [
         {
             caseName: 'Mandatory',
             twoRules: [mandatoryRuleBAt0, mandatoryRuleBAt1]

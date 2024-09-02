@@ -156,12 +156,12 @@ describe(WordList, () => {
     });
 
     describe(WordList.prototype.doesWordMatchAllRules, () => {
-        const testCases: Array<{
+        const testCases: {
             caseName: string;
             alphabet: string;
-            positionLetterRules: Array<LetterAtPositionInWordRule>;
-            expectedWordMatches: Array<{ word: string; isMatch: boolean }>;
-        }> = [
+            positionLetterRules: LetterAtPositionInWordRule[];
+            expectedWordMatches: { word: string; isMatch: boolean }[];
+        }[] = [
             {
                 caseName: 'excludes A at every position (Impossible)',
                 alphabet: 'AB',
@@ -288,12 +288,12 @@ describe(WordList, () => {
             expect(() => wordList.processExclusionsFromRules([testRuleWithoutPosition])).not.toThrow();
         });
 
-        const letterAtPositionTestCases: Array<{
+        const letterAtPositionTestCases: {
             caseName: string;
             alphabet: string;
-            positionLetterRules: Array<LetterAtPositionInWordRule>;
-            expectedLetterPossibilities: Array<string>;
-        }> = [
+            positionLetterRules: LetterAtPositionInWordRule[];
+            expectedLetterPossibilities: string[];
+        }[] = [
             {
                 caseName: 'should set singleton letter for Mandatory',
                 alphabet: 'ABC',

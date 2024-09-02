@@ -6,11 +6,11 @@ describe(generateAlphabetWords, () => {
     const alphabetWord = (length: number, chunkNum = 0) =>
         String.fromCodePoint(...times(length, (ord) => 'A'.charCodeAt(0) + chunkNum * WordLength + ord));
 
-    const testCases: Array<{
+    const testCases: {
         caseName: string;
         alphabet: string;
-        expectedWords: Array<string>;
-    }> = [
+        expectedWords: string[];
+    }[] = [
         {
             caseName: 'should pad the given alphabet to WordLength length',
             alphabet: alphabetWord(1),
