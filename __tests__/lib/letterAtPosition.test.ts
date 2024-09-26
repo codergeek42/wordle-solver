@@ -3,6 +3,7 @@ import {
     LetterAtPositionInWordRule,
     letterAtPositionInWordRuleComparator
 } from '../../src/lib/letterAtPosition';
+import 'jest-extended';
 
 describe(letterAtPositionInWordRuleComparator, () => {
     const impossibleRuleA: LetterAtPositionInWordRule = {

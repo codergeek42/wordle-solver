@@ -1,4 +1,4 @@
-import { MissingPositionError, WordleSolverError } from '../../src/lib/wordleSolverError';
+import { MissingPositionError, NoMoreGuessesError, WordleSolverError } from '../../src/lib/wordleSolverError';
 
 describe(WordleSolverError, () => {
     it('can be instantiated and extends Error class', () => {
@@ -15,7 +15,17 @@ describe(MissingPositionError, () => {
         const missingPositionError = new MissingPositionError('test');
 
         expect(missingPositionError).toBeDefined();
-        expect(missingPositionError).toBeInstanceOf(MissingPositionError);
         expect(missingPositionError).toBeInstanceOf(WordleSolverError);
+        expect(missingPositionError).toBeInstanceOf(MissingPositionError);
+    });
+});
+
+describe(NoMoreGuessesError, () => {
+    it('can be instantiated and extends WordleSolverError class', () => {
+        const missingPositionError = new NoMoreGuessesError('test');
+
+        expect(missingPositionError).toBeDefined();
+        expect(missingPositionError).toBeInstanceOf(WordleSolverError);
+        expect(missingPositionError).toBeInstanceOf(NoMoreGuessesError);
     });
 });

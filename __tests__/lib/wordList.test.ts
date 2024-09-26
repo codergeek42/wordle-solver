@@ -1,4 +1,4 @@
-import { WordList } from '../../src/lib/wordList';
+import WordList from '../../src/lib/wordList';
 import fs from 'node:fs/promises';
 import { cloneDeep, times } from 'lodash';
 import {
@@ -84,47 +84,6 @@ describe(WordList, () => {
     });
 
     describe(WordList.prototype.withPositionLetterRules, () => {
-        // const testCases: Array<{
-        //     caseName: string;
-        //     startingWords: Array<string>;
-        //     positionLetterRules: Array<LetterAtPositionInWordRule>;
-        //     expectedWords: Array<string>;
-        // }> = [
-        //     {
-        //         caseName: 'excludes A at every position (Impossible)',
-        //         startingWords: [
-        //             'A'.repeat(WordLength),
-        //             ...times(WordLength, (idx) => 'B'.repeat(idx) + 'A' + 'B'.repeat(WordLength - idx)),
-        //             'B'.repeat(WordLength)
-        //         ],
-        //         positionLetterRules: [
-        //             {
-        //                 letter: 'A',
-        //                 required: LetterAtPositionInWord.Impossible
-        //             }
-        //         ],
-        //         expectedWords: ['B'.repeat(WordLength)]
-        //     },
-        //     {
-        //         caseName: 'requires B at every position (Mandatory)',
-        //         startingWords: [
-        //             'A'.repeat(WordLength),
-        //             ...times(WordLength, (idx) => 'B'.repeat(idx) + 'A' + 'B'.repeat(WordLength - idx)),
-        //             'B'.repeat(WordLength)
-        //         ],
-        //         positionLetterRules: times(WordLength, (idx) => ({
-        //             position: idx,
-        //             letter: 'B',
-        //             required: LetterAtPositionInWord.Mandatory
-        //         })),
-        //         expectedWords: ['B'.repeat(WordLength)]
-        // //     }
-        // ];
-        // it.each(testCases)('$caseName', ({ startingWords, positionLetterRules, expectedWords }) => {
-        //     const wordList = new WordList(startingWords);
-        //     const wordListWithRulesApplied = wordList.withPositionLetterRules(positionLetterRules);
-        //     expect(wordListWithRulesApplied.words).toStrictEqual(expectedWords);
-        // });
         it('should copy the given WordList and process the rules exclusions and filter out the non-matching words', () => {
             const excludeBs: LetterAtPositionInWordRule[] = [
                 {

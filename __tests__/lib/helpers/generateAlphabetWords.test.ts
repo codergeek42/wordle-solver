@@ -28,6 +28,7 @@ describe(generateAlphabetWords, () => {
         }
     ];
     it.each(testCases)('$caseName', ({ alphabet, expectedWords }) => {
-        expect(generateAlphabetWords(alphabet)).toStrictEqual(expectedWords);
+        const result = generateAlphabetWords(alphabet);
+        expect(result).toStrictEqual(expectedWords);
     });
 });
