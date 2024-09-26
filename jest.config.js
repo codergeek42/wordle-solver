@@ -15,5 +15,6 @@ module.exports = {
             statements: 95
         }
     },
+    testMatch: ['<rootDir>/__tests__/**/*.test.ts'],
     setupFilesAfterEnv: ['jest-extended/all']
 };
