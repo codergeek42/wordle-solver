@@ -5,7 +5,7 @@ import { WordLength } from '../../__data__/alphabet';
 import { LetterAtPositionInWord } from './letterAtPosition';
 import { MissingPositionError } from './wordleSolverError';
 
-export class WordList {
+export default class WordList {
     private myWords: string[];
     private myPossibleLetters: Set<string>[];
     private myLetterRules: LetterAtPositionInWordRule[];

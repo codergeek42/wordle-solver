@@ -25,3 +25,5 @@ export type LetterRule = {
 export type LetterAtPositionInWordRule = LetterRule & {
     position?: number;
 };
+
+export type LetterWithPosition = Required<Omit<LetterAtPositionInWordRule, 'required'>>;
