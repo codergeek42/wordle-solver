@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { LetterAtPositionInWordRule, letterAtPositionInWordRuleComparator } from './letterAtPosition';
-import { every, times, uniq } from 'lodash';
+import { cloneDeep, every, times, uniq } from 'lodash';
 import { WordLength } from '../../__data__/alphabet';
 import { LetterAtPositionInWord } from './letterAtPosition';
 import { MissingPositionError } from './wordleSolverError';
@@ -42,8 +42,12 @@ export default class WordList {
         return new WordList(fileData.split(newline));
     }
 
+    static fromCopyOf(wordListObj: WordList): WordList {
+        return cloneDeep(wordListObj);
+    }
+
     withPositionLetterRules(lettersAtPositionsRules: LetterAtPositionInWordRule[]): WordList {
-        const newWordList = new WordList(this.myWords);
+        const newWordList = WordList.fromCopyOf(this);
         newWordList.processExclusionsFromRules(lettersAtPositionsRules);
         newWordList.myWords = this.myWords.filter((word) => newWordList.doesWordMatchAllRules(word), newWordList);
         return newWordList;

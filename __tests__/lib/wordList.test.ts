@@ -67,6 +67,15 @@ describe(WordList, () => {
         });
     });
 
+    describe(WordList.fromCopyOf, () => {
+        it('can instantiate as factory method from a copy of another WordList', () => {
+            const originalWordList = new WordList(['TEST', 'FROM', 'COPY', 'OF']);
+            const resultCopy = WordList.fromCopyOf(originalWordList);
+            expect(resultCopy).toStrictEqual(originalWordList);
+            expect(resultCopy).not.toBe(originalWordList);
+        });
+    });
+
     describe(WordList.fromFile, () => {
         it('can instantiate as factory method from the lines of a text file', async () => {
             const wordsInFile = ['ABC', 'DEF', 'GHI'];
@@ -105,6 +114,7 @@ describe(WordList, () => {
             const wordListWithRulesApplied = wordList.withPositionLetterRules(excludeBs);
 
             expect(wordList).toStrictEqual(wordListBeforeRules);
+            expect(wordList).not.toBe(wordListBeforeRules);
             expect(wordListWithRulesApplied.words).toStrictEqual(['AAA']);
             expect(processExclusionsFromRulesSpy).toHaveBeenCalledExactlyOnceWith(excludeBs);
             expect(doesWordMatchAllRulesSpy).toHaveBeenCalledTimes(wordList.words.length);
