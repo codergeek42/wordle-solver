@@ -18,6 +18,7 @@ describe(DistinctLettersStrategy, () => {
 
             expect(distinctLettersStrategy).toBeDefined();
             expect(distinctLettersStrategy.scoreForGuess).toBeFunction();
+            expect(distinctLettersStrategy.wordList).toBeInstanceOf(WordList);
             expect(distinctLettersStrategy).toBeInstanceOf(NextWordGuesserStrategyBase);
             expect(distinctLettersStrategy).toBeInstanceOf(DistinctLettersStrategy);
         });

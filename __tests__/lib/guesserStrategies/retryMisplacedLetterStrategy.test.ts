@@ -17,6 +17,7 @@ describe(RetryMisplacedLettersStrategy, () => {
             const retryMisplacedLettersStrategy = new RetryMisplacedLettersStrategy(wordList);
 
             expect(retryMisplacedLettersStrategy).toBeDefined();
+            expect(retryMisplacedLettersStrategy.wordList).toBeInstanceOf(WordList);
             expect(retryMisplacedLettersStrategy.scoreForGuess).toBeFunction();
             expect(retryMisplacedLettersStrategy).toBeInstanceOf(NextWordGuesserStrategyBase);
             expect(retryMisplacedLettersStrategy).toBeInstanceOf(RetryMisplacedLettersStrategy);
