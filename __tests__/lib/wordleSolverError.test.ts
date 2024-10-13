@@ -5,42 +5,27 @@ import {
     WordleSolverTestError
 } from '../../src/lib/wordleSolverError';
 
-describe(WordleSolverError, () => {
-    it('can be instantiated and extends Error class', () => {
-        const wordleSolverError = new WordleSolverError('test');
+const wordleSolverErrorTestCases: {
+    ErrorType: typeof WordleSolverError;
+    ExtendsType: typeof Error | typeof WordleSolverError;
+}[] = [
+    {
+        ErrorType: WordleSolverError,
+        ExtendsType: Error
+    },
+    ...[MissingPositionError, NoMoreGuessesError, WordleSolverTestError].map((ErrorType) => ({
+        ErrorType,
+        ExtendsType: WordleSolverError
+    }))
+];
+
+it.each(wordleSolverErrorTestCases)(
+    '$ErrorType.name can be instantiated and extends $ExtendsType.name class',
+    ({ ErrorType, ExtendsType }) => {
+        const wordleSolverError = new ErrorType('test');
 
         expect(wordleSolverError).toBeDefined();
-        expect(wordleSolverError).toBeInstanceOf(WordleSolverError);
-        expect(wordleSolverError).toBeInstanceOf(Error);
-    });
-});
-
-describe(MissingPositionError, () => {
-    it('can be instantiated and extends WordleSolverError class', () => {
-        const missingPositionError = new MissingPositionError('test');
-
-        expect(missingPositionError).toBeDefined();
-        expect(missingPositionError).toBeInstanceOf(WordleSolverError);
-        expect(missingPositionError).toBeInstanceOf(MissingPositionError);
-    });
-});
-
-describe(NoMoreGuessesError, () => {
-    it('can be instantiated and extends WordleSolverError class', () => {
-        const missingPositionError = new NoMoreGuessesError('test');
-
-        expect(missingPositionError).toBeDefined();
-        expect(missingPositionError).toBeInstanceOf(WordleSolverError);
-        expect(missingPositionError).toBeInstanceOf(NoMoreGuessesError);
-    });
-});
-
-describe(WordleSolverTestError, () => {
-    it('can be instantiated and extends WordleSolverError class', () => {
-        const missingPositionError = new WordleSolverTestError('test');
-
-        expect(missingPositionError).toBeDefined();
-        expect(missingPositionError).toBeInstanceOf(WordleSolverError);
-        expect(missingPositionError).toBeInstanceOf(WordleSolverTestError);
-    });
-});
+        expect(wordleSolverError).toBeInstanceOf(ErrorType);
+        expect(wordleSolverError).toBeInstanceOf(ExtendsType);
+    }
+);
