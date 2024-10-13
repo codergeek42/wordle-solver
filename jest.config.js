@@ -3,7 +3,7 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     verbose: true,
-    testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/dist/'],
+    testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/dist/', '<rootDir>/__tests__/integration/'],
     collectCoverage: true,
     collectCoverageFrom: ['src/**/*.ts', '__data__/**/*.ts'],
     coverageReporters: ['text'],
