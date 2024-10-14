@@ -1,6 +1,6 @@
 import WordList from '../../src/lib/wordList';
 import fs from 'node:fs/promises';
-import { cloneDeep, times } from 'lodash';
+import { times } from 'lodash';
 import {
     LetterAtPositionInWord,
     LetterAtPositionInWordRule,
@@ -28,14 +28,19 @@ describe(WordList, () => {
         });
 
         it('can be instantiated from a list of words', () => {
-            const threeWords = ['AAAA', 'BBB', 'CCC'];
+            const threeLetters = ['A', 'B', 'C'];
+
+            const threeWords = generateAlphabetWords(threeLetters.join('')).sort();
 
             const threeWordList = new WordList(threeWords);
-
             expect(threeWordList).toBeDefined();
             expect(threeWordList).toBeInstanceOf(WordList);
             expect(threeWordList.words).toStrictEqual(threeWords);
-            expect(threeWordList.alphabet).toStrictEqual(new Set(['A', 'B', 'C']));
+            expect(threeWordList.alphabet).toStrictEqual(threeLetters);
+            threeWordList.possibleLetters.forEach((possibleLetters) =>
+                expect(possibleLetters).toStrictEqual(threeLetters)
+            );
+            expect(threeWordList.letterRules).toStrictEqual([]);
         });
 
         it('should uppercase, trim, and sort the given list of words', () => {
@@ -47,7 +52,6 @@ describe(WordList, () => {
             expect(goodWordList).toBeDefined();
             expect(goodWordList).toBeInstanceOf(WordList);
             expect(goodWordList.words).toStrictEqual(goodWords);
-            expect(goodWordList.alphabet).toStrictEqual(new Set(Array.from('UNSORTEDLOWERCASENOTTRIMMED').sort()));
         });
         it('should create the alphabet from the given list of words', () => {
             const alphabetBuilderWords = [
@@ -56,7 +60,7 @@ describe(WordList, () => {
                 'ABCDK', // does it correctly ignore duplicate letters across words?
                 'AABLL' // does it correctly ignore duplicate letters within the same word?
             ];
-            const expectedAlphabet = new Set(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']);
+            const expectedAlphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
             const testWordList = new WordList(alphabetBuilderWords);
 
@@ -93,34 +97,35 @@ describe(WordList, () => {
     });
 
     describe(WordList.prototype.withPositionLetterRules, () => {
-        it('should copy the given WordList and process the rules exclusions and filter out the non-matching words', () => {
+        it('should copy the given WordList and call processExclusionsFromRules to process the rules exclusions', () => {
             const excludeBs: LetterAtPositionInWordRule[] = [
                 {
                     letter: 'B',
                     required: LetterAtPositionInWord.Impossible
                 }
             ];
+            // const doesWordMatchAllRulesSpy = jest
+            //     .spyOn(WordList.prototype, 'doesWordMatchAllRules')
+            //     .mockImplementation((word) => word === 'AAA');
+
+            const wordList = new WordList(['AAA', 'BBB']);
             const processExclusionsFromRulesSpy = jest
-                .spyOn(WordList.prototype, 'processExclusionsFromRules')
+                .spyOn(wordList, 'processExclusionsFromRules')
                 .mockImplementationOnce(() => {
                     return;
                 });
-            const doesWordMatchAllRulesSpy = jest
-                .spyOn(WordList.prototype, 'doesWordMatchAllRules')
-                .mockImplementation((word) => word === 'AAA');
-
-            const wordList = new WordList(['AAA', 'BBB']);
-            const wordListBeforeRules = cloneDeep(wordList);
+            // const wordListBeforeRules = cloneDeep(wordList);
             const wordListWithRulesApplied = wordList.withPositionLetterRules(excludeBs);
 
-            expect(wordList).toStrictEqual(wordListBeforeRules);
-            expect(wordList).not.toBe(wordListBeforeRules);
-            expect(wordListWithRulesApplied.words).toStrictEqual(['AAA']);
+            // expect(wordList).toStrictEqual(wordListBeforeRules);
+            // expect(wordList).not.toBe(wordListBeforeRules);
+            expect(wordListWithRulesApplied).toStrictEqual(wordList);
+            expect(wordListWithRulesApplied).not.toBe(wordList);
             expect(processExclusionsFromRulesSpy).toHaveBeenCalledExactlyOnceWith(excludeBs);
-            expect(doesWordMatchAllRulesSpy).toHaveBeenCalledTimes(wordList.words.length);
-            wordList.words.forEach((word) => {
-                expect(doesWordMatchAllRulesSpy).toHaveBeenCalledWith(word);
-            });
+            // expect(doesWordMatchAllRulesSpy).toHaveBeenCalledTimes(wordList.words.length);
+            // wordList.words.forEach((word) => {
+            //     expect(doesWordMatchAllRulesSpy).toHaveBeenCalledWith(word);
+            // });
         });
     });
 
@@ -332,94 +337,59 @@ describe(WordList, () => {
                 const wordList = new WordList(generateAlphabetWords(alphabet));
                 wordList.processExclusionsFromRules(positionLetterRules);
                 expectedLetterPossibilities.forEach((letterPossibilities, position) => {
-                    expect(wordList.possibleLetters[position]).toStrictEqual(new Set(Array.from(letterPossibilities)));
+                    expect(wordList.possibleLetters[position]).toStrictEqual(Array.from(letterPossibilities));
                 });
             }
         );
-        // const testCases: Array<{
+
+        // const filterOutNonMatchingWordsTestCases: {
         //     caseName: string;
-        //     alphabet: string;
-        //     positionLetterRules: Array<LetterAtPositionInWordRule>;
-        //     expectedLettersAtPositions: {
-        //         missing?: Array<Set<string>>;
-        //         required?: Array<Set<string>>;
-        //     };
-        // }> = [
+        //     words: string[];
+        //     letterAtPositionInWordRule: LetterAtPositionInWordRule;
+        //     expectedWords: string[];
+        // }[] = [
         //     {
-        //         caseName: 'excludes A at every position (Impossible)',
-        //         alphabet: 'AB',
-        //         positionLetterRules: [
-        //             {
-        //                 letter: 'A',
-        //                 required: LetterAtPositionInWord.Impossible
-        //             }
+        //         caseName: 'should filter out letter in every position when Impossible',
+        //         words: [
+        //             times(WordLength, () => 'A').join(''),
+        //             ...times(WordLength, (positionA) => {
+        //                 const allBs = times(WordLength, () => 'A');
+        //                 allBs[positionA] = 'A';
+        //                 return allBs.join('');
+        //             }),
+        //             times(WordLength, () => 'B').join('')
         //         ],
-        //         expectedLettersAtPositions: {
-        //             missing: times(WordLength, () => new Set(['A']))
-        //         }
+        //         letterAtPositionInWordRule: {
+        //             letter: 'A',
+        //             required: LetterAtPositionInWord.Impossible
+        //         },
+        //         expectedWords: [times(WordLength, () => 'B').join('')]
         //     },
         //     {
-        //         caseName: 'requires B at every position (Mandatory)',
-        //         alphabet: 'AB',
-        //         positionLetterRules: times(WordLength, (idx) => ({
-        //             position: idx,
-        //             letter: 'B',
-        //             required: LetterAtPositionInWord.Mandatory
-        //         })),
-        //         expectedLettersAtPositions: {
-        //             required: times(WordLength, () => new Set(['B']))
-        //         }
-        //     },
-        //     {
-        //         caseName: 'misplaces A at every position (Misplaced)',
-        //         alphabet: 'AB',
-        //         positionLetterRules: times(WordLength, (idx) => ({
-        //             position: idx,
-        //             letter: 'B',
-        //             required: LetterAtPositionInWord.Misplaced
-        //         })),
-        //         expectedLettersAtPositions: {
-        //             missing: times(WordLength, () => new Set(['B']))
-        //         }
-        //     },
-        //     {
-        //         caseName:
-        //             'misplaces B at all but the last position (Misplaced), then requires it there (Mandatory/Impossible)',
-        //         alphabet: 'AB',
-        //         positionLetterRules: [
-        //             ...times(WordLength - 1, (idx) => ({
-        //                 position: idx,
-        //                 letter: 'B',
-        //                 required: LetterAtPositionInWord.Misplaced
-        //             })),
-        //             {
-        //                 position: WordLength - 1,
-        //                 letter: 'B',
-        //                 required: LetterAtPositionInWord.Mandatory
-        //             }
+        //         caseName: 'should filter out letter in one position when Impossible',
+        //         words: [
+        //             times(WordLength, () => 'A').join(''),
+        //             ...times(WordLength, (positionA) => {
+        //                 const allBs = times(WordLength, () => 'A');
+        //                 allBs[positionA] = 'A';
+        //                 return allBs.join('');
+        //             }),
+        //             times(WordLength, () => 'B').join('')
         //         ],
-        //         expectedLettersAtPositions: {
-        //             required: [...times(WordLength - 1, () => new Set(['A'])), new Set(['B'])],
-        //             missing: [...times(WordLength - 1, () => new Set(['B'])), new Set(['A'])]
-        //         }
+        //         letterAtPositionInWordRule: {
+        //             letter: 'A',
+        //             required: LetterAtPositionInWord.Impossible
+        //         },
+        //         expectedWords: [times(WordLength, () => 'B').join('')]
         //     }
         // ];
-        // it.each(testCases)('$caseName', ({ alphabet, positionLetterRules, expectedLettersAtPositions }) => {
-        //     const wordList = new WordList(generateAlphabetWords(alphabet));
-        //     wordList.processExclusionsFromRules(positionLetterRules);
-        //     expect(wordList.letterRules).toStrictEqual(positionLetterRules);
-        //     // TODO: When upgrading to Node 22+, switch to built-in Set intersection functionality instead of using
-        //     // Lodash's ArrayLike methods.
-        //     expectedLettersAtPositions.missing?.forEach((missingLetters, position) => {
-        //         expect(
-        //             intersection(Array.from(wordList.possibleLetters[position]), Array.from(missingLetters))
-        //         ).toStrictEqual([]);
-        //     });
-        //     expectedLettersAtPositions.required?.forEach((requiredLetters, position) => {
-        //         expect(
-        //             intersection(Array.from(wordList.possibleLetters[position]), Array.from(requiredLetters))
-        //         ).toStrictEqual(Array.from(requiredLetters));
-        //     });
-        // });
+        // it.only.each(filterOutNonMatchingWordsTestCases)(
+        //     '$caseName',
+        //     ({ words, letterAtPositionInWordRule, expectedWords }) => {
+        //         const wordList = new WordList(words);
+        //         wordList.processExclusionsFromRules([letterAtPositionInWordRule]);
+        //         expect(wordList.words).toStrictEqual(expectedWords);
+        //     }
+        // );
     });
 });

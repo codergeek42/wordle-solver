@@ -31,7 +31,7 @@ describe(RetryMisplacedLettersStrategy, () => {
             (numMisplacedLetters) => {
                 const alphabet = generateAlphabetOfLength(numMisplacedLetters + 3);
                 const misplacedAlphabet = alphabet.slice(-1).concat(alphabet.slice(0, alphabet.length - 1));
-                const wordList = new WordList(generateAlphabetWords(alphabet));
+                const wordList = new WordList(generateAlphabetWords(alphabet, 2));
                 const retryMisplacedLettersStrategy = new RetryMisplacedLettersStrategy(wordList);
 
                 const impossibleLetterRule: LetterAtPositionInWordRule = {

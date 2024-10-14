@@ -1,34 +1,27 @@
-import { times } from 'lodash';
 import { WordLength } from '../../../__data__/alphabet';
-import generateAlphabetWords from '../../../src/lib/helpers/generateAlphabetWords';
+import * as generateAlphabetWordsModule from '../../../src/lib/helpers/generateAlphabetWords';
+import { WordleSolverTestError } from '../../../src/lib/wordleSolverError';
+
+const { default: generateAlphabetWords } = generateAlphabetWordsModule;
 
 describe(generateAlphabetWords, () => {
-    const alphabetWord = (length: number, chunkNum = 0) =>
-        String.fromCodePoint(...times(length, (ord) => 'A'.charCodeAt(0) + chunkNum * WordLength + ord));
+    it('should generate all possible words from the given alphabet', () => {
+        const alphabet = 'ABC';
+        const expectedAlphabetWords = ['AA', 'BA', 'CA', 'AB', 'BB', 'CB', 'AC', 'BC', 'CC'];
+        const result = generateAlphabetWords(alphabet, 2);
+        expect(result).toStrictEqual(expectedAlphabetWords);
+    });
 
-    const testCases: {
-        caseName: string;
-        alphabet: string;
-        expectedWords: string[];
-    }[] = [
-        {
-            caseName: 'should pad the given alphabet to WordLength length',
-            alphabet: alphabetWord(1),
-            expectedWords: [alphabetWord(1).repeat(WordLength)]
-        },
-        {
-            caseName: 'should split a word larger than WordLength into words of that length',
-            alphabet: alphabetWord(2 * WordLength),
-            expectedWords: times(2, (chunkNum) => alphabetWord(WordLength, chunkNum))
-        },
-        {
-            caseName: 'should return the given alphabet as a singleton string if it has exactly WordLength length',
-            alphabet: alphabetWord(WordLength),
-            expectedWords: [alphabetWord(WordLength)]
-        }
-    ];
-    it.each(testCases)('$caseName', ({ alphabet, expectedWords }) => {
+    it('should throw a WorldSolverTestError if the size argument is negative', () => {
+        const alphabet = 'ABC';
+        const testCall = () => generateAlphabetWords(alphabet, -1);
+        expect(testCall).toThrow(WordleSolverTestError);
+    });
+
+    it('should use WordLength as the default wordSize parameter', () => {
+        const alphabet = 'ABC';
         const result = generateAlphabetWords(alphabet);
-        expect(result).toStrictEqual(expectedWords);
+        const expected = generateAlphabetWords(alphabet, WordLength);
+        expect(result).toStrictEqual(expected);
     });
 });
