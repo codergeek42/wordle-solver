@@ -1,11 +1,14 @@
-import { chunk, join, padEnd } from 'lodash';
 import { WordLength } from '../../../__data__/alphabet';
+import { WordleSolverTestError } from '../wordleSolverError';
 
-export default function generateAlphabetWords(alphabet: string): string[] {
-    // Pad alphabet to a multiple of `WordLength` characters so it can be
-    // evenly chunked; use itself as the pad to ensure the resulting
-    // alphabet remains unchanged.
-    const padLength = alphabet.length <= WordLength ? WordLength : alphabet.length % WordLength;
-    const alphabetPadded = padEnd(alphabet, padLength, alphabet);
-    return chunk(Array.from(alphabetPadded), WordLength).map((wordChars) => join(wordChars, ''));
+export default function generateAlphabetWords(alphabet: string, wordLength: number = WordLength): string[] {
+    const prefixLetters = Array.from(alphabet);
+    if (wordLength <= 0) {
+        throw new WordleSolverTestError('generateAlphabetWords: invalid size argument');
+    }
+    return wordLength == 1
+        ? prefixLetters
+        : generateAlphabetWords(alphabet, wordLength - 1).flatMap((word) =>
+              prefixLetters.map((letter) => letter.concat(word))
+          );
 }

@@ -3,8 +3,6 @@ import { WordGuessAndResult, WordGuessAndScore } from './wordGuessAndResult';
 import WordList from './wordList';
 import { NoMoreGuessesError } from './wordleSolverError';
 
-/*
-
 /**
  * TODO: Solve styles / architecture notes to self:
  * 
@@ -12,7 +10,7 @@ import { NoMoreGuessesError } from './wordleSolverError';
  * Strategy methods for score methods implemented by extenders
  * Guesser class for each method which implements strategy, extends base class;
  * Algorithm uses all guessers and picks which one removes most possibilities.
- * 
+ *
  * 1. guess word by eliminating highest count of distinct unguessed letters (e.g., BREAD (5) > BREED (4) = BLEED (4) > PAPAS (3))
  * 2. guess word by highest count of additional letter+position exclusions (total # eliminations at each position maximized);
  * 3. guess word by highest count of re-used misplaced letters; (if known TSO__ misplaced, try ST_O_, etc.)
@@ -44,6 +42,7 @@ export abstract class NextWordGuesserStrategyBase implements INextWordGuesserStr
     abstract scoreForGuess(guess: string): number;
 
     withPreviousGuess(candidate: WordGuessAndResult) {
+        // console.log('@ withPreviousGuess: ', JSON.stringify({ candidate }, null, 2));
         this.myWordList.processExclusionsFromRules(candidate.result);
         this.myPreviousGuesses.push(candidate);
         return this;
@@ -57,6 +56,7 @@ export abstract class NextWordGuesserStrategyBase implements INextWordGuesserStr
             (word: string): WordGuessAndScore => ({ word, score: this.scoreForGuess(word) }),
             this
         );
+
         return maxBy(wordsWithGuesses, 'score') as WordGuessAndScore;
     }
 

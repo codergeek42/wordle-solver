@@ -2,6 +2,10 @@ import { IStrategyScoreMethod, NextWordGuesserStrategyBase } from '../nextWordGu
 import { LetterAtPositionInWord, LetterWithPosition } from '../letterAtPosition';
 
 export default class RetryMisplacedLettersStrategy extends NextWordGuesserStrategyBase implements IStrategyScoreMethod {
+    constructor(...params: ConstructorParameters<typeof NextWordGuesserStrategyBase>) {
+        super(...params);
+    }
+
     scoreForGuess(guess: string): number {
         const previouslyMisplacedLetters = this.wordList.letterRules
             .filter((rule) => rule.required === LetterAtPositionInWord.Misplaced)
