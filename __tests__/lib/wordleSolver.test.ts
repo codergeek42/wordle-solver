@@ -1,13 +1,9 @@
-import { get, keys, mapValues, partialRight } from 'lodash';
+import { get, keys, mapValues } from 'lodash';
 import { LetterAtPositionInWord } from '../../src/lib/letterAtPosition';
 import { WordGuessAndResult, WordGuessAndScore } from '../../src/lib/wordGuessAndResult';
 import { GuesserStrategies, WordleSolver } from '../../src/lib/wordleSolver';
 import WordList from '../../src/lib/wordList';
-import {
-    INextWordGuesserStrategyBase,
-    IStrategyScoreMethod,
-    NextWordGuesserStrategyBase
-} from '../../src/lib/nextWordGuesserStrategy';
+import { NextWordGuesserStrategyBase } from '../../src/lib/nextWordGuesserStrategy';
 import 'jest-extended';
 import DistinctLettersStrategy from '../../src/lib/guesserStrategies/distinctLettersStrategy';
 import RetryMisplacedLettersStrategy from '../../src/lib/guesserStrategies/retryMisplacedLettersStrategy';
@@ -19,16 +15,6 @@ describe(WordleSolver, () => {
     let wordleSolver: WordleSolver;
     let wordleSolverStrategySpies: Record<keyof GuesserStrategies, jest.SpyInstance>;
     let wordleSolverStrategyTypes: Record<keyof GuesserStrategies, typeof NextWordGuesserStrategyBase>;
-
-    function _guesserStrategiesSpyOn<GuesserStrategyType extends INextWordGuesserStrategyBase & IStrategyScoreMethod>(
-        method: keyof GuesserStrategyType,
-        attributeMethod?: 'get' | 'set'
-    ): Record<keyof GuesserStrategies, jest.SpyInstance> {
-        const spyMethod = attributeMethod
-            ? partialRight(jest.spyOn, method, attributeMethod)
-            : partialRight(jest.spyOn, method);
-        return mapValues(wordleSolver.guesserStrategies, (s, _name) => spyMethod(s));
-    }
 
     beforeEach(() => {
         wordList = new WordList(['TEST']);
