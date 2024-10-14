@@ -55,7 +55,6 @@ export default class WordList {
 
     withPositionLetterRules(lettersAtPositionsRules: LetterAtPositionInWordRule[]): WordList {
         const newWordList = WordList.fromCopyOf(this);
-        // console.log('@@ withPositionLetterRules: '.concat(JSON.stringify({ newWordList }, null, 2)));
         newWordList.processExclusionsFromRules(lettersAtPositionsRules);
 
         return newWordList;
@@ -65,32 +64,13 @@ export default class WordList {
         const doesMatch =
             every(this.possibleLetters, (possibleLettersAtPos, position) => {
                 const matchesPossibleLetters = possibleLettersAtPos.includes(word[position]);
-                // console.log(
-                //     '@@ doesMatch possibleLetters callback: '.concat(
-                //         JSON.stringify({ word, possibleLettersAtPos, position, matchesPossibleLetters }, null, 2)
-                //     )
-                // );
                 return matchesPossibleLetters;
             }) &&
             every(this.myLetterRules, (rule) => {
                 const matchesLetterRules =
                     rule.required !== LetterAtPositionInWord.Misplaced || word.includes(rule.letter);
-                // console.log(
-                //     '@@ doesMatch letterRules callback: '.concat(
-                //         JSON.stringify({ rule, word, matchesLetterRules }, null, 2)
-                //     )
-                // );
                 return matchesLetterRules;
             });
-        // console.log(
-        //     '@@ doesWordMatchAllRules: '.concat(
-        //         JSON.stringify(
-        //             { doesMatch, word, rules: this.letterRules, possibleLetters: this.myPossibleLetters },
-        //             null,
-        //             2
-        //         )
-        //     )
-        // );
         return doesMatch;
     }
 
@@ -100,11 +80,6 @@ export default class WordList {
         // and so marked as Mandatory in the correct position and Impossible in the
         // position where it was previously Misplaced.
         lettersAtPositionsRules.sort(letterAtPositionInWordRuleComparator).forEach((rule) => {
-            // console.log(
-            //     '@@ processExclusionsFromRules forEach callback ',
-            //     JSON.stringify({ words: this.words, rule }, null, 2)
-            // );
-
             if (rule.required === LetterAtPositionInWord.Impossible) {
                 this.myPossibleLetters = this.myPossibleLetters.map((letters) => difference(letters, [rule.letter]));
             } else if (typeof rule.position === 'undefined') {
@@ -125,13 +100,5 @@ export default class WordList {
         this.myLetterRules.push(...lettersAtPositionsRules);
         this.myWords = this.words.filter((word) => this.doesWordMatchAllRules(word), this);
         this.myAlphabet = uniq(this.words.join(''));
-        // console.log(
-        //     '@@ processExclusionsFromRules after callback: ',
-        //     JSON.stringify(
-        //         { words: this.words, possibleLetters: this.possibleLetters, alphabet: this.alphabet },
-        //         null,
-        //         2
-        //     )
-        // );
     }
 }

@@ -42,7 +42,6 @@ export abstract class NextWordGuesserStrategyBase implements INextWordGuesserStr
     abstract scoreForGuess(guess: string): number;
 
     withPreviousGuess(candidate: WordGuessAndResult) {
-        // console.log('@ withPreviousGuess: ', JSON.stringify({ candidate }, null, 2));
         this.myWordList.processExclusionsFromRules(candidate.result);
         this.myPreviousGuesses.push(candidate);
         return this;
