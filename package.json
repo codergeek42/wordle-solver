@@ -3,14 +3,17 @@
     "version": "0.0.1",
     "description": "A clever algorithm and automated tool to solve the NYTimes daily Wordle puzzle game.",
     "scripts": {
+        "build:clean": "rm -rf dist/*",
         "build:compile": "tsc",
         "build": "npm run fmt && npm run build:compile",
+        "clean": "npm run build:clean && rm -rf node_modules/",
         "cli": "node dist/index.js",
         "fmt": "prettier --write --log-level warn .",
         "fmt:check": "prettier --check .",
-        "lint": "eslint src/ __tests__/",
-        "test:unit": "jest --coverage",
+        "lint": "eslint __data__/ __tests__/ src/",
+        "test:unit": "jest",
         "test": "npm run test:unit",
+        "ci:local": "npm run lint && npm run clean && npm install && npm run build && npm run test",
         "prepare": "husky"
     },
     "keywords": [
@@ -27,15 +30,24 @@
         "@eslint/js": "^9.12.0",
         "@tsconfig/node20": "^20.1.4",
         "@types/jest": "^29.5.13",
+        "@types/lodash": "^4.17.4",
+        "@types/node": "^20.14.2",
         "eslint": "^9.12.0",
+        "eslint-plugin-jest-extended": "^2.4.0",
         "git-format-staged": "^3.1.1",
         "globals": "^15.11.0",
         "husky": "^9.1.6",
         "jest": "^29.7.0",
+        "jest-extended": "^4.0.2",
+        "jest-extended-fs": "^1.0.3",
         "jest-mock": "^29.7.0",
         "jest-mock-console": "^2.0.0",
+        "jest-mock-extended": "^3.0.7",
         "prettier": "^3.3.3",
         "ts-jest": "^29.2.5",
         "typescript-eslint": "^8.8.1"
+    },
+    "dependencies": {
+        "lodash": "^4.17.21"
     }
 }

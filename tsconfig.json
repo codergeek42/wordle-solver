@@ -2,7 +2,9 @@
     "extends": "@tsconfig/node20/tsconfig.json",
     "compilerOptions": {
         "sourceMap": true,
-        "outDir": "dist",
-        "types": ["node", "jest"]
-    }
+        "outDir": "./dist",
+        "types": ["node", "jest", "jest-extended"]
+    },
+    "files": ["node_modules/jest-extended/types/index.d.ts"],
+    "include": ["node_modules/jest-extended/types/global.d.ts", "src/**/*.ts"]
 }
