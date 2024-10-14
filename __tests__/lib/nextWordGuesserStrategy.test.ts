@@ -69,7 +69,7 @@ describe(NextWordGuesserStrategyBase, () => {
         it('throws NoMoreGuessesError if result words list is empty', () => {
             const emptyWordList = new WordList([]);
             const nextWordGuesserStrategy = new NextWordGuesserStrategyBaseTest(emptyWordList);
-            const testCall = () => nextWordGuesserStrategy.guessNextWordAndScore()
+            const testCall = () => nextWordGuesserStrategy.guessNextWordAndScore();
             expect(testCall).toThrow(NoMoreGuessesError);
         });
 
