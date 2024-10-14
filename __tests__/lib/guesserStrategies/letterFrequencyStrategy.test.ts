@@ -25,8 +25,6 @@ describe(LetterFrequencyStrategy, () => {
             const wordList = new WordList(['AAA', 'BZZ', 'CCZ']);
             const letterFrequencyStrategy = new LetterFrequencyStrategy(wordList);
 
-            // const wordsSpy = jest.spyOn(wordList, 'words', 'get').mockReturnValue(['AZZ', 'BBZ', 'CCC']);
-            // // const result = Array.from('ABC').map((c) => ({ score: letterFrequencyStrategy.scoreForGuess(''), c }));
             const result = Array.from(wordList.words, (word) => ({
                 word,
                 score: letterFrequencyStrategy.scoreForGuess(word)
