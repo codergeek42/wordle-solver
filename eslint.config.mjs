@@ -15,7 +15,9 @@ export default [
             '@typescript-eslint/consistent-type-definitions': 'warn',
 
             // Sometimes it's good practice to have placeholder variables that are then unused,
-            // such as in mock functions, parameter ordering, etc. Ensu
+            // such as in mock functions, parameter ordering, etc. to ensure that the right type
+            // and/or count of parameters are matched, even if they are not necessary for the
+            // logic, such as iteration callbacks and mappings.
             '@typescript-eslint/no-unused-vars': [
                 'error',
                 {
