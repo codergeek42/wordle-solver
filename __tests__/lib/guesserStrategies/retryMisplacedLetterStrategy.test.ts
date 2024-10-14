@@ -1,10 +1,12 @@
-import { times } from 'lodash';
+import { range, times } from 'lodash';
 import { NextWordGuesserStrategyBase } from '../../../src/lib/nextWordGuesserStrategy';
 import WordList from '../../../src/lib/wordList';
 import generateAlphabetWords from '../../../src/lib/helpers/generateAlphabetWords';
 import RetryMisplacedLettersStrategy from '../../../src/lib/guesserStrategies/retryMisplacedLettersStrategy';
 import generateAlphabetOfLength from '../../../src/lib/helpers/generateAlphabetOfLength';
 import { LetterAtPositionInWord, LetterAtPositionInWordRule } from '../../../src/lib/letterAtPosition';
+import 'jest-extended';
+import { WordLength } from '../../../__data__/alphabet';
 
 describe(RetryMisplacedLettersStrategy, () => {
     beforeEach(() => {
@@ -25,7 +27,7 @@ describe(RetryMisplacedLettersStrategy, () => {
     });
 
     describe(RetryMisplacedLettersStrategy.prototype.scoreForGuess, () => {
-        const numMisplacedLettersCases = [2]; // range(0, WordLength + 1)
+        const numMisplacedLettersCases = range(0, WordLength + 1);
         it.each(numMisplacedLettersCases)(
             'scores the guess based on the number of previously misplaced letters (%i misplaced)',
             (numMisplacedLetters) => {
