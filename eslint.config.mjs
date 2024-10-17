@@ -21,6 +21,7 @@
 import globals from 'globals';
 import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import { default as pluginTsdoc } from 'eslint-plugin-tsdoc';
 
 export default [
     { languageOptions: { globals: globals.browser } },
@@ -28,6 +29,9 @@ export default [
     ...tseslint.configs.recommended,
     ...tseslint.configs.stylistic,
     {
+        plugins: {
+            tsdoc: pluginTsdoc
+        },
         rules: {
             // If I want the openness of an interface instead of a type for object definitions,
             // then I'll make the thing an interface. Otherwise this recommendation is silly IMHO.
@@ -45,7 +49,8 @@ export default [
                     varsIgnorePattern: '^_[^_].*$|^_$',
                     caughtErrorsIgnorePattern: '^_[^_].*$|^_$'
                 }
-            ]
+            ],
+            'tsdoc/syntax': 'warn'
         }
     }
 ];
