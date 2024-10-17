@@ -1,4 +1,4 @@
-/*****
+/*
  * wordle-solver: A clever algorithm and automated tool to solve the
  * 	NYTimes daily Wordle puzzle game.
  * Copyright (C) 2023 Peter Gordon <codergeek42@gmail.com>
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program, namely the "LICENSE" text file.  If not,
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
- *****/
+ */
 
 import { maxBy, sumBy, uniq } from 'lodash';
 import { LetterAtPositionInWord } from '../../src/lib/letterAtPosition';
