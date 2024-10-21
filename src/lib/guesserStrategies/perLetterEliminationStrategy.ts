@@ -19,11 +19,11 @@
  */
 
 import { sumBy } from 'lodash';
-import { IStrategyScoreMethod, NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
+import { NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
 import WordList from '../wordList';
 import { LetterAtPositionInWord, LetterAtPositionInWordRule } from '../letterAtPosition';
 
-export default class PerLetterEliminationStrategy extends NextWordGuesserStrategyBase implements IStrategyScoreMethod {
+export default class PerLetterEliminationStrategy extends NextWordGuesserStrategyBase {
     constructor(...params: ConstructorParameters<typeof NextWordGuesserStrategyBase>) {
         super(...params);
     }

@@ -19,9 +19,9 @@
  */
 
 import { difference, uniq } from 'lodash';
-import { IStrategyScoreMethod, NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
+import { NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
 
-export default class DistinctLettersStrategy extends NextWordGuesserStrategyBase implements IStrategyScoreMethod {
+export default class DistinctLettersStrategy extends NextWordGuesserStrategyBase {
     constructor(...params: ConstructorParameters<typeof NextWordGuesserStrategyBase>) {
         super(...params);
     }

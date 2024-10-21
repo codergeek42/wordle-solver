@@ -20,14 +20,14 @@
 
 import { maxBy, sumBy, uniq } from 'lodash';
 import { LetterAtPositionInWord } from '../../src/lib/letterAtPosition';
-import { IStrategyScoreMethod, NextWordGuesserStrategyBase } from '../../src/lib/nextWordGuesserStrategy';
+import { NextWordGuesserStrategyBase } from '../../src/lib/nextWordGuesserStrategy';
 import { WordGuessAndResult } from '../../src/lib/wordGuessAndResult';
 import { NoMoreGuessesError } from '../../src/lib/wordleSolverError';
 import WordList from '../../src/lib/wordList';
 import 'jest-extended';
 
 // Allows us to instantiate the base class as-is.
-class NextWordGuesserStrategyBaseTest extends NextWordGuesserStrategyBase implements IStrategyScoreMethod {
+class NextWordGuesserStrategyBaseTest extends NextWordGuesserStrategyBase {
     constructor(...ctorParams: ConstructorParameters<typeof NextWordGuesserStrategyBase>) {
         super(...ctorParams);
     }

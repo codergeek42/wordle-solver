@@ -18,10 +18,10 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
-import { IStrategyScoreMethod, NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
+import { NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
 import { LetterAtPositionInWord, LetterWithPosition } from '../letterAtPosition';
 
-export default class RetryMisplacedLettersStrategy extends NextWordGuesserStrategyBase implements IStrategyScoreMethod {
+export default class RetryMisplacedLettersStrategy extends NextWordGuesserStrategyBase {
     constructor(...params: ConstructorParameters<typeof NextWordGuesserStrategyBase>) {
         super(...params);
     }

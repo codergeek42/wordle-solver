@@ -39,22 +39,7 @@ import { NoMoreGuessesError } from './wordleSolverError';
  * then pick from among these which removes the most amount of words total from the candidate list.
  */
 
-export interface INextWordGuesserStrategyBase {
-    getAlreadyGuessedLetters(): string[];
-
-    guessNextWordAndScore(): WordGuessAndScore;
-
-    withPreviousGuess(candidate: WordGuessAndResult): this;
-
-    get previousGuesses(): WordGuessAndResult[];
-    get wordList(): WordList;
-}
-
-export interface IStrategyScoreMethod {
-    scoreForGuess(guess: string): number;
-}
-
-export abstract class NextWordGuesserStrategyBase implements INextWordGuesserStrategyBase {
+export abstract class NextWordGuesserStrategyBase {
     protected myPreviousGuesses: WordGuessAndResult[] = [];
 
     constructor(protected myWordList: WordList) {}

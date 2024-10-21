@@ -19,9 +19,9 @@
  */
 
 import { countBy, sum } from 'lodash';
-import { IStrategyScoreMethod, NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
+import { NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
 
-export default class LetterFrequencyStrategy extends NextWordGuesserStrategyBase implements IStrategyScoreMethod {
+export default class LetterFrequencyStrategy extends NextWordGuesserStrategyBase {
     constructor(...params: ConstructorParameters<typeof NextWordGuesserStrategyBase>) {
         super(...params);
     }
