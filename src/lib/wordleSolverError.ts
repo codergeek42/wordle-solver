@@ -24,8 +24,18 @@
  */
 export class WordleSolverError extends Error {}
 
+/**
+ * A `LetterAtPositionInWordRule` was attempted to be processed that required a `position`
+ * property but did not have it.
+ */
 export class MissingPositionError extends WordleSolverError {}
 
+/**
+ * There are no more possible guesses (i.e., the set of possible words has become empty).
+ */
 export class NoMoreGuessesError extends WordleSolverError {}
 
+/**
+ * An error that occurs in the test helpers, such as `generateAlphabetWords`.
+ */
 export class WordleSolverTestError extends WordleSolverError {}
