@@ -1,4 +1,4 @@
-/*****
+/*
  * wordle-solver: A clever algorithm and automated tool to solve the
  * 	NYTimes daily Wordle puzzle game.
  * Copyright (C) 2023 Peter Gordon <codergeek42@gmail.com>
@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program, namely the "LICENSE" text file.  If not,
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
- *****/
+ */
 
 import { countBy, sum } from 'lodash';
-import { IStrategyScoreMethod, NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
+import { NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
 
-export default class LetterFrequencyStrategy extends NextWordGuesserStrategyBase implements IStrategyScoreMethod {
+export default class LetterFrequencyStrategy extends NextWordGuesserStrategyBase {
     constructor(...params: ConstructorParameters<typeof NextWordGuesserStrategyBase>) {
         super(...params);
     }
@@ -30,11 +30,13 @@ export default class LetterFrequencyStrategy extends NextWordGuesserStrategyBase
         const countLettersAtPosition = (position: number): Record<string, number> =>
             countBy(this.wordList.words.flatMap((word) => [word[position]]));
 
-        return sum(
-            Array.from(guess).map((letter, position) => {
-                const lettersAtPosition = countLettersAtPosition(position);
-                return lettersAtPosition[letter] / this.wordList.possibleLetters[position].length;
-            })
+        return (
+            sum(
+                Array.from(guess).map((letter, position) => {
+                    const lettersAtPosition = countLettersAtPosition(position);
+                    return lettersAtPosition[letter] / this.wordList.possibleLetters[position].length;
+                })
+            ) / guess.length
         );
     }
 }

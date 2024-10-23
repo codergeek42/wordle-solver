@@ -1,4 +1,4 @@
-/*****
+/*
  * wordle-solver: A clever algorithm and automated tool to solve the
  * 	NYTimes daily Wordle puzzle game.
  * Copyright (C) 2023 Peter Gordon <codergeek42@gmail.com>
@@ -16,18 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program, namely the "LICENSE" text file.  If not,
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
- *****/
+ */
 
 import { maxBy, sumBy, uniq } from 'lodash';
 import { LetterAtPositionInWord } from '../../src/lib/letterAtPosition';
-import { IStrategyScoreMethod, NextWordGuesserStrategyBase } from '../../src/lib/nextWordGuesserStrategy';
+import { NextWordGuesserStrategyBase } from '../../src/lib/nextWordGuesserStrategy';
 import { WordGuessAndResult } from '../../src/lib/wordGuessAndResult';
 import { NoMoreGuessesError } from '../../src/lib/wordleSolverError';
 import WordList from '../../src/lib/wordList';
 import 'jest-extended';
 
 // Allows us to instantiate the base class as-is.
-class NextWordGuesserStrategyBaseTest extends NextWordGuesserStrategyBase implements IStrategyScoreMethod {
+class NextWordGuesserStrategyBaseTest extends NextWordGuesserStrategyBase {
     constructor(...ctorParams: ConstructorParameters<typeof NextWordGuesserStrategyBase>) {
         super(...ctorParams);
     }

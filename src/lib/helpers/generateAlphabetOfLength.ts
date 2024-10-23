@@ -1,4 +1,4 @@
-/*****
+/*
  * wordle-solver: A clever algorithm and automated tool to solve the
  * 	NYTimes daily Wordle puzzle game.
  * Copyright (C) 2023 Peter Gordon <codergeek42@gmail.com>
@@ -16,10 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program, namely the "LICENSE" text file.  If not,
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
- *****/
+ */
 
 import { range } from 'lodash';
+import { WordleSolverTestError } from '../wordleSolverError';
 
+/**
+ * Generates an alphabet of `numLetters` size, starting from 'A', up to as many letters as desired in ascending order.
+ *
+ * @param numLetters - the number of letters in the resulting alphabet
+ *
+ * @returns the left-most substring of `A...Z` of length `numLetters`
+ *
+ * @example Generating the first five letters
+ * ```typescript
+ *  const AtoE = generateAlphabetOfLength(5);
+ *  expect(AtoE).toStrictEqual('ABCDE');
+ * ```
+ */
 export default function generateAlphabetOfLength(numLetters: number): string {
-    return String.fromCharCode(...range(0, numLetters).map((ord) => 'A'.charCodeAt(0) + ord));
+    if (numLetters < 0 || numLetters >= 26) {
+        throw new WordleSolverTestError('generateAlphabetOfLength: numLetters out of range');
+    }
+    return String.fromCharCode(...range(0, numLetters).map((ord: number) => 'A'.charCodeAt(0) + ord));
 }
