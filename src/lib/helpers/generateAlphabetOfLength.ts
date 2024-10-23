@@ -21,6 +21,19 @@
 import { range } from 'lodash';
 import { WordleSolverTestError } from '../wordleSolverError';
 
+/**
+ * Generates an alphabet of `numLetters` size, starting from 'A', up to as many letters as desired in ascending order.
+ *
+ * @param {number} numLetters the number of letters in the resulting alphabet
+ *
+ * @returns {string} the left-most substring of `A...Z` of length `numLetters`
+ *
+ * @example Generating the first five letters
+ * ```typescript
+ *  const AtoE = generateAlphabetOfLength(5);
+ *  expect(AtoE).toStrictEqual('ABCDE');
+ * ```
+ */
 export default function generateAlphabetOfLength(numLetters: number): string {
     if (numLetters < 0 || numLetters >= 26) {
         throw new WordleSolverTestError('generateAlphabetOfLength: numLetters out of range');

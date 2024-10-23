@@ -21,6 +21,23 @@
 import { WordLength } from '../../../__data__/alphabet';
 import { WordleSolverTestError } from '../wordleSolverError';
 
+/**
+ * Recursively calculates all possible words from the given `alphabet` of the length `wordLength`
+ *
+ * @param {string} alphabet the string of all possible characters
+ * @param {number} wordLength the length of the resulting words
+ *
+ * @returns {string[]} a list of all possible permutations
+ *
+ * @throws `WordleSolverTestError`
+ * if the `wordLength` is zero or negative
+ *
+ * @example All possible 2-letter permutations of A and B
+ * ```typescript
+ * const AsAndBs = generateAlphabetWords('AB', 2).sorted();
+ * expect(AsAndBs).toEqual(['AA', 'AB', 'BA', 'BB']);
+ * ```
+ */
 export default function generateAlphabetWords(alphabet: string, wordLength: number = WordLength): string[] {
     const prefixLetters = Array.from(alphabet);
     if (wordLength <= 0) {
