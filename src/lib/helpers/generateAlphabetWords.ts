@@ -24,10 +24,10 @@ import { WordleSolverTestError } from '../wordleSolverError';
 /**
  * Recursively calculates all possible words from the given `alphabet` of the length `wordLength`
  *
- * @param {string} alphabet the string of all possible characters
- * @param {number} wordLength the length of the resulting words
+ * @param alphabet - the string of all possible characters
+ * @param wordLength - the length of the resulting words
  *
- * @returns {string[]} a list of all possible permutations
+ * @returns the calculated list of all such possible words.
  *
  * @throws `WordleSolverTestError`
  * if the `wordLength` is zero or negative

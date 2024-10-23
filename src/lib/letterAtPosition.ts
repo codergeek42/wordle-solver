@@ -43,7 +43,8 @@ export enum LetterAtPositionInWord {
  *
  * @param posRuleA - The first rule.
  * @param posRuleB - The second rule.
- * @returns +1 if `posRuleA` > `posRuleB`; -1 if `posRuleA` < `posRuleB`; or 0 otherwise.
+ *
+ * @returns +1 if `posRuleA` \> `posRuleB`; -1 if `posRuleA` \< `posRuleB`; or 0 otherwise.
  */
 export function letterAtPositionInWordRuleComparator(
     posRuleA: LetterAtPositionInWordRule,
@@ -76,6 +77,6 @@ export type LetterAtPositionInWordRule = LetterRule & {
  * The same type as `LetterAtPositionInWordRule`, but with the the `position` property
  * not optional.
  * @see {@link LetterAtPositionInWordRule}
- * @todo Consolidate the LetterAtPositionInWordRule conditional types into one discriminated union.
  */
+// TODO: Consolidate the LetterAtPositionInWordRule conditional types into one discriminated union.
 export type LetterWithPosition = Required<Omit<LetterAtPositionInWordRule, 'required'>>;

@@ -59,19 +59,17 @@ export abstract class NextWordGuesserStrategyBase {
 
     /**
      *
-     * @param {WordList} myWordList the `WordList` object to use for choosing the next optimal guess.
+     * @param myWordList - the `WordList` object to use for choosing the next optimal guess.
      */
     constructor(protected myWordList: WordList) {}
 
     /**
      * Implement this with a metric for scoring for the given guess, determined by the guessing strategy in use.
      *
-     * @abstract
+     * @param guess - The guess candidate word.
      *
-     * @param {string} guess The guess candidate word.
-     *
-     * @returns {number} A score calculated by a given guessing strategy, roughly equal to the number of letter &
-     *  position combinations' worth of information that would be given by this guess in that strategy.
+     * @returns A score calculated by a given guessing strategy, roughly equal to the number of letter & position
+     *  combinations' worth of information that would be given by this guess in that strategy.
      */
     abstract scoreForGuess(guess: string): number;
 
@@ -79,9 +77,9 @@ export abstract class NextWordGuesserStrategyBase {
      * Modifies the calling object to procss the given candidate guess and store its resulting rules, such as certain
      *  letters being mandated at or excluded from certain positions.
      *
-     * @param {WordGuessAndResult} candidate A pairing of the guessed word and its resulting
-     *  `LetterAtPositionInWordRule` rules.
-     * @returns {this} This same object after having processed the previous guess and its resulting rules.
+     * @param candidate - A pairing of the guessed word and its resulting `LetterAtPositionInWordRule` rules.
+     *
+     * @returns `this`, after having processed the previous guess and its resulting rules.
      */
     withPreviousGuess(candidate: WordGuessAndResult): this {
         this.myWordList.processExclusionsFromRules(candidate.result);
@@ -92,7 +90,7 @@ export abstract class NextWordGuesserStrategyBase {
     /**
      * Calculates the score for all remaining possible candidate words and then returns the highest-scoring one.
      *
-     * @returns {WordGuessAndScore} The next optimal word to guess for this particular strategy.
+     * @returns The next optimal word to guess for this particular strategy.
      *
      * @throws `NoMoreGuessesError`
      * When there are no more guesses possible (i.e., the list of candidate words becomes empty).
@@ -110,7 +108,7 @@ export abstract class NextWordGuesserStrategyBase {
     }
 
     /**
-     * @returns {string[]} the list of all unique letters already guessed, regardless of position.
+     * @returns the list of all unique letters already guessed, regardless of position.
      */
     getAlreadyGuessedLetters(): string[] {
         return uniq(this.previousGuesses.flatMap((guess) => Array.from(guess.word)));
