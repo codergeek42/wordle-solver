@@ -19,7 +19,11 @@
  */
 
 import { range } from 'lodash';
+import { WordleSolverTestError } from '../wordleSolverError';
 
 export default function generateAlphabetOfLength(numLetters: number): string {
+    if (numLetters < 0 || numLetters >= 26) {
+        throw new WordleSolverTestError('generateAlphabetOfLength: numLetters out of range');
+    }
     return String.fromCharCode(...range(0, numLetters).map((ord) => 'A'.charCodeAt(0) + ord));
 }
