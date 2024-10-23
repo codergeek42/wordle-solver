@@ -76,5 +76,6 @@ export type LetterAtPositionInWordRule = LetterRule & {
  * The same type as `LetterAtPositionInWordRule`, but with the the `position` property
  * not optional.
  * @see {@link LetterAtPositionInWordRule}
+ * @todo Consolidate the LetterAtPositionInWordRule conditional types into one discriminated union.
  */
 export type LetterWithPosition = Required<Omit<LetterAtPositionInWordRule, 'required'>>;

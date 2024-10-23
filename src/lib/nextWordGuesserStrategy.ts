@@ -23,35 +23,80 @@ import { WordGuessAndResult, WordGuessAndScore } from './wordGuessAndResult';
 import WordList from './wordList';
 import { NoMoreGuessesError } from './wordleSolverError';
 
-/*
- * TODO: Solve styles / architecture notes to self:
- * 
- * Abstract class with base solver stuff;
- * Strategy methods for score methods implemented by extenders
- * Guesser class for each method which implements strategy, extends base class;
- * Algorithm uses all guessers and picks which one removes most possibilities.
+/**
+ * A base class for the guesser strategies, consolidating shared code.
  *
- * 1. guess word by eliminating highest count of distinct unguessed letters (e.g., BREAD (5) > BREED (4) = BLEED (4) > PAPAS (3))
- * 2. guess word by highest count of additional letter+position exclusions (total # eliminations at each position maximized);
- * 3. guess word by highest count of re-used misplaced letters; (if known TSO__ misplaced, try ST_O_, etc.)
- * 4. guess word by highest count by most frequent letters (calculate frequency list of each position, eliminate letters highest on that, total # = metric)
-
- * then pick from among these which removes the most amount of words total from the candidate list.
+ * @example For calculating the score of a guess based on its ASCII character values
+ * ```typescript
+ *  class AsciiValueGuesserStrategy extends NextWordGuesserStrategyBase {
+ *      constructor(...ctorParams: ConstructorParameters<typeof NextWordGuesserStrategyBase>) {
+ *          super(...ctorParams);
+ *      }
+ *
+ *      scoreForGuess(guess: string): number {
+ *          return sumBy(guess, (chr) => chr.charCodeAt(0));
+ *      }
+ *  }
+ * ```
+ * ...and then using this to suggest guesses:
+ * ```typescript
+ *  const wordList = new wordList(methodThatReturnsAListOfWords())
+ *  const asciiValueGuesser = new AsciiValueGuesserStrategy(wordList);
+ *  const asciiValueGuesserAfterGuessingHELLO = asciiValueGuesser.withPreviousGuess({
+ *      word: 'HELLO',
+ *      result: someFunctionThatYieldsExclusionAndMandateRulesFromGuess('HELLO')
+ *  });
+ *  expect(asciiValueGuesserAfterGuessingHELLO.getAlreadyGuessedLetters()).toEqual(['H', 'E', 'L', 'O']);
+ *  console.log('Next optimal word guess after HELLO is: ',
+ *      asciiValueGuesserAfterGuessingHELLO.guessNextWordAndScore());
+ * ```
  */
-
 export abstract class NextWordGuesserStrategyBase {
+    /**
+     * Track the previously-guessed words and their resulting exclusion/mandate rules.
+     */
     protected myPreviousGuesses: WordGuessAndResult[] = [];
 
+    /**
+     *
+     * @param {WordList} myWordList the `WordList` object to use for choosing the next optimal guess.
+     */
     constructor(protected myWordList: WordList) {}
 
+    /**
+     * Implement this with a metric for scoring for the given guess, determined by the guessing strategy in use.
+     *
+     * @abstract
+     *
+     * @param {string} guess The guess candidate word.
+     *
+     * @returns {number} A score calculated by a given guessing strategy, roughly equal to the number of letter &
+     *  position combinations' worth of information that would be given by this guess in that strategy.
+     */
     abstract scoreForGuess(guess: string): number;
 
-    withPreviousGuess(candidate: WordGuessAndResult) {
+    /**
+     * Modifies the calling object to procss the given candidate guess and store its resulting rules, such as certain
+     *  letters being mandated at or excluded from certain positions.
+     *
+     * @param {WordGuessAndResult} candidate A pairing of the guessed word and its resulting
+     *  `LetterAtPositionInWordRule` rules.
+     * @returns {this} This same object after having processed the previous guess and its resulting rules.
+     */
+    withPreviousGuess(candidate: WordGuessAndResult): this {
         this.myWordList.processExclusionsFromRules(candidate.result);
         this.myPreviousGuesses.push(candidate);
         return this;
     }
 
+    /**
+     * Calculates the score for all remaining possible candidate words and then returns the highest-scoring one.
+     *
+     * @returns {WordGuessAndScore} The next optimal word to guess for this particular strategy.
+     *
+     * @throws `NoMoreGuessesError`
+     * When there are no more guesses possible (i.e., the list of candidate words becomes empty).
+     */
     guessNextWordAndScore(): WordGuessAndScore {
         if (this.myWordList.words.length < 1) {
             throw new NoMoreGuessesError();
@@ -64,6 +109,9 @@ export abstract class NextWordGuesserStrategyBase {
         return maxBy(wordsWithGuesses, 'score') as WordGuessAndScore;
     }
 
+    /**
+     * @returns {string[]} the list of all unique letters already guessed, regardless of position.
+     */
     getAlreadyGuessedLetters(): string[] {
         return uniq(this.previousGuesses.flatMap((guess) => Array.from(guess.word)));
     }
