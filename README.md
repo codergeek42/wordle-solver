@@ -128,9 +128,6 @@ O, S, and T have already been guessed), whereas "STOPS" would score 1, and "STOM
 not yet been guessed. This strategy prioritizes only gaining information about as many letters as possible without
 regard for their position in the word, if any.
 
-Given $L$, the set of unique letters already guessed regardless of position, and $G$, the set of unique letters in the
-guess candidate $G$, the score $S$ is given by $$S(G) = \left|G - L| \text{.}$$
-
 ### LetterFrequencyStrategy
 
 This metric scores a candidate guess based on the frequencies of each letter at their corresponding position,
@@ -143,20 +140,6 @@ three words, E occurs more frequently than K; and AUDIT will have a much lower s
 frequently-used letter (T) rather than the 4 of KNOTS. This strategy prioritizes guessing letters that occur the most
 frequently, and calculates the score as a sum of the ratios of, at each position, the frequency of the corresponding
 candidate letter to the number of possible letters at that position.
-
-Given a starting set of words $D$ and a guessed letter $c$ at position $p$, let $F{c,p}$ denote the frequency of that
-letter at that position, and let $L(p)$ denote the total set of unique letters possible at position $p$ across all of
-$D$:
-
-$$F(c,p) = \left|\left\{w \in D \ni w \text{ has letter } c \text{ at position } p\right\}\right|$$
-
-$$L(p) = \bigcup_{W \in D}{\left\{c \ni c \text{ is the letter at position } p \text{ in word } W\right\}}$$
-
-And let $P(G)$ denote the candidate guess as a set of all the letter-position pairings,
-$$P(G) = \left\{(c,p) \ni G \text{ has letter } c \text{ at position } p \right\}$$
-
-Then the total score $S$ of a guess candidate $G$ is
-$$S(G) = \sum_{(c,p) \in P(G)}{\frac{\left|F(c,p)\right|}{\left|L(p)\right|}}$$
 
 ### PerLetterEliminationStrategy
 
@@ -173,8 +156,6 @@ to STONES because they both would try 5 new letter & position combinations: for 
 A, D, I, and U, alongside T at position 5 which had only been guessed at position 3 so far; and for STONE, this would be
 all 5 of the previously-guessed E, N, O, S, and T but at their yet-unguessed positions 5, 4, 3, 1, and 2, respectively.
 
--   TODO: Add this $S(G)$ formula.
-
 ### RetryMisplacedLettersStrategy
 
 This metric scores a candidate guess based on how letters that have already been guessed are being re-used at different
@@ -188,8 +169,6 @@ letters in different positions, whereas AUDIT would score the lowest because it 
 different position, alongside the yet-unguessed A, D, I, and U. KNOTS would score between these, because it does attempt
 to re-guess the N, O, and T, but keeps the already-guessed S at its current position and includes the yet-unguessed K.
 This strategy prioritizes re-guessing existing Yellow-marked letters as much as possible.
-
--   TODO: Fill this in, including $S(G)$ formula.
 
 ### Remarks
 
