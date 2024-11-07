@@ -18,7 +18,7 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
-import { get, keys, mapValues } from 'lodash';
+import { get, keys, mapValues, values } from 'lodash';
 import { LetterAtPositionInWord } from '../../src/lib/letterAtPosition';
 import { WordGuessAndResult, WordGuessAndScore } from '../../src/lib/wordGuessAndResult';
 import { GuesserStrategies, WordleSolver } from '../../src/lib/wordleSolver';
@@ -79,7 +79,7 @@ describe(WordleSolver, () => {
 
             const result = wordleSolver.withPreviousGuess(previousGuess);
 
-            mapValues(wordleSolverStrategySpies, (withPreviousGuessSpy) => {
+            values(wordleSolverStrategySpies).forEach((withPreviousGuessSpy) => {
                 expect(withPreviousGuessSpy).toHaveBeenCalledExactlyOnceWith(previousGuess);
             });
             expect(result).toStrictEqual(wordleSolver);
@@ -92,18 +92,48 @@ describe(WordleSolver, () => {
                 word: 'TEST',
                 score: 42
             };
-            const wordleSolverStrategySpies = mapValues(wordleSolver.guesserStrategies, (guesserStrategy) =>
+            wordleSolverStrategySpies = mapValues(wordleSolver.guesserStrategies, (guesserStrategy) =>
                 jest.spyOn(guesserStrategy, 'guessNextWordAndScore').mockReturnValueOnce(nextGuessAndScore)
             );
 
             const result = wordleSolver.guessNextWord();
 
-            mapValues(wordleSolverStrategySpies, (withPreviousGuessSpy) => {
+            values(wordleSolverStrategySpies).forEach((withPreviousGuessSpy) => {
                 expect(withPreviousGuessSpy).toHaveBeenCalledOnce();
             });
             expect(result).toStrictEqual(
                 mapValues(wordleSolver.guesserStrategies, (_guesserStrategy) => nextGuessAndScore)
             );
+        });
+    });
+
+    describe(WordleSolver.prototype.isSolved, () => {
+        it('is called on each solver strategy', () => {
+            wordleSolverStrategySpies = mapValues(wordleSolver.guesserStrategies, (guesserStrategy) =>
+                jest.spyOn(guesserStrategy, 'isSolved').mockReturnValueOnce(false)
+            );
+
+            const result = wordleSolver.isSolved();
+
+            values(wordleSolverStrategySpies).forEach((isSolvedSpy) => {
+                expect(isSolvedSpy).toHaveBeenCalledOnce();
+            });
+            expect(result).toStrictEqual(false);
+        });
+    });
+
+    describe(WordleSolver.prototype.hasSolution, () => {
+        it('is called on each solver strategy', () => {
+            wordleSolverStrategySpies = mapValues(wordleSolver.guesserStrategies, (guesserStrategy) =>
+                jest.spyOn(guesserStrategy, 'hasSolution').mockReturnValueOnce(false)
+            );
+
+            const result = wordleSolver.hasSolution();
+
+            values(wordleSolverStrategySpies).forEach((isSolvedSpy) => {
+                expect(isSolvedSpy).toHaveBeenCalledOnce();
+            });
+            expect(result).toStrictEqual(false);
         });
     });
 });
