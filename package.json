@@ -27,12 +27,12 @@
     },
     "homepage": "https://github.com/codergeek42/wordle-solver#readme",
     "devDependencies": {
-        "@eslint/js": "^9.19.0",
+        "@eslint/js": "^9.20.0",
         "@tsconfig/node20": "^20.1.4",
         "@types/jest": "^29.5.14",
-        "@types/lodash": "^4.17.14",
-        "@types/node": "^22.10.10",
-        "eslint": "^9.19.0",
+        "@types/lodash": "^4.17.15",
+        "@types/node": "^22.13.1",
+        "eslint": "^9.20.0",
         "eslint-plugin-jest-extended": "^3.0.0",
         "git-format-staged": "^3.1.1",
         "globals": "^15.14.0",
@@ -43,9 +43,9 @@
         "jest-mock": "^29.7.0",
         "jest-mock-console": "^2.0.0",
         "jest-mock-extended": "^3.0.7",
-        "prettier": "^3.4.2",
+        "prettier": "^3.5.0",
         "ts-jest": "^29.2.5",
-        "typescript-eslint": "^8.22.0"
+        "typescript-eslint": "^8.24.0"
     },
     "dependencies": {
         "lodash": "^4.17.21"
