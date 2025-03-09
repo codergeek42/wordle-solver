@@ -8,9 +8,9 @@ Wordle is a word-based logic and puzzle game created by Josh Wardle and (since J
 Times. The system chooses a random 5-letter word, and it is the player's goal to guess that word within 6 attempts.
 After each attempt, the system will color-code their guess at each position to reveal clues about the random word:
 
--   Green: if the letter guessed at this position is correct;
--   Yellow: if the letter guessed at this position is in the word, but not at this position; or
--   Black: if the letter guessed at this position does not appear anywhere in the word.
+- Green: if the letter guessed at this position is correct;
+- Yellow: if the letter guessed at this position is in the word, but not at this position; or
+- Black: if the letter guessed at this position does not appear anywhere in the word.
 
 (Note that this concept is similar to the classic "Mastermind" game originally made by Mordecai Meirowitz, only with
 letters at each position and corresponding colors to demonstrate correctness instead of adjacent black and white key
@@ -40,9 +40,9 @@ This tells us that
 
 So from this we know now that the word
 
--   must begin with S;
--   must contain both O and N but not as the third and fourth positions, respectively; and
--   must not contain either T or E.
+- must begin with S;
+- must contain both O and N but not as the third and fourth positions, respectively; and
+- must not contain either T or E.
 
 A candidate for the second guess could be "SONAR", as it satisfies the required conditions and allows us to not only
 attempt O and N at other positions, but also to try additional letters, namely A and R. This would result in the
@@ -191,4 +191,4 @@ the `LetterFrequencyStrategy`, `RetryMisplacedLettersStrategy`, and `DistinctLet
 
 # Bibliography
 
-1. [Wikipedia: Letter Frequency](https://en.wikipedia.org/wiki/Letter_frequency) $$
+1. [Wikipedia: Letter Frequency](https://en.wikipedia.org/wiki/Letter_frequency)
