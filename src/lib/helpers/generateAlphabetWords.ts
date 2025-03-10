@@ -1,4 +1,4 @@
-/*****
+/*
  * wordle-solver: A clever algorithm and automated tool to solve the
  * 	NYTimes daily Wordle puzzle game.
  * Copyright (C) 2023 Peter Gordon <codergeek42@gmail.com>
@@ -16,11 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program, namely the "LICENSE" text file.  If not,
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
- *****/
+ */
 
 import { WordLength } from '../../../__data__/alphabet';
 import { WordleSolverTestError } from '../wordleSolverError';
 
+/**
+ * Recursively calculates all possible words from the given `alphabet` of the length `wordLength`
+ *
+ * @param alphabet - the string of all possible characters
+ * @param wordLength - the length of the resulting words
+ *
+ * @returns the calculated list of all such possible words.
+ *
+ * @throws `WordleSolverTestError`
+ * if the `wordLength` is zero or negative
+ *
+ * @example All possible 2-letter permutations of A and B
+ * ```typescript
+ * const AsAndBs = generateAlphabetWords('AB', 2).sorted();
+ * expect(AsAndBs).toEqual(['AA', 'AB', 'BA', 'BB']);
+ * ```
+ */
 export default function generateAlphabetWords(alphabet: string, wordLength: number = WordLength): string[] {
     const prefixLetters = Array.from(alphabet);
     if (wordLength <= 0) {

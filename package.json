@@ -13,7 +13,7 @@
         "lint": "eslint __data__/ __tests__/ src/",
         "test:unit": "jest",
         "test": "npm run test:unit",
-        "ci:local": "npm run lint && npm run clean && npm install && npm run build && npm run test",
+        "ci:local": "npm run clean && npm install && npm run lint && npm run build && npm run test",
         "prepare": "husky"
     },
     "keywords": [
@@ -34,6 +34,7 @@
         "@types/node": "^22.13.9",
         "eslint": "^9.22.0",
         "eslint-plugin-jest-extended": "^3.0.0",
+        "eslint-plugin-tsdoc": "^0.3.0",
         "git-format-staged": "^3.1.1",
         "globals": "^16.0.0",
         "husky": "^9.1.7",

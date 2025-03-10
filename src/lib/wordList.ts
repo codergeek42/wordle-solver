@@ -1,4 +1,4 @@
-/*****
+/*
  * wordle-solver: A clever algorithm and automated tool to solve the
  * 	NYTimes daily Wordle puzzle game.
  * Copyright (C) 2023 Peter Gordon <codergeek42@gmail.com>
@@ -16,21 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program, namely the "LICENSE" text file.  If not,
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
- *****/
+ */
 
 import { readFile } from 'node:fs/promises';
 import { LetterAtPositionInWordRule, letterAtPositionInWordRuleComparator } from './letterAtPosition';
-import { cloneDeep, difference, every, times, union, uniq } from 'lodash';
+import { cloneDeep, countBy, difference, every, maxBy, times, union, uniq } from 'lodash';
 import { WordLength } from '../../__data__/alphabet';
 import { LetterAtPositionInWord } from './letterAtPosition';
-import { MissingPositionError } from './wordleSolverError';
+import { MissingPositionError, NoMoreGuessesError } from './wordleSolverError';
 
+/**
+ * Keeps track of a dictionary of possible words to be guessed, as well as exclusion/mandate rules for
+ * already-guessed letters.
+ */
 export default class WordList {
     private myWords: string[];
     private myPossibleLetters: string[][];
     private myLetterRules: LetterAtPositionInWordRule[];
     private myAlphabet: string[];
 
+    /**
+     * @param _words - the list of words to use as a dictionary of possible guess candidates
+     */
     constructor(private readonly _words: string[] = []) {
         this.myWords = _words.map((word) => word.trim().toUpperCase()).sort();
         this.myLetterRules = [];
@@ -45,22 +52,52 @@ export default class WordList {
         this.myPossibleLetters.forEach((possibleLetters) => possibleLetters.sort());
     }
 
+    /**
+     * List of all possible letters.
+     */
     get alphabet(): WordList['myAlphabet'] {
         return this.myAlphabet;
     }
 
+    /**
+     * List of possible words.
+     */
     get words(): WordList['myWords'] {
         return this.myWords;
     }
 
+    /**
+     * List of mandate/exclusion rules.
+     */
     get letterRules(): WordList['myLetterRules'] {
         return this.myLetterRules;
     }
 
+    /**
+     * List of possible letters at each position.
+     */
     get possibleLetters(): WordList['myPossibleLetters'] {
         return this.myPossibleLetters;
     }
 
+    /**
+     * Factory method to read the given file and build a `WordList` from it, expecting one word per line.
+     *
+     * @param fileName - filename (relative)
+     *
+     * @returns a new WordList object with the words from the given file contents.
+     *
+     * @example To build a WordList having words ABC and DEF, suppose  'abc-def.txt' contains
+     * ```plaintext
+     * ABC
+     * DEF
+     * ```
+     * then one can write
+     * ```typescript
+     * const sampleWordList = await WordList.fromFile('abc-def.txt');
+     * expect(sampleWordList.words).toStrictEqual(['ABC', 'DEF']);
+     * ```
+     */
     static async fromFile(fileName: string): Promise<WordList> {
         // TODO: I will probably need to make newline configurable, i.e. for Windows CR/LF, etc.
         // For now, assume Linux/Unix-like \n only, for simplicity.
@@ -69,10 +106,41 @@ export default class WordList {
         return new WordList(fileData.split(newline));
     }
 
+    /**
+     * Factory method to create a `WordList` that is a duplicate of another.
+     *
+     * @param wordListObj - the `WordList` object to copy
+     *
+     * @returns a deep copy of the given `WordList` object.
+     *
+     * @example
+     * const originalWordList = new WordList(['ABC', 'DEF']);
+     * const copyWordList = WordList.fromCopyOf(originalWordList);
+     * expect(copyWordList).toStrictEqual(originalWordList);
+     * expect(copyWordList).not.toBe(originalWordList);
+     */
     static fromCopyOf(wordListObj: WordList): WordList {
         return cloneDeep(wordListObj);
     }
 
+    /**
+     * Create a new `WordList` as a copy of the calling object with the given additional rules, without modifying the
+     * caller.
+     *
+     * @param lettersAtPositionsRules - the additional exclude and/or mandate rules
+     * @see {@link LetterAtPositionInWordRule}
+     *
+     * @returns the created `WordList`
+     *
+     * @example to exclude DEF from a `WordList` that has words ABC and DEF
+     * ```typescript
+     * const abcDefWordList = new WordList(['ABC', 'DEF']);
+     * const abcOnlyWordList = abcDefWordList.withPositionLetterRules([{
+     *      letter: 'D',
+     *      required: LetterAtPositionInWordRule.Impossible }
+     * ]);
+     * ```
+     */
     withPositionLetterRules(lettersAtPositionsRules: LetterAtPositionInWordRule[]): WordList {
         const newWordList = WordList.fromCopyOf(this);
         newWordList.processExclusionsFromRules(lettersAtPositionsRules);
@@ -80,13 +148,31 @@ export default class WordList {
         return newWordList;
     }
 
+    /**
+     * Checks if the given word matches all of the current mandate and exclusion rules.
+     *
+     * @param word - the word to validate
+     *
+     * @returns true if the word matches all of the current rules, false otherwise.
+     *
+     * @example to check that ABC would be allowed but DEF would not
+     * ```typescript
+     * const abcDefWordList = new WordList(['ABC', 'DEF']);
+     * const abcOnlyWordList = abcDefWordList.withPositionLetterRules([{
+     *      letter: 'D',
+     *      required: LetterAtPositionInWordRule.Impossible }
+     * ]);
+     * expect(abcOnlyWordList.doesWordMatchAllRules('ABC')).toBe(true);
+     * expect(abcOnlyWordList.doesWordMatchAllRules('DEF')).toBe(false);
+     * ```
+     */
     doesWordMatchAllRules(word: string): boolean {
         const doesMatch =
-            every(this.possibleLetters, (possibleLettersAtPos, position) => {
+            every(this.possibleLetters, (possibleLettersAtPos: string, position: number) => {
                 const matchesPossibleLetters = possibleLettersAtPos.includes(word[position]);
                 return matchesPossibleLetters;
             }) &&
-            every(this.myLetterRules, (rule) => {
+            every(this.myLetterRules, (rule: LetterAtPositionInWordRule) => {
                 const matchesLetterRules =
                     rule.required !== LetterAtPositionInWord.Misplaced || word.includes(rule.letter);
                 return matchesLetterRules;
@@ -94,6 +180,13 @@ export default class WordList {
         return doesMatch;
     }
 
+    /**
+     * Adds the given rule to the caller's ongoing list, and processes them by removing any entries from the
+     * possible words list that do not match them as well as any letters in its alphabet that are no longer possible.
+     *
+     * @param lettersAtPositionsRules - the additional exclude and/or mandate rules
+     * @see {@link LetterAtPositionInWordRule}
+     */
     processExclusionsFromRules(lettersAtPositionsRules: LetterAtPositionInWordRule[]): void {
         // NB: Ensure that the Mandatory letters are processed after the others,
         // to handle the case when a Misplaced letter is found at another position,
@@ -120,5 +213,22 @@ export default class WordList {
         this.myLetterRules.push(...lettersAtPositionsRules);
         this.myWords = this.words.filter((word) => this.doesWordMatchAllRules(word), this);
         this.myAlphabet = uniq(this.words.join(''));
+    }
+
+    countLetters(): Record<string, number>[] {
+        if (this.words.length <= 0) {
+            throw new NoMoreGuessesError('Empty word list.');
+        }
+        const { length } = maxBy(this.words, 'length')!;
+
+        const totalCount = Array.from({ length }).map((_val, position) =>
+            // If the words are not of equal length, then the counts will tally the "missing" letters as 'undefined'.
+            countBy(this.words.flatMap((word) => (position < word.length ? [word[position]] : [])))
+        );
+        return totalCount;
+        // .map((letterCountAtPosition) =>
+        //
+        //     pickBy(letterCountAtPosition, (_value, key) => key !== 'undefined')
+        // );
     }
 }

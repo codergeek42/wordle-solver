@@ -1,4 +1,4 @@
-/*****
+/*
  * wordle-solver: A clever algorithm and automated tool to solve the
  * 	NYTimes daily Wordle puzzle game.
  * Copyright (C) 2023 Peter Gordon <codergeek42@gmail.com>
@@ -16,16 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program, namely the "LICENSE" text file.  If not,
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
- *****/
+ */
 
-import { IStrategyScoreMethod, NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
+import NextWordGuesserStrategyBase from '../nextWordGuesserStrategy';
 import { LetterAtPositionInWord, LetterWithPosition } from '../letterAtPosition';
 
-export default class RetryMisplacedLettersStrategy extends NextWordGuesserStrategyBase implements IStrategyScoreMethod {
+/**
+ * A guessing strategy which scores the candidate words based on the number of retried misplaced letters.
+ */
+export default class RetryMisplacedLettersStrategy extends NextWordGuesserStrategyBase {
     constructor(...params: ConstructorParameters<typeof NextWordGuesserStrategyBase>) {
         super(...params);
     }
 
+    /**
+     * Scores the candidate word based on the number of retried misplaced letters.
+     * For example, if only `STONE` was guess so far and all five letters were misplaced, then a candidate guess
+     * of `NOTES` would score the highest (5), as all five letters are used in different positions; but `ATONE` would
+     * score the lowest of 0 (since all of T, O, N, and E are not in other positions); and `STENO` would score
+     * between them at 2, as only E and O are retried in a different position, but S, T, and N are all kept at their
+     * same positions.
+     *
+     * @param guess - the candidate word
+     *
+     * @returns the number of retried misplaced letters in `guess`.
+     */
     scoreForGuess(guess: string): number {
         const previouslyMisplacedLetters = this.wordList.letterRules
             .filter((rule) => rule.required === LetterAtPositionInWord.Misplaced)

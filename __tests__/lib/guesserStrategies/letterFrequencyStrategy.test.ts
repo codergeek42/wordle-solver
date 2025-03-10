@@ -1,4 +1,4 @@
-/*****
+/*
  * wordle-solver: A clever algorithm and automated tool to solve the
  * 	NYTimes daily Wordle puzzle game.
  * Copyright (C) 2023 Peter Gordon <codergeek42@gmail.com>
@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program, namely the "LICENSE" text file.  If not,
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
- *****/
+ */
 
 import LetterFrequencyStrategy from '../../../src/lib/guesserStrategies/letterFrequencyStrategy';
-import { NextWordGuesserStrategyBase } from '../../../src/lib/nextWordGuesserStrategy';
+import NextWordGuesserStrategyBase from '../../../src/lib/nextWordGuesserStrategy';
 import WordList from '../../../src/lib/wordList';
 
 describe(LetterFrequencyStrategy, () => {
@@ -42,14 +42,27 @@ describe(LetterFrequencyStrategy, () => {
 
     describe(LetterFrequencyStrategy.prototype.scoreForGuess, () => {
         it('scores the guess based on letter frequency', () => {
-            const wordList = new WordList(['AAA', 'BZZ', 'CCZ']);
+            const wordList = new WordList(['AA', 'BB', 'AB']);
             const letterFrequencyStrategy = new LetterFrequencyStrategy(wordList);
 
             const result = Array.from(wordList.words, (word) => ({
                 word,
                 score: letterFrequencyStrategy.scoreForGuess(word)
             }));
-            console.log('@@ res = ', JSON.stringify(result, null, 2));
+            expect(result).toStrictEqual([
+                {
+                    word: 'AA',
+                    score: 0.75
+                },
+                {
+                    word: 'AB',
+                    score: 1
+                },
+                {
+                    word: 'BB',
+                    score: 0.75
+                }
+            ]);
         });
     });
 });
