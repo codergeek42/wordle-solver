@@ -20,7 +20,7 @@
 
 import { range, sum, times } from 'lodash';
 import PerLetterEliminationStrategy from '../../../src/lib/guesserStrategies/perLetterEliminationStrategy';
-import { NextWordGuesserStrategyBase } from '../../../src/lib/nextWordGuesserStrategy';
+import NextWordGuesserStrategyBase from '../../../src/lib/nextWordGuesserStrategy';
 import WordList from '../../../src/lib/wordList';
 import 'jest-extended';
 import 'jest-mock-extended';

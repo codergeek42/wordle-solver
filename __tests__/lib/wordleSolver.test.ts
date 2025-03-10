@@ -23,7 +23,7 @@ import { LetterAtPositionInWord } from '../../src/lib/letterAtPosition';
 import { WordGuessAndResult, WordGuessAndScore } from '../../src/lib/wordGuessAndResult';
 import { GuesserStrategies, WordleSolver } from '../../src/lib/wordleSolver';
 import WordList from '../../src/lib/wordList';
-import { NextWordGuesserStrategyBase } from '../../src/lib/nextWordGuesserStrategy';
+import NextWordGuesserStrategyBase from '../../src/lib/nextWordGuesserStrategy';
 import 'jest-extended';
 import DistinctLettersStrategy from '../../src/lib/guesserStrategies/distinctLettersStrategy';
 import RetryMisplacedLettersStrategy from '../../src/lib/guesserStrategies/retryMisplacedLettersStrategy';

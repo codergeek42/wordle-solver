@@ -21,7 +21,7 @@
 import { range } from 'lodash';
 import { WordLength } from '../../../__data__/alphabet';
 import DistinctLettersStrategy from '../../../src/lib/guesserStrategies/distinctLettersStrategy';
-import { NextWordGuesserStrategyBase } from '../../../src/lib/nextWordGuesserStrategy';
+import NextWordGuesserStrategyBase from '../../../src/lib/nextWordGuesserStrategy';
 import WordList from '../../../src/lib/wordList';
 import generateAlphabetWords from '../../../src/lib/helpers/generateAlphabetWords';
 import generateAlphabetOfLength from '../../../src/lib/helpers/generateAlphabetOfLength';

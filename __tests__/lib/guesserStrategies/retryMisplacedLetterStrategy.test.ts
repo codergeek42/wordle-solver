@@ -19,7 +19,7 @@
  */
 
 import { range, times } from 'lodash';
-import { NextWordGuesserStrategyBase } from '../../../src/lib/nextWordGuesserStrategy';
+import NextWordGuesserStrategyBase from '../../../src/lib/nextWordGuesserStrategy';
 import WordList from '../../../src/lib/wordList';
 import generateAlphabetWords from '../../../src/lib/helpers/generateAlphabetWords';
 import RetryMisplacedLettersStrategy from '../../../src/lib/guesserStrategies/retryMisplacedLettersStrategy';

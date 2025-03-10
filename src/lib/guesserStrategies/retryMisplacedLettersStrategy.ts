@@ -18,14 +18,29 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
-import { NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
+import NextWordGuesserStrategyBase from '../nextWordGuesserStrategy';
 import { LetterAtPositionInWord, LetterWithPosition } from '../letterAtPosition';
 
+/**
+ * A guessing strategy which scores the candidate words based on the number of retried misplaced letters.
+ */
 export default class RetryMisplacedLettersStrategy extends NextWordGuesserStrategyBase {
     constructor(...params: ConstructorParameters<typeof NextWordGuesserStrategyBase>) {
         super(...params);
     }
 
+    /**
+     * Scores the candidate word based on the number of retried misplaced letters.
+     * For example, if only `STONE` was guess so far and all five letters were misplaced, then a candidate guess
+     * of `NOTES` would score the highest (5), as all five letters are used in different positions; but `ATONE` would
+     * score the lowest of 0 (since all of T, O, N, and E are not in other positions); and `STENO` would score
+     * between them at 2, as only E and O are retried in a different position, but S, T, and N are all kept at their
+     * same positions.
+     *
+     * @param guess - the candidate word
+     *
+     * @returns the number of retried misplaced letters in the candidate word.
+     */
     scoreForGuess(guess: string): number {
         const previouslyMisplacedLetters = this.wordList.letterRules
             .filter((rule) => rule.required === LetterAtPositionInWord.Misplaced)

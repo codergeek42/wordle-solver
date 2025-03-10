@@ -19,19 +19,34 @@
  */
 
 import { sumBy } from 'lodash';
-import { NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
+import NextWordGuesserStrategyBase from '../nextWordGuesserStrategy';
 import WordList from '../wordList';
 import { LetterAtPositionInWord, LetterAtPositionInWordRule } from '../letterAtPosition';
 
+/**
+ * A guessing strategy which scores the candidate words based on the letter frequency at each position.
+ */
 export default class PerLetterEliminationStrategy extends NextWordGuesserStrategyBase {
     constructor(...params: ConstructorParameters<typeof NextWordGuesserStrategyBase>) {
         super(...params);
     }
 
+    /**
+     * Counts the number of total possible letters (with repetition) in the given word list.
+     *
+     * @param wordList - the word list from which to count possible letters.
+     * @returns The count of total possible letters in the given word list.
+     */
     static totalPossibleLettersInWordList(wordList: WordList): number {
         return sumBy(wordList.possibleLetters, 'length');
     }
 
+    /**
+     * Maps the given guess to an array of `LetterAtPositionInWordRule` with `required` set to `Misplaced`.
+     *
+     * @param guess - the candidate guess
+     * @returns An array of rules with each letter at its position in the given guess marked as `Misplaced`.
+     */
     static generateGuessPositionLetterRules(guess: string): LetterAtPositionInWordRule[] {
         return Array.from(guess).map((letter, position) => ({
             position,
@@ -40,6 +55,20 @@ export default class PerLetterEliminationStrategy extends NextWordGuesserStrateg
         }));
     }
 
+    /**
+     * Scores the candidate word based on the letter frequency at each position, where the resulting score
+     * for a given guess is the number of position-letter combinations that the current solver rules have not
+     * specified that the given guess could potentially eliminate.
+     *
+     * For example, if only `GUESS` has previously been guessed and all of the letters had an `Impossible` result,
+     * then a guess of `GUEST` would only score 1 because that could only potentially eliminate one letter-position
+     * pair (T at position 5), and all of G, U, E, and S are already known to be nowhere in the word; whereas a guess
+     * of `SEGUE` would also score 5 because it would potentially eliminate each of the `G`, `U`, `E`, and `S` at
+     * positions different from `GUESS`.
+     *
+     * @param guess - the candidate guess
+     * @returns the number of position-letter
+     */
     scoreForGuess(guess: string): number {
         const previousScore = PerLetterEliminationStrategy.totalPossibleLettersInWordList(this.wordList);
         const guessWordList = this.wordList.withPositionLetterRules(

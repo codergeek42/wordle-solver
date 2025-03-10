@@ -51,7 +51,7 @@ import { NoMoreGuessesError } from './wordleSolverError';
  *      asciiValueGuesserAfterGuessingHELLO.guessNextWordAndScore());
  * ```
  */
-export abstract class NextWordGuesserStrategyBase {
+export default abstract class NextWordGuesserStrategyBase {
     /**
      * Track the previously-guessed words and their resulting exclusion/mandate rules.
      */
@@ -112,6 +112,34 @@ export abstract class NextWordGuesserStrategyBase {
      */
     getAlreadyGuessedLetters(): string[] {
         return uniq(this.previousGuesses.flatMap((guess) => Array.from(guess.word)));
+    }
+
+    /**
+     * @returns true if the given `WordList` is solved (has only one possible word); false otherwise.
+     *
+     * @example A single-word `WordList` is trivially already solved:
+     * ```typescript
+     * const abcWordList = new WordList(['ABC']);
+     * const guesserStrategy = new NextWordGuesserStrategyBaseTest(abcWordList);
+     * expect(guesserStrategy.isSolved()).toBe(true);
+     * ```
+     */
+    isSolved(): boolean {
+        return this.wordList.words.length === 1;
+    }
+
+    /**
+     * @returns true if the given WordList is solvable (has at least one possible word); false otherwise.
+     *
+     * @example An empty `WordList` is trivially not solvable:
+     * ```typescript
+     * const emptyWordList = new WordList([]);
+     * const guesserStrategy = new NextWordGuesserStrategyBaseTest(abcWordList);
+     * expect(guesserStrategy.hasSolution()).toBe(false);
+     * ```
+     */
+    hasSolution(): boolean {
+        return this.wordList.words.length >= 1;
     }
 
     get previousGuesses(): WordGuessAndResult[] {

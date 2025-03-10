@@ -20,7 +20,7 @@
 
 import { maxBy, sumBy, times, uniq } from 'lodash';
 import { LetterAtPositionInWord } from '../../src/lib/letterAtPosition';
-import { NextWordGuesserStrategyBase } from '../../src/lib/nextWordGuesserStrategy';
+import NextWordGuesserStrategyBase from '../../src/lib/nextWordGuesserStrategy';
 import { WordGuessAndResult } from '../../src/lib/wordGuessAndResult';
 import { NoMoreGuessesError } from '../../src/lib/wordleSolverError';
 import WordList from '../../src/lib/wordList';

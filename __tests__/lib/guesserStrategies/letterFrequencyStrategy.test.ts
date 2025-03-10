@@ -19,7 +19,7 @@
  */
 
 import LetterFrequencyStrategy from '../../../src/lib/guesserStrategies/letterFrequencyStrategy';
-import { NextWordGuesserStrategyBase } from '../../../src/lib/nextWordGuesserStrategy';
+import NextWordGuesserStrategyBase from '../../../src/lib/nextWordGuesserStrategy';
 import WordList from '../../../src/lib/wordList';
 
 describe(LetterFrequencyStrategy, () => {

@@ -19,13 +19,28 @@
  */
 
 import { difference, uniq } from 'lodash';
-import { NextWordGuesserStrategyBase } from '../nextWordGuesserStrategy';
+import NextWordGuesserStrategyBase from '../nextWordGuesserStrategy';
 
+/**
+ * A guessing strategy which scores the candidate words based on the number of distinct unguessed letters.
+ */
 export default class DistinctLettersStrategy extends NextWordGuesserStrategyBase {
     constructor(...params: ConstructorParameters<typeof NextWordGuesserStrategyBase>) {
         super(...params);
     }
 
+    /**
+     * Scores the guess based on the number of distinct unguessed letters, ignoring repetitions.
+     * For example, if there are no guesses yet, `BREAD` would yield 5 and `BOOKS` would yield 4;
+     * but if `BAKER` had already been guessed before those, then `BREAD` would yield only 1 (D), while
+     * `BOOKS` would yield 2 (O and S).
+     *
+     * (Note that the letters shown in these example results are for demonstration only; and the actual
+     * returned score does not include the information about those letters, only their total count.)
+     *
+     * @param guess - the candidate word
+     * @returns the number of distinct letters in `guess` that have not yet been guessed.
+     */
     scoreForGuess(guess: string): number {
         const prev = this.getAlreadyGuessedLetters();
         const score = uniq(difference(Array.from(guess), prev)).length;
