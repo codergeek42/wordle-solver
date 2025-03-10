@@ -39,7 +39,7 @@ export default class RetryMisplacedLettersStrategy extends NextWordGuesserStrate
      *
      * @param guess - the candidate word
      *
-     * @returns the number of retried misplaced letters in the candidate word.
+     * @returns the number of retried misplaced letters in `guess`.
      */
     scoreForGuess(guess: string): number {
         const previouslyMisplacedLetters = this.wordList.letterRules

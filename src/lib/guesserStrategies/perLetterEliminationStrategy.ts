@@ -35,7 +35,7 @@ export default class PerLetterEliminationStrategy extends NextWordGuesserStrateg
      * Counts the number of total possible letters (with repetition) in the given word list.
      *
      * @param wordList - the word list from which to count possible letters.
-     * @returns The count of total possible letters in the given word list.
+     * @returns the count of total possible letters in the given word list.
      */
     static totalPossibleLettersInWordList(wordList: WordList): number {
         return sumBy(wordList.possibleLetters, 'length');
@@ -45,7 +45,7 @@ export default class PerLetterEliminationStrategy extends NextWordGuesserStrateg
      * Maps the given guess to an array of `LetterAtPositionInWordRule` with `required` set to `Misplaced`.
      *
      * @param guess - the candidate guess
-     * @returns An array of rules with each letter at its position in the given guess marked as `Misplaced`.
+     * @returns an array of rules with each letter at its position in `guess` marked as `Misplaced`.
      */
     static generateGuessPositionLetterRules(guess: string): LetterAtPositionInWordRule[] {
         return Array.from(guess).map((letter, position) => ({
@@ -67,7 +67,7 @@ export default class PerLetterEliminationStrategy extends NextWordGuesserStrateg
      * positions different from `GUESS`.
      *
      * @param guess - the candidate guess
-     * @returns the number of position-letter
+     * @returns the number of position-letter combinations that `guess` could eliminate.
      */
     scoreForGuess(guess: string): number {
         const previousScore = PerLetterEliminationStrategy.totalPossibleLettersInWordList(this.wordList);

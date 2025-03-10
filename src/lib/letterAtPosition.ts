@@ -32,12 +32,12 @@ export enum LetterAtPositionInWord {
 
 /**
  * A comparator for sorting two `LetterAtPositionInWordRule` objects, following the usual
- * pattern of positive (if the first rule is greater), positive (if the second rule is
+ * pattern of positive (if the first rule is greater), negative (if the second rule is
  * greater), or zero (if they are equal).
  *
  * In the cae of `LetterAtPositionInWordRule` objects, this comparison is based on which
  * of the given rules has their `required` property set to `Mandatory`: If one of the rules
- * has a `Mandatory` and the other does not, then the one which does is the considered the
+ * has a `Mandatory` and the other does not, then the one which does is considered the
  * greater of the two; and if neither or both of them have a `Mandatory`, then they are
  * considered equal.
  *
