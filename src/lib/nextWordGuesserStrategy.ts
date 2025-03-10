@@ -68,14 +68,14 @@ export default abstract class NextWordGuesserStrategyBase {
      *
      * @param guess - The guess candidate word.
      *
-     * @returns A score calculated by a given guessing strategy, roughly equal to the number of letter & position
+     * @returns a score calculated by a given guessing strategy, roughly equal to the number of letter & position
      *  combinations' worth of information that would be given by this guess in that strategy.
      */
     abstract scoreForGuess(guess: string): number;
 
     /**
      * Modifies the calling object to procss the given candidate guess and store its resulting rules, such as certain
-     *  letters being mandated at or excluded from certain positions.
+     * letters being mandated at or excluded from certain positions.
      *
      * @param candidate - A pairing of the guessed word and its resulting `LetterAtPositionInWordRule` rules.
      *
@@ -93,7 +93,7 @@ export default abstract class NextWordGuesserStrategyBase {
      * @returns The next optimal word to guess for this particular strategy.
      *
      * @throws `NoMoreGuessesError`
-     * When there are no more guesses possible (i.e., the list of candidate words becomes empty).
+     * when there are no more guesses possible (i.e., the list of candidate words becomes empty).
      */
     guessNextWordAndScore(): WordGuessAndScore {
         if (this.myWordList.words.length < 1) {
@@ -134,7 +134,7 @@ export default abstract class NextWordGuesserStrategyBase {
      * @example An empty `WordList` is trivially not solvable:
      * ```typescript
      * const emptyWordList = new WordList([]);
-     * const guesserStrategy = new NextWordGuesserStrategyBaseTest(abcWordList);
+     * const guesserStrategy = new NextWordGuesserStrategyBaseTest(emptyWordList);
      * expect(guesserStrategy.hasSolution()).toBe(false);
      * ```
      */
