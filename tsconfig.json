@@ -1,8 +1,9 @@
 {
     "extends": "@tsconfig/node20/tsconfig.json",
     "compilerOptions": {
-        "sourceMap": true,
+        "isolatedModules": true,
         "outDir": "./dist",
+        "sourceMap": true,
         "types": ["node", "jest", "jest-extended"]
     },
     "files": ["node_modules/jest-extended/types/index.d.ts"],
