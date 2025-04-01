@@ -98,12 +98,16 @@ export default class WordList {
      * expect(sampleWordList.words).toStrictEqual(['ABC', 'DEF']);
      * ```
      */
-    static async fromFile(fileName: string): Promise<WordList> {
+    static async fromFile(fileName: string, wordLength?: number): Promise<WordList> {
         // TODO: I will probably need to make newline configurable, i.e. for Windows CR/LF, etc.
         // For now, assume Linux/Unix-like \n only, for simplicity.
         const newline = '\n';
         const fileData = await readFile(fileName, { encoding: 'utf8' });
-        return new WordList(fileData.split(newline));
+        let words = fileData.split(newline);
+        if (wordLength) {
+            words = words.filter((word) => word.length === wordLength);
+        }
+        return new WordList(words);
     }
 
     /**

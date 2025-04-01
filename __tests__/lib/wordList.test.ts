@@ -101,18 +101,27 @@ describe(WordList, () => {
     });
 
     describe(WordList.fromFile, () => {
+        const wordsInFile = ['ABC', 'DEF', 'GHI', 'JK', 'LMNO'];
+        const testFileName = 'test.txt';
+
         it('can instantiate as factory method from the lines of a text file', async () => {
-            const wordsInFile = ['ABC', 'DEF', 'GHI'];
-            const testFileName = 'test.txt';
-
             const readFileMock = jest.spyOn(fs, 'readFile').mockResolvedValueOnce(wordsInFile.join('\n'));
-
             const testWordList = await WordList.fromFile(testFileName);
 
             expect(readFileMock).toHaveBeenCalledExactlyOnceWith(testFileName, { encoding: 'utf8' });
             expect(testWordList).toBeDefined();
             expect(testWordList).toBeInstanceOf(WordList);
             expect(testWordList.words).toStrictEqual(wordsInFile);
+        });
+
+        it('filters for only words of the wordLength parameter if provided', async () => {
+            const readFileMock = jest.spyOn(fs, 'readFile').mockResolvedValueOnce(wordsInFile.join('\n'));
+            const testWordList = await WordList.fromFile(testFileName, 3);
+
+            expect(readFileMock).toHaveBeenCalledExactlyOnceWith(testFileName, { encoding: 'utf8' });
+            expect(testWordList).toBeDefined();
+            expect(testWordList).toBeInstanceOf(WordList);
+            expect(testWordList.words).toStrictEqual(wordsInFile.filter((word) => word.length === 3));
         });
     });
 
