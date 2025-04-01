@@ -30,7 +30,7 @@ describe(generateAlphabetOfLength, () => {
         expect(result).toStrictEqual(expected);
     });
 
-    it.each([-1, 26])('throws a WordleSolverTestError if desired length is out of range (%i)', (alphabetLength) => {
+    it.each([-1, 27])('throws a WordleSolverTestError if desired length is out of range (%i)', (alphabetLength) => {
         const testCall = () => generateAlphabetOfLength(alphabetLength);
         expect(testCall).toThrow(WordleSolverTestError);
     });

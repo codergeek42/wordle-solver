@@ -14,7 +14,10 @@
         "test:unit": "jest",
         "test": "npm run test:unit",
         "ci:local": "npm run clean && npm install && npm run lint && npm run build && npm run test",
-        "prepare": "husky"
+        "prepare": "husky",
+        "solve:ui": "playwright test --headed",
+        "solve:ui:ci": "playwright test",
+        "solve:ui:interactive": "playwright test --ui"
     },
     "keywords": [
         "wordle",
@@ -49,6 +52,7 @@
         "typescript-eslint": "^8.28.0"
     },
     "dependencies": {
-        "lodash": "^4.17.21"
+        "lodash": "^4.17.21",
+        "playwright": "^1.51.1"
     }
 }
