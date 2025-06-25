@@ -225,8 +225,7 @@ export default class WordList {
         const { length } = maxBy(this.words, 'length')!;
 
         const totalCount = Array.from({ length }).map((_val, position) =>
-            // If the words are not of equal length, then the counts will tally the "missing" letters as 'undefined'.
-            countBy(this.words.flatMap((word) => (position < word.length ? [word[position]] : [])))
+            countBy(this.words.map((word) => word[position]))
         );
         return totalCount;
         // .map((letterCountAtPosition) =>
