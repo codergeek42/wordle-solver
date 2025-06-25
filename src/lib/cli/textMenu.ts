@@ -20,7 +20,7 @@
 
 import * as readlinePromises from 'readline/promises';
 
-type TextMenuEntry = {
+export type TextMenuEntry = {
     callback: () => void | Promise<void>;
     text: string;
 };
@@ -44,12 +44,13 @@ export class TextMenu {
             throw new TextMenuNotInitializedError('Menu has no entries.');
         }
 
-        const numWidth = Math.ceil(Math.log10(this.entries.length));
         console.log(this.title);
+        const numWidth = Math.ceil(Math.log10(this.entries.length));
         this.entries.forEach(({ text }, idx) => {
-            const entryNumber = idx.toString().padStart(numWidth, ' ');
+            const entryNumber = (idx + 1).toString().padStart(numWidth, ' ');
             console.log(`(${entryNumber}) ${text}\n`);
         });
+        console.log(this.prompt);
 
         // TODO: Consider using parameterized I/O?
         const readlineInterface = readlinePromises.createInterface({
@@ -60,9 +61,9 @@ export class TextMenu {
         let callback: undefined | (() => void) = undefined;
         while (!callback) {
             const response = await readlineInterface.question(this.prompt);
-            ({ callback } = this.entries[parseInt(response)]);
-
-            if (!callback) {
+            try {
+                ({ callback } = this.entries[parseInt(response) - 1]);
+            } catch {
                 console.warn('Oops, that was not a valid choice!');
             }
         }
