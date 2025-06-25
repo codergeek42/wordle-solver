@@ -19,6 +19,15 @@ const entries: TextMenuEntry[] = [
     }
 ];
 
+describe(TextMenuNotInitializedError.name, () => {
+    it('can be instantiated and extends Error class', () => {
+        const testError = new TextMenuNotInitializedError('test message');
+        expect(testError).toBeDefined();
+        expect(testError).toBeInstanceOf(TextMenuNotInitializedError);
+        expect(testError).toBeInstanceOf(Error);
+    });
+});
+
 describe(TextMenu.name, () => {
     let testTextMenu: TextMenu;
     let consoleLogSpy: jest.SpiedFunction<typeof console.log>;
