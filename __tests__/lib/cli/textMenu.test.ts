@@ -105,16 +105,18 @@ describe(TextMenu.name, () => {
 
             const numWidth = Math.ceil(Math.log10(entries.length));
             await expect(testCall).resolves.not.toThrow();
-            // title + entries + prompt + callback
-            expect(consoleLogSpy).toHaveBeenCalledTimes(1 + entries.length + 1 + 1);
+            // title + entries + callback; prompt is already output by the `question` call.
+            expect(questionMock).toHaveBeenCalledTimes(2);
+            expect(questionMock).toHaveBeenNthCalledWith(1, prompt);
+            expect(questionMock).toHaveBeenNthCalledWith(2, prompt);
+            expect(consoleLogSpy).toHaveBeenCalledTimes(1 + entries.length + 1);
             expect(consoleLogSpy).toHaveBeenNthCalledWith(1, title);
             entries.forEach(({ text }, idx) => {
                 const entryNumber = (idx + 1).toString().padStart(numWidth, ' ');
                 expect(consoleLogSpy).toHaveBeenNthCalledWith(idx + 2, `(${entryNumber}) ${text}`);
             });
-            expect(consoleLogSpy).toHaveBeenNthCalledWith(entries.length + 2, prompt);
             expect(consoleLogSpy).toHaveBeenNthCalledWith(
-                entries.length + 3,
+                entries.length + 2,
                 `callback ${entries.length - 1} answer is 42`
             );
         });
