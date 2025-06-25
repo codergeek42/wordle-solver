@@ -41,21 +41,21 @@ export class TextMenu {
 
     async promptAndExecute(): Promise<void> {
         if (this.title.length <= 0 || this.entries.length <= 0 || this.prompt.length <= 0) {
-            throw new TextMenuNotInitializedError('Menu has no entries.');
+            throw new TextMenuNotInitializedError('Menu is incomplete.');
         }
 
         console.log(this.title);
         const numWidth = Math.ceil(Math.log10(this.entries.length));
         this.entries.forEach(({ text }, idx) => {
             const entryNumber = (idx + 1).toString().padStart(numWidth, ' ');
-            console.log(`(${entryNumber}) ${text}\n`);
+            console.log(`(${entryNumber}) ${text}`);
         });
-        console.log(this.prompt);
 
         // TODO: Consider using parameterized I/O?
         const readlineInterface = readlinePromises.createInterface({
             input: process.stdin,
-            output: process.stdout
+            output: process.stdout,
+            terminal: false // don't echo the I/O when it's already the standard streams
         });
 
         let callback: undefined | (() => void) = undefined;
@@ -77,10 +77,9 @@ export class TextMenu {
  * ```
  *	const myMenu = new TextMenuBuilder()
  *		.withTitle('Welcome to MyApp v1.0!')
- *		.addEntry('Do the first cool thing', firstCoolFunction)
- *		.addEntry('Do the second cool thing', secondCoolFunction)
- *		.addEntry<ParamsType>('Do the third thing with parameters', thirdFunc, params)
- *		.addEntry('Exit', process.exit, 0)
+ *		.addEntry({ text: 'Do the first cool thing', callback: firstCoolFunction })
+ *		.addEntry({ text: 'Do the second cool thing', callback: secondCoolFunction }))
+ *		.addEntry({ text: 'Exit', callback: () => process.exit(0) })
  *		.withPrompt('Choose one:')
  *		.build();
  * await myMenu.promptAndExecute();

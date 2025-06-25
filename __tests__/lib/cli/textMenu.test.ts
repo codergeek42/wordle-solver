@@ -90,8 +90,9 @@ describe(TextMenu.name, () => {
                     expect(createInterfaceSpy).toHaveBeenCalledTimes(1);
                     expect(createInterfaceSpy).toHaveBeenCalledWith({
                         input: process.stdin,
-                        output: process.stdout
-                    });
+                        output: process.stdout,
+                        terminal: false
+                    } as readlinePromises.ReadLineOptions);
                     return entries.length + 1;
                 })
                 .mockImplementationOnce((_query: string) => {
@@ -109,7 +110,7 @@ describe(TextMenu.name, () => {
             expect(consoleLogSpy).toHaveBeenNthCalledWith(1, title);
             entries.forEach(({ text }, idx) => {
                 const entryNumber = (idx + 1).toString().padStart(numWidth, ' ');
-                expect(consoleLogSpy).toHaveBeenNthCalledWith(idx + 2, `(${entryNumber}) ${text}\n`);
+                expect(consoleLogSpy).toHaveBeenNthCalledWith(idx + 2, `(${entryNumber}) ${text}`);
             });
             expect(consoleLogSpy).toHaveBeenNthCalledWith(entries.length + 2, prompt);
             expect(consoleLogSpy).toHaveBeenNthCalledWith(
