@@ -7,7 +7,7 @@
         "build:compile": "tsc",
         "build": "npm run fmt && npm run build:compile",
         "clean": "npm run build:clean && rm -rf node_modules/",
-        "cli": "node dist/index.js",
+        "cli": "ts-node src/cli/app.ts",
         "fmt": "prettier --write --log-level warn .",
         "fmt:check": "prettier --check .",
         "lint": "eslint __data__/ __tests__/ src/",

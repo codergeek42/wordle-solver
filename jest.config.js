@@ -25,7 +25,7 @@ module.exports = {
     verbose: true,
     testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/dist/', '<rootDir>/__tests__/integration/'],
     collectCoverage: true,
-    collectCoverageFrom: ['src/**/*.ts', '__data__/**/*.ts'],
+    collectCoverageFrom: ['src/**/*.ts', '__data__/**/*.ts', '!src/cli/**.*'],
     coverageReporters: ['text'],
     coverageThreshold: {
         global: {

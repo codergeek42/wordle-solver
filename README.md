@@ -94,6 +94,22 @@ G G G G G
 
 Congratulations, the player has won this game after a total of 3 guesses!
 
+# How To Use (Interactive)
+
+The solver is exposed via a menu-driven command-line app: run `npm run cli` from the source to begin.
+
+You will be given a list of candidate words for each [guessing strategy](#guessing-strategies--scoring), where each
+candidate word is the highest-scoring for that particular strategy's metric. Upon choosing a word from the menu, you
+will then be prompted to input the result from the Wordle site as a sequence of characters corresponding to the colors
+in its results:
+
+- `G` if the letter at that position is correct (green),
+- `Y` if the letter at that position is incorrect, but is included in the word at a different position (yellow), or
+- `B` if the letter at that position is excluded from the word entirely (black).
+
+The solver will then process the letter exclusions from the guess results and suggest a more specific candidate word in
+the same way, looping until the word must be solved (i.e., there is only one possible candidate word remaining).
+
 # Solver Algorithm
 
 The basis of this solver algorithm is a single guess-and-check loop: Given a starting dictionary of all possible words,
