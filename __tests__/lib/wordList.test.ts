@@ -114,7 +114,7 @@ describe(WordList, () => {
 
     describe(WordList.fromFile, () => {
         it('can instantiate as factory method from the lines of a text file', async () => {
-            const wordsInFile = generateAlphabetWords('ABC', WordLength);
+            const wordsInFile = generateAlphabetWords('ABC');
             const testFileName = 'test.txt';
 
             const readFileMock = jest.spyOn(fs, 'readFile').mockResolvedValueOnce(wordsInFile.join('\n'));
@@ -136,9 +136,6 @@ describe(WordList, () => {
                     required: LetterAtPositionInWord.Impossible
                 }
             ];
-            // const doesWordMatchAllRulesSpy = jest
-            //     .spyOn(WordList.prototype, 'doesWordMatchAllRules')
-            //     .mockImplementation((word) => word === 'AAA');
 
             const wordList = new WordList(['AAA', 'BBB']);
             const processExclusionsFromRulesSpy = jest
@@ -146,7 +143,6 @@ describe(WordList, () => {
                 .mockImplementationOnce(() => {
                     return;
                 });
-            // const wordListBeforeRules = cloneDeep(wordList);
             const wordListWithRulesApplied = wordList.withPositionLetterRules(excludeBs);
 
             // expect(wordList).toStrictEqual(wordListBeforeRules);
@@ -373,56 +369,6 @@ describe(WordList, () => {
                 });
             }
         );
-
-        // const filterOutNonMatchingWordsTestCases: {
-        //     caseName: string;
-        //     words: string[];
-        //     letterAtPositionInWordRule: LetterAtPositionInWordRule;
-        //     expectedWords: string[];
-        // }[] = [
-        //     {
-        //         caseName: 'should filter out letter in every position when Impossible',
-        //         words: [
-        //             times(WordLength, () => 'A').join(''),
-        //             ...times(WordLength, (positionA) => {
-        //                 const allBs = times(WordLength, () => 'A');
-        //                 allBs[positionA] = 'A';
-        //                 return allBs.join('');
-        //             }),
-        //             times(WordLength, () => 'B').join('')
-        //         ],
-        //         letterAtPositionInWordRule: {
-        //             letter: 'A',
-        //             required: LetterAtPositionInWord.Impossible
-        //         },
-        //         expectedWords: [times(WordLength, () => 'B').join('')]
-        //     },
-        //     {
-        //         caseName: 'should filter out letter in one position when Impossible',
-        //         words: [
-        //             times(WordLength, () => 'A').join(''),
-        //             ...times(WordLength, (positionA) => {
-        //                 const allBs = times(WordLength, () => 'A');
-        //                 allBs[positionA] = 'A';
-        //                 return allBs.join('');
-        //             }),
-        //             times(WordLength, () => 'B').join('')
-        //         ],
-        //         letterAtPositionInWordRule: {
-        //             letter: 'A',
-        //             required: LetterAtPositionInWord.Impossible
-        //         },
-        //         expectedWords: [times(WordLength, () => 'B').join('')]
-        //     }
-        // ];
-        // it.only.each(filterOutNonMatchingWordsTestCases)(
-        //     '$caseName',
-        //     ({ words, letterAtPositionInWordRule, expectedWords }) => {
-        //         const wordList = new WordList(words);
-        //         wordList.processExclusionsFromRules([letterAtPositionInWordRule]);
-        //         expect(wordList.words).toStrictEqual(expectedWords);
-        //     }
-        // );
     });
 
     describe(WordList.prototype.countLetters, () => {
