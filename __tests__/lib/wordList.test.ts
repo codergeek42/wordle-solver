@@ -20,13 +20,13 @@
 
 import WordList from '../../src/lib/wordList';
 import fs from 'node:fs/promises';
-import { times } from 'lodash';
+import { every, times } from 'lodash';
 import {
     LetterAtPositionInWord,
     LetterAtPositionInWordRule,
     letterAtPositionInWordRuleComparator
 } from '../../src/lib/letterAtPosition';
-import { WordLength } from '../../__data__/alphabet';
+import { Alphabet, WordLength } from '../../__data__/alphabet';
 import generateAlphabetWords from '../../src/lib/helpers/generateAlphabetWords';
 import 'jest-extended';
 import { MissingPositionError, NoMoreGuessesError } from '../../src/lib/wordleSolverError';
@@ -64,15 +64,27 @@ describe(WordList, () => {
         });
 
         it('should uppercase, trim, and sort the given list of words', () => {
-            const badWords = ['UNSORTED', 'lowercase', ' NOTTRIMMED '];
+            const badWords = ['UNORD', 'lower', ' NOTRM '];
             const goodWords = badWords.map((word) => word.trim().toUpperCase()).sort();
-
             const goodWordList = new WordList(badWords);
 
             expect(goodWordList).toBeDefined();
             expect(goodWordList).toBeInstanceOf(WordList);
             expect(goodWordList.words).toStrictEqual(goodWords);
         });
+
+        it('should ignore words that are not 5 alphabetic characters', () => {
+            const badWords = ['1_ONE', '2TWO2', 'THREE', 'FOUR'];
+            const goodWords = badWords.filter(
+                (word) => word.length === 5 && every(word, (letter) => Alphabet.includes(letter))
+            );
+
+            const goodWordList = new WordList(badWords);
+            expect(goodWordList).toBeDefined();
+            expect(goodWordList).toBeInstanceOf(WordList);
+            expect(goodWordList.words).toStrictEqual(goodWords);
+        });
+
         it('should create the alphabet from the given list of words', () => {
             const alphabetBuilderWords = [
                 'ABCDE',
@@ -93,7 +105,7 @@ describe(WordList, () => {
 
     describe(WordList.fromCopyOf, () => {
         it('can instantiate as factory method from a copy of another WordList', () => {
-            const originalWordList = new WordList(['TEST', 'FROM', 'COPY', 'OF']);
+            const originalWordList = new WordList(['TESTS', 'FROMC', 'OPYOF']);
             const resultCopy = WordList.fromCopyOf(originalWordList);
             expect(resultCopy).toStrictEqual(originalWordList);
             expect(resultCopy).not.toBe(originalWordList);
@@ -102,7 +114,7 @@ describe(WordList, () => {
 
     describe(WordList.fromFile, () => {
         it('can instantiate as factory method from the lines of a text file', async () => {
-            const wordsInFile = ['ABC', 'DEF', 'GHI'];
+            const wordsInFile = generateAlphabetWords('ABC', WordLength);
             const testFileName = 'test.txt';
 
             const readFileMock = jest.spyOn(fs, 'readFile').mockResolvedValueOnce(wordsInFile.join('\n'));
@@ -112,7 +124,7 @@ describe(WordList, () => {
             expect(readFileMock).toHaveBeenCalledExactlyOnceWith(testFileName, { encoding: 'utf8' });
             expect(testWordList).toBeDefined();
             expect(testWordList).toBeInstanceOf(WordList);
-            expect(testWordList.words).toStrictEqual(wordsInFile);
+            expect(testWordList.words).toStrictEqual(wordsInFile.sort());
         });
     });
 
@@ -422,20 +434,17 @@ describe(WordList, () => {
             expect(testCall).toThrow(NoMoreGuessesError);
         });
 
-        it('should return the letters count when the word list is non-empty but all words are same length', () => {
-            const wordList = new WordList(['AAA', 'BBA', 'ACA']);
-            const expectedCounts = [{ A: 2, B: 1 }, { A: 1, B: 1, C: 1 }, { A: 3 }];
+        it('should return the letters count when the word list is non-empty and all words are same length', () => {
+            const wordList = new WordList(['AAAAA', 'BBABB', 'ACACD']);
+            const expectedCounts = [
+                { A: 2, B: 1 },
+                { A: 1, B: 1, C: 1 },
+                { A: 3 },
+                { A: 1, B: 1, C: 1 },
+                { A: 1, B: 1, D: 1 }
+            ];
 
             const result = wordList.countLetters();
-
-            expect(result).toStrictEqual(expectedCounts);
-        });
-
-        it('should filter out undefined keys from count (unexpected edge case: words are not same length', () => {
-            const unevenWordList = new WordList(['A', 'AA', 'AB', 'ABC']);
-            const expectedCounts = [{ A: 4 }, { A: 1, B: 2 }, { C: 1 }];
-
-            const result = unevenWordList.countLetters();
 
             expect(result).toStrictEqual(expectedCounts);
         });

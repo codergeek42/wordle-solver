@@ -21,7 +21,7 @@
 import { readFile } from 'node:fs/promises';
 import { LetterAtPositionInWordRule, letterAtPositionInWordRuleComparator } from './letterAtPosition';
 import { cloneDeep, countBy, difference, every, maxBy, times, union, uniq } from 'lodash';
-import { WordLength } from '../../__data__/alphabet';
+import { Alphabet, WordLength } from '../../__data__/alphabet';
 import { LetterAtPositionInWord } from './letterAtPosition';
 import { MissingPositionError, NoMoreGuessesError } from './wordleSolverError';
 
@@ -39,7 +39,10 @@ export default class WordList {
      * @param _words - the list of words to use as a dictionary of possible guess candidates
      */
     constructor(private readonly _words: string[] = []) {
-        this.myWords = _words.map((word) => word.trim().toUpperCase()).sort();
+        this.myWords = _words
+            .map((word) => word.trim().toUpperCase())
+            .filter((word) => word.length == WordLength && every(word, (letter) => Alphabet.includes(letter)))
+            .sort();
         this.myLetterRules = [];
         this.myAlphabet = uniq(this.myWords.join('')).sort();
 
