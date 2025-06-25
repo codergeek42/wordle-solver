@@ -228,9 +228,5 @@ export default class WordList {
             countBy(this.words.map((word) => word[position]))
         );
         return totalCount;
-        // .map((letterCountAtPosition) =>
-        //
-        //     pickBy(letterCountAtPosition, (_value, key) => key !== 'undefined')
-        // );
     }
 }

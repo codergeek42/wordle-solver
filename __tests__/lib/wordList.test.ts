@@ -137,7 +137,7 @@ describe(WordList, () => {
                 }
             ];
 
-            const wordList = new WordList(['AAA', 'BBB']);
+            const wordList = new WordList(generateAlphabetWords('AB'));
             const processExclusionsFromRulesSpy = jest
                 .spyOn(wordList, 'processExclusionsFromRules')
                 .mockImplementationOnce(() => {
@@ -145,15 +145,9 @@ describe(WordList, () => {
                 });
             const wordListWithRulesApplied = wordList.withPositionLetterRules(excludeBs);
 
-            // expect(wordList).toStrictEqual(wordListBeforeRules);
-            // expect(wordList).not.toBe(wordListBeforeRules);
             expect(wordListWithRulesApplied).toStrictEqual(wordList);
             expect(wordListWithRulesApplied).not.toBe(wordList);
             expect(processExclusionsFromRulesSpy).toHaveBeenCalledExactlyOnceWith(excludeBs);
-            // expect(doesWordMatchAllRulesSpy).toHaveBeenCalledTimes(wordList.words.length);
-            // wordList.words.forEach((word) => {
-            //     expect(doesWordMatchAllRulesSpy).toHaveBeenCalledWith(word);
-            // });
         });
     });
 
