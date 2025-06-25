@@ -133,7 +133,7 @@ describe(TextMenuBuilder.name, () => {
     describe(TextMenuBuilder.prototype.addEntry.name, () => {
         it.each(entries)('should append the given entry for $text callback and return this', (entry) => {
             expect(testTextMenuBuilder.entries).toHaveLength(0);
-            const textMenuBuilderWithEntry = testTextMenuBuilder.addEntry(entry);
+            const textMenuBuilderWithEntry = testTextMenuBuilder.addEntry(entry.text, entry.callback);
             expect(textMenuBuilderWithEntry).toBe(testTextMenuBuilder);
             expect(textMenuBuilderWithEntry.entries).toStrictEqual([entry]);
         });
@@ -143,8 +143,8 @@ describe(TextMenuBuilder.name, () => {
         it('should return a new TextMenu with the given title, entries, and prompt', () => {
             const testTextMenu = testTextMenuBuilder
                 .withTitle(title)
-                .addEntry(entries[0])
-                .addEntry(entries[1])
+                .addEntry(entries[0].text, entries[0].callback)
+                .addEntry(entries[1].text, entries[1].callback)
                 .withPrompt(prompt)
                 .build();
             expect(testTextMenu).toStrictEqual(new TextMenu(title, entries, prompt));

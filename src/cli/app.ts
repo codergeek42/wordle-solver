@@ -17,12 +17,9 @@ function displayCopyleftInformation(): void {
 
 const MainMenu = new TextMenuBuilder()
     .withTitle('===== Main Menu =====')
-    .addEntry({
-        text: '(No) Warranty Information',
-        callback: displayNoWarrantyInformation
-    })
-    .addEntry({ text: 'Copyleft Information', callback: displayCopyleftInformation })
-    .addEntry({ text: 'Exit', callback: () => process.exit(0) })
+    .addEntry('(No) Warranty Information', displayNoWarrantyInformation)
+    .addEntry('Copyleft Information', displayCopyleftInformation)
+    .addEntry('Exit', () => process.exit(0))
     .withPrompt('? ')
     .build();
 

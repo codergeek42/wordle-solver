@@ -20,8 +20,9 @@
 
 import * as readlinePromises from 'readline/promises';
 
+export type TextMenuEntryCallback = () => void | Promise<void>;
 export type TextMenuEntry = {
-    callback: () => void | Promise<void>;
+    callback: TextMenuEntryCallback;
     text: string;
 };
 
@@ -77,9 +78,9 @@ export class TextMenu {
  * ```
  *	const myMenu = new TextMenuBuilder()
  *		.withTitle('Welcome to MyApp v1.0!')
- *		.addEntry({ text: 'Do the first cool thing', callback: firstCoolFunction })
- *		.addEntry({ text: 'Do the second cool thing', callback: secondCoolFunction }))
- *		.addEntry({ text: 'Exit', callback: () => process.exit(0) })
+ *		.addEntry('Do the first cool thing', firstCoolFunction)
+ *		.addEntry('Do the second cool thing', secondCoolFunction)
+ *		.addEntry('Exit', () => process.exit(0))
  *		.withPrompt('Choose one:')
  *		.build();
  * await myMenu.promptAndExecute();
@@ -90,7 +91,7 @@ export default class TextMenuBuilder {
     entries: TextMenuEntry[] = [];
     prompt = '';
 
-    addEntry({ text, callback }: TextMenuEntry): TextMenuBuilder {
+    addEntry(text: string, callback: TextMenuEntryCallback): TextMenuBuilder {
         this.entries.push({
             text,
             callback
