@@ -22,6 +22,15 @@ import { maxBy, uniq } from 'lodash';
 import { WordGuessAndResult, WordGuessAndScore } from './wordGuessAndResult';
 import WordList from './wordList';
 import { NoMoreGuessesError } from './wordleSolverError';
+import EventEmitter from 'node:events';
+
+export enum GuesserStrategyEvent {
+    CalculateScores = 'calculate-scores'
+}
+
+export type GuesserStrategyEventPayload = {
+    [GuesserStrategyEvent.CalculateScores]: { percent: number };
+};
 
 /**
  * A base class for the guesser strategies, consolidating shared code.
@@ -60,8 +69,12 @@ export default abstract class NextWordGuesserStrategyBase {
     /**
      *
      * @param myWordList - the `WordList` object to use for choosing the next optimal guess.
+     * @param progressEvents - the (optional) `EventEmitter` object to use for handling progress events
      */
-    constructor(protected myWordList: WordList) {}
+    constructor(
+        protected myWordList: WordList,
+        protected progressEvents?: EventEmitter
+    ) {}
 
     /**
      * Implement this with a metric for scoring for the given guess, determined by the guessing strategy in use.
@@ -99,11 +112,18 @@ export default abstract class NextWordGuesserStrategyBase {
         if (this.myWordList.words.length < 1) {
             throw new NoMoreGuessesError();
         }
-        const wordsWithGuesses = this.myWordList.words.map(
-            (word: string): WordGuessAndScore => ({ word, score: this.scoreForGuess(word) }),
-            this
-        );
-
+        const wordsWithGuesses = this.myWordList.words.map((word: string, wordIdx: number): WordGuessAndScore => {
+            try {
+                return { word, score: this.scoreForGuess(word) };
+            } finally {
+                this.progressEvents?.emit(GuesserStrategyEvent.CalculateScores, {
+                    percent: Math.floor((10000 * wordIdx) / this.myWordList.words.length) / 100
+                } as GuesserStrategyEventPayload[GuesserStrategyEvent.CalculateScores]);
+            }
+        }, this);
+        this.progressEvents?.emit(GuesserStrategyEvent.CalculateScores, {
+            percent: 100
+        } as GuesserStrategyEventPayload[GuesserStrategyEvent.CalculateScores]);
         return maxBy(wordsWithGuesses, 'score') as WordGuessAndScore;
     }
 

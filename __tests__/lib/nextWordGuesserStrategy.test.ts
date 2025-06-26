@@ -20,11 +20,15 @@
 
 import { maxBy, sumBy, times, uniq } from 'lodash';
 import { LetterAtPositionInWord } from '../../src/lib/letterAtPosition';
-import NextWordGuesserStrategyBase from '../../src/lib/nextWordGuesserStrategy';
+import NextWordGuesserStrategyBase, {
+    GuesserStrategyEvent,
+    GuesserStrategyEventPayload
+} from '../../src/lib/nextWordGuesserStrategy';
 import { WordGuessAndResult } from '../../src/lib/wordGuessAndResult';
 import { NoMoreGuessesError } from '../../src/lib/wordleSolverError';
 import WordList from '../../src/lib/wordList';
 import 'jest-extended';
+import EventEmitter from 'node:events';
 
 /**
  * Allows us to instantiate the base class as-is with a rudimentary scoring metric for testing.
@@ -121,6 +125,44 @@ describe(NextWordGuesserStrategyBase, () => {
 
             expect(result).toStrictEqual(expected);
         });
+
+        it(`emits a ${GuesserStrategyEvent.CalculateScores} event at each word score calculation and when finished`, () => {
+            const progressEvents = new EventEmitter();
+            const progressCallback = jest
+                .fn()
+                .mockName('progress')
+                .mockImplementation(
+                    ({ percent }: GuesserStrategyEventPayload[GuesserStrategyEvent.CalculateScores]) => {
+                        expect(percent).toBeNumber();
+                        expect(percent).toBeGreaterThanOrEqual(0);
+                        expect(percent).toBeLessThanOrEqual(100);
+                    }
+                );
+            const wordList = new WordList(['AAAAA', 'BBBBB']);
+            const nextWordGuesserStrategy = new NextWordGuesserStrategyBaseTest(wordList, progressEvents);
+            progressEvents.on(GuesserStrategyEvent.CalculateScores, progressCallback);
+
+            const wordsWithScores = wordList.words.map((word) => ({
+                word,
+                score: nextWordGuesserStrategy.scoreForGuess(word)
+            }));
+            const expected = maxBy(wordsWithScores, 'score');
+
+            const result = nextWordGuesserStrategy.guessNextWordAndScore();
+
+            expect(progressCallback).toHaveBeenCalledTimes(3);
+            expect(progressCallback).toHaveBeenNthCalledWith(1, {
+                percent: 0
+            } as GuesserStrategyEventPayload[GuesserStrategyEvent.CalculateScores]);
+            expect(progressCallback).toHaveBeenNthCalledWith(2, {
+                percent: 50
+            } as GuesserStrategyEventPayload[GuesserStrategyEvent.CalculateScores]);
+            expect(progressCallback).toHaveBeenNthCalledWith(3, {
+                percent: 100
+            } as GuesserStrategyEventPayload[GuesserStrategyEvent.CalculateScores]);
+
+            expect(result).toStrictEqual(expected);
+        });
     });
 
     describe(NextWordGuesserStrategyBase.prototype.getAlreadyGuessedLetters, () => {
@@ -128,10 +170,10 @@ describe(NextWordGuesserStrategyBase, () => {
         const nextWordGuesserStrategy = new NextWordGuesserStrategyBaseTest(wordList);
         it('returns a flattened list of unique guessed letters', () => {
             const previousGuesses: WordGuessAndResult[] = [
-                { word: 'ABC', result: [] },
-                { word: 'BCD', result: [] },
-                { word: 'DEF', result: [] },
-                { word: 'GHI', result: [] }
+                { word: 'ABCAB', result: [] },
+                { word: 'BCDBC', result: [] },
+                { word: 'DEFDE', result: [] },
+                { word: 'GHIGH', result: [] }
             ];
             const expected = uniq(previousGuesses.flatMap((guess) => Array.from(guess.word)));
             const previousGuessesSpy = jest
