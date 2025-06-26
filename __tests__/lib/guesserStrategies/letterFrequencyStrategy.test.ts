@@ -42,7 +42,7 @@ describe(LetterFrequencyStrategy, () => {
 
     describe(LetterFrequencyStrategy.prototype.scoreForGuess, () => {
         it('scores the guess based on letter frequency', () => {
-            const wordList = new WordList(['AAAAA', 'BBBBB', 'CCCAB']);
+            const wordList = new WordList(['BREAD', 'BROOD', 'BLOOD', 'CROOK']);
             const letterFrequencyStrategy = new LetterFrequencyStrategy(wordList);
 
             const result = Array.from(wordList.words, (word) => ({
@@ -50,18 +50,10 @@ describe(LetterFrequencyStrategy, () => {
                 score: letterFrequencyStrategy.scoreForGuess(word)
             }));
             expect(result).toStrictEqual([
-                {
-                    word: 'AAAAA',
-                    score: 0.5
-                },
-                {
-                    word: 'BBBBB',
-                    score: 0.5
-                },
-                {
-                    word: 'CCCAB',
-                    score: 0.6
-                }
+                { word: 'BLOOD', score: 3.25 },
+                { word: 'BREAD', score: 2.75 },
+                { word: 'BROOD', score: 3.75 },
+                { word: 'CROOK', score: 2.75 }
             ]);
         });
     });

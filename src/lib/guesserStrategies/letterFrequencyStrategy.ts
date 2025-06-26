@@ -46,13 +46,8 @@ export default class LetterFrequencyStrategy extends NextWordGuesserStrategyBase
      */
     scoreForGuess(guess: string): number {
         const lettersCount = this.wordList.countLetters();
-        return (
-            sum(
-                Array.from(guess).map(
-                    (letter, position) =>
-                        lettersCount[position][letter] / this.wordList.possibleLetters[position].length
-                )
-            ) / guess.length
+        return sum(
+            Array.from(guess).map((letter, position) => lettersCount[position][letter] / this.wordList.words.length)
         );
     }
 }
