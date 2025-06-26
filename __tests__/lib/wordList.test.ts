@@ -389,4 +389,15 @@ describe(WordList, () => {
             expect(result).toStrictEqual(expectedCounts);
         });
     });
+
+    describe(WordList.prototype.withExcludedWords, () => {
+        it('should copy the given WordList and exclude all matching words', () => {
+            const originalWordList = new WordList(generateAlphabetWords('AB').concat('CCCCC'));
+            const excludedWordList = originalWordList.withExcludedWords(['CCCCC']);
+            expect(excludedWordList).not.toBe(originalWordList);
+            expect(originalWordList.words).toContain('CCCCC');
+            expect(excludedWordList.words).not.toContain('CCCCC');
+            expect(excludedWordList.alphabet).not.toContain('C');
+        });
+    });
 });

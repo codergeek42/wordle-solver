@@ -229,4 +229,10 @@ export default class WordList {
         );
         return totalCount;
     }
+
+    withExcludedWords(excludedWords: string[]): WordList {
+        const uppercaseExclusions = excludedWords.map((word) => word.toUpperCase());
+        const wordsWithExclusions = this.words.filter((word) => !uppercaseExclusions.includes(word));
+        return new WordList(wordsWithExclusions);
+    }
 }
