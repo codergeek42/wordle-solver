@@ -90,15 +90,15 @@ export default class WordList {
      *
      * @returns a new WordList object with the words from the given file contents.
      *
-     * @example To build a WordList having words ABC and DEF, suppose  'abc-def.txt' contains
+     * @example To build a WordList having words ABCDE and EFGHI, suppose  'abcde.txt' contains
      * ```plaintext
-     * ABC
-     * DEF
+     * ABCDE
+     * FGHIJ
      * ```
      * then one can write
      * ```typescript
-     * const sampleWordList = await WordList.fromFile('abc-def.txt');
-     * expect(sampleWordList.words).toStrictEqual(['ABC', 'DEF']);
+     * const sampleWordList = await WordList.fromFile('abcde.txt');
+     * expect(sampleWordList.words).toStrictEqual(['ABCDE', 'FGHIJ']);
      * ```
      */
     static async fromFile(fileName: string): Promise<WordList> {
