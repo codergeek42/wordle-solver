@@ -1,0 +1,6 @@
+[flake8]
+doctests = True
+hang-closing = False
+max-complexity = 15
+max-line-length = 120
+show-source = True
