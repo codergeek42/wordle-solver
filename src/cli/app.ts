@@ -1,29 +1,34 @@
+import { open } from 'fs/promises';
 import TextMenuBuilder from '../lib/cli/textMenu';
+import WordList from '../lib/wordList';
+import { parseCommandLineArgs } from './arguments';
+import { runGuessLoop } from './guessLoop';
+import { displayCopyleftInformation, displayNoWarrantyInformation, displayWelcomeBanner } from './legal';
 
-import GPLSections from '../../__data__/gpl-sections.json';
-
-function displayWelcomeBanner(): void {
-    console.log(`Peter's Wordle Solver\nCopyright (C) 2025 Peter Gordon <codergeek42@gmail.com>\n`);
-    console.log(GPLSections.WelcomeBanner);
+async function initializeWordList(dictionaryFile: string, previousWordsFile: string): Promise<WordList> {
+    // Create the file if it does not yet exist...
+    const previousWordsFileHandle = await open(previousWordsFile, 'a+', 0o664);
+    try {
+        const previousWords = (await previousWordsFileHandle.readFile({ encoding: 'utf8' })).split('\n');
+        return (await WordList.fromFile(dictionaryFile)).withExcludedWords(previousWords);
+    } finally {
+        previousWordsFileHandle.close();
+    }
 }
-
-function displayNoWarrantyInformation(): void {
-    console.log(GPLSections.DisclaimerOfWarranty);
-}
-
-function displayCopyleftInformation(): void {
-    console.log(GPLSections.CopyleftInformation);
-}
-
-const MainMenu = new TextMenuBuilder()
-    .withTitle('===== Main Menu =====')
-    .addEntry('(No) Warranty Information', displayNoWarrantyInformation)
-    .addEntry('Copyleft Information', displayCopyleftInformation)
-    .addEntry('Exit', () => process.exit(0))
-    .withPrompt('? ')
-    .build();
 
 async function main(): Promise<void> {
+    const cliArgs = parseCommandLineArgs();
+    const wordList = await initializeWordList(cliArgs.dictionary, cliArgs.previousWords);
+
+    const MainMenu = new TextMenuBuilder()
+        .withTitle('===== Main Menu =====')
+        .addEntry('Start guessing!', () => runGuessLoop(wordList))
+        .addEntry('(No) Warranty Information', displayNoWarrantyInformation)
+        .addEntry('Copyleft Information', displayCopyleftInformation)
+        .addEntry('Exit', () => process.exit(0))
+        .withPrompt('? ')
+        .build();
+
     displayWelcomeBanner();
     while (true) {
         await MainMenu.promptAndExecute();
