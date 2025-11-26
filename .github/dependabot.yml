@@ -5,8 +5,10 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "dotnet-sdk" # See documentation for possible values
+    directories: # Location of package manifests
+    - "/WordleSolver.Library"
+    - "/WordleSolver.Tests"
     schedule:
       interval: "daily"
     commit-message:
