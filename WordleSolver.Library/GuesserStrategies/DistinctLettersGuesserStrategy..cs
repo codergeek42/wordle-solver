@@ -20,11 +20,8 @@
 
 namespace WordleSolver.Library.GuesserStrategies;
 
-public class DistinctLettersGuesserStrategy : NextWordGuesserStrategyBase
+public class DistinctLettersGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
-	public DistinctLettersGuesserStrategy(IWordList wordList) : base(wordList)
-	{ }
-
 	public override double ScoreForGuess(string guess)
 	{
 		HashSet<char> alreadyGuessedLetters = GetAlreadyGuessedLetters();

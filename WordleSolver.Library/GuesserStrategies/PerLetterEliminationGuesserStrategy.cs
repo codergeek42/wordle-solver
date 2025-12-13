@@ -22,12 +22,8 @@ using WordleSolver.Library.Extensions;
 
 namespace WordleSolver.Library.GuesserStrategies;
 
-public class PerLetterEliminationGuesserStrategy : NextWordGuesserStrategyBase
+public class PerLetterEliminationGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
-
-	public PerLetterEliminationGuesserStrategy(IWordList wordList) : base(wordList)
-	{ }
-
 	public override double ScoreForGuess(string guess)
 	{
 		int previousScore = GetTotalPossibleLettersInWordList(CandidateWordList);

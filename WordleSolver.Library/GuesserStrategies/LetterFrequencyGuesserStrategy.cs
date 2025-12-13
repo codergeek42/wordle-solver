@@ -22,11 +22,8 @@ using WordleSolver.Library.Extensions;
 
 namespace WordleSolver.Library.GuesserStrategies;
 
-public class LetterFrequencyGuesserStrategy : NextWordGuesserStrategyBase
+public class LetterFrequencyGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
-	public LetterFrequencyGuesserStrategy(IWordList wordList) : base(wordList)
-	{ }
-
 	public override double ScoreForGuess(string guess)
 	{
 		List<Dictionary<char, int>> LettersCount = CandidateWordList.CountLetters();

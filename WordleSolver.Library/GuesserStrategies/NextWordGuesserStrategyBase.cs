@@ -20,16 +20,10 @@
 
 namespace WordleSolver.Library.GuesserStrategies;
 
-public abstract class NextWordGuesserStrategyBase : INextWordGuesserStrategy
+public abstract class NextWordGuesserStrategyBase(IWordList wordList) : INextWordGuesserStrategy
 {
-	public List<WordGuessAndResult> PreviousGuesses { get; private set; }
-	public IWordList CandidateWordList { get; private set; }
-
-	public NextWordGuesserStrategyBase(IWordList wordList)
-	{
-		PreviousGuesses = new([]);
-		CandidateWordList = wordList;
-	}
+	public List<WordGuessAndResult> PreviousGuesses { get; private set; } = new([]);
+	public IWordList CandidateWordList { get; private set; } = wordList;
 
 	public abstract double ScoreForGuess(string guess);
 

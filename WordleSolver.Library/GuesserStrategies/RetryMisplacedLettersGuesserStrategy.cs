@@ -22,11 +22,8 @@ using WordleSolver.Library.Extensions;
 
 namespace WordleSolver.Library.GuesserStrategies;
 
-public class RetryMisplacedLettersGuesserStrategy : NextWordGuesserStrategyBase
+public class RetryMisplacedLettersGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
-	public RetryMisplacedLettersGuesserStrategy(IWordList wordList) : base(wordList)
-	{ }
-
 	public override double ScoreForGuess(string guess)
 	{
 		IEnumerable<LetterWithPosition> previouslyMisplacedLetters = CandidateWordList.LetterRules
