@@ -18,6 +18,7 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
+using System.ComponentModel;
 using AwesomeAssertions;
 using WordleSolver.Library;
 
@@ -25,7 +26,7 @@ namespace WordleSolver.Tests;
 
 public class DataTest
 {
-    [Fact]
+    [Fact(DisplayName = "Alphabet has all A-Z exactly once in order.")]
     public void Alphabet_HasAll26Chars()
     {
         Data.Alphabet.Should()
@@ -35,7 +36,7 @@ public class DataTest
                 "alphabet should contain every letter");
     }
 
-    [Theory]
+    [Theory(DisplayName = "{1}")]
     [InlineData(-1, "negative")]
     [InlineData(0, "zero")]
     public void GenerateAlphabetWords_ShouldThrowIfNonPositiveLength(int wordLength, string condition)

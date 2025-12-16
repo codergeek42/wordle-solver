@@ -99,11 +99,11 @@ public class WordListTest
         WordList emptyWordList = new();
 
         emptyWordList.Words.Should()
-            .NotBeNull();
+            .NotBeNull("should instantiate empty word list");
         emptyWordList.Words.Should()
-            .BeEmpty();
+            .BeEmpty("should have no words");
         emptyWordList.Alphabet.Should()
-            .BeEmpty();
+            .BeEmpty("should have no alphabet");
     }
 
     [Fact]
@@ -114,7 +114,7 @@ public class WordListTest
         WordList threeWordList = new(threeWords);
 
         threeWordList.Should()
-            .BeOfType<WordList>();
+            .BeOfType<WordList>($"should be a {nameof(WordList)}");
         threeWordList.Words.Should()
             .Equal(threeWords, "should store all words from the list");
         threeWordList.Alphabet.Should()
@@ -134,7 +134,7 @@ public class WordListTest
         WordList goodWordList = new(badWords);
 
         goodWordList.Should()
-            .BeOfType<WordList>();
+            .BeOfType<WordList>($"should be a {nameof(WordList)}");
         goodWordList.Words.Should()
             .Equal(goodWords, "words should be ordered, trimmed, and uppercase");
     }
@@ -150,7 +150,7 @@ public class WordListTest
         WordList goodWordList = new(badWords);
 
         goodWordList.Should()
-            .BeOfType<WordList>();
+            .BeOfType<WordList>($"should be a {nameof(WordList)}");
         goodWordList.Words.Should()
             .Equal(goodWords, $"words should be exactly {Data.WordLength} alphabetic letters");
     }
@@ -160,16 +160,16 @@ public class WordListTest
     {
         List<string> alphabetBuilderWords = [
             "ABCDE",
-            "FGHIJ", // Does it correctly use all of the words?
-            "ABCDK", // Does it correctly ignore duplicate letters across words?
-            "AABLL", // Does it correctly ignore duplicate letters within the same word?
+            "FGHIJ", // Does it correctly use all of the words (i.e., not just one)?
+            "ABCDK", // Does it correctly ignore duplicate letters across words (ABC)?
+            "AABLL", // Does it correctly ignore duplicate letters within the same word (AA and LL)?
 		];
         HashSet<char> expectedAlphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
         WordList testWordList = new(alphabetBuilderWords);
 
         testWordList.Should()
-            .BeOfType<WordList>();
+            .BeOfType<WordList>($"should be a {nameof(WordList)}");
         testWordList.Words.Should()
             .Equal(alphabetBuilderWords.Order(), "should use only the given list of words");
         testWordList.Alphabet.Order().Should()
@@ -184,7 +184,7 @@ public class WordListTest
         WordList result = new(originalWordList);
 
         result.Should()
-            .BeOfType<WordList>()
+            .BeOfType<WordList>($"should be a {nameof(WordList)}")
             .And.BeEquivalentTo(originalWordList, "constructed copy should be identical")
             .And.NotBeSameAs(originalWordList, "constructed copy should be new distinct object");
     }
@@ -279,10 +279,27 @@ public class WordListTest
 
         originalWordList.Should()
             .BeEquivalentTo(originalCopy, "calling object letter rules should not be processed");
-
         result.Should()
             .NotBeSameAs(originalWordList, "should return a modified copy, not the original");
         result.LetterRules.Should()
             .BeEquivalentTo(letterAtPositionInWordRules, "should process the given rules");
+    }
+
+    [Fact]
+    public void WordList_WithExcludedWords_ShouldUpperAndTrimWords()
+    {
+        List<string> badWords = [" NOTRM ", "lower"];
+        WordList badWordList = new(
+            ["UPPER", .. badWords.ConvertAll(word => word.ToUpper().Trim())]
+        );
+        badWordList.Words.Should()
+            .BeEquivalentTo(["LOWER", "NOTRM", "UPPER"], $"{nameof(WordList)} trims and uppercases words");
+
+        IWordList wordListWithExcluded = badWordList.WithExcludedWords(badWords);
+
+        wordListWithExcluded.Words.Should()
+            .NotContain("NOTRM", "should exclude the trimmed word")
+            .And.NotContain("LOWER", "should exclude the uppercased word")
+            .And.Contain("UPPER", "should not exclude the word that was not in the parameter");
     }
 }

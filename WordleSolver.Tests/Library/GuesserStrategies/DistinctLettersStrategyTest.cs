@@ -19,9 +19,9 @@
  */
 
 using DistinctLettersScoreForGuessTestCase = (
-	string CaseName,
-	int NumGuessedLetters,
-	int NumDistinctLetters
+    string CaseName,
+    int NumGuessedLetters,
+    int NumDistinctLetters
 );
 
 using AwesomeAssertions;
@@ -32,57 +32,57 @@ using WordleSolver.Library.Extensions;
 
 namespace WordleSolver.Tests;
 
-public class DistinctLettersStrategyTest : NextWordGuesserStrategyTestFixture<DistinctLettersGuesserStrategy>
+public class DistinctLettersStrategyTest : MockWordListFixture
 {
-	public static IEnumerable<object[]> DistinctLettersScoreForGuessTestData()
-	{
-		IEnumerable<DistinctLettersScoreForGuessTestCase> TestCases = Data.WordLength.RepeatMany(
-			numGuessedLetters => Data.WordLength.Repeat(numDistinctLetters => (
-				CaseName: $"{numGuessedLetters} guessed already, {numDistinctLetters} distinct unguessed",
-				NumGuessedLetters: numGuessedLetters,
-				NumDistinctLetters: numDistinctLetters
-			)));
+    public static IEnumerable<object[]> DistinctLettersScoreForGuessTestData()
+    {
+        IEnumerable<DistinctLettersScoreForGuessTestCase> TestCases = Data.WordLength.RepeatMany(
+            numGuessedLetters => Data.WordLength.Repeat(numDistinctLetters => (
+                CaseName: $"{numGuessedLetters} guessed already, {numDistinctLetters} distinct unguessed",
+                NumGuessedLetters: numGuessedLetters,
+                NumDistinctLetters: numDistinctLetters
+            )));
 
-		foreach (var (CaseName, NumGuessedLetters, NumDistinctLetters) in TestCases)
-		{
-			yield return [CaseName, NumGuessedLetters, NumDistinctLetters];
-		}
-	}
+        foreach (var (CaseName, NumGuessedLetters, NumDistinctLetters) in TestCases)
+        {
+            yield return [CaseName, NumGuessedLetters, NumDistinctLetters];
+        }
+    }
 
-	[Fact]
-	public void DistinctLettersStrategy_Constructor_CanBeInstantiated()
-	{
-		DistinctLettersGuesserStrategy distinctLettersStrategy = new(MockWordList.Object);
+    [Fact]
+    public void DistinctLettersStrategy_Constructor_CanBeInstantiated()
+    {
+        DistinctLettersGuesserStrategy distinctLettersStrategy = new(MockWordList.Object);
 
-		distinctLettersStrategy.SetupGetAlreadyGuessedLettersMockReturn(['A']);
+        distinctLettersStrategy.SetupGetAlreadyGuessedLettersMockReturn(['A']);
 
-		distinctLettersStrategy.Should()
-			.NotBeNull()
-			.And.BeOfType<DistinctLettersGuesserStrategy>()
-			.And.BeAssignableTo<NextWordGuesserStrategyBase>();
-	}
+        distinctLettersStrategy.Should()
+            .NotBeNull("should be instantiated")
+            .And.BeOfType<DistinctLettersGuesserStrategy>($"should be a {nameof(DistinctLettersGuesserStrategy)}")
+            .And.BeAssignableTo<NextWordGuesserStrategyBase>($"should subclass ${nameof(NextWordGuesserStrategyBase)}");
+    }
 
-	[Theory]
-	[MemberData(nameof(DistinctLettersScoreForGuessTestData))]
-	public void DistinctLettersStrategy_ScoreForGuess_ScoresGuessBasedOnDistinctUngessedLetters(string because, int numGuessedLetters, int numDistinctLetters)
-	{
-		HashSet<char> previousGuessLetters = Data.Alphabet.Take(numGuessedLetters).ToHashSet();
+    [Theory]
+    [MemberData(nameof(DistinctLettersScoreForGuessTestData))]
+    public void DistinctLettersStrategy_ScoreForGuess_ScoresGuessBasedOnDistinctUngessedLetters(string because, int numGuessedLetters, int numDistinctLetters)
+    {
+        HashSet<char> previousGuessLetters = Data.Alphabet.Take(numGuessedLetters).ToHashSet();
 
-		int AlphabetSize = numGuessedLetters + numDistinctLetters;
+        int AlphabetSize = numGuessedLetters + numDistinctLetters;
 
-		AlphabetSize.Should()
-			.BeInRange(0, Data.Alphabet.Count, "test data should contain valid guessed + distinct letter quantities");
+        AlphabetSize.Should()
+            .BeInRange(0, Data.Alphabet.Count, "test case data should contain valid guessed + distinct letter quantities");
 
-		// Not null by construction of Data.Alphabet, and above assertion.
-		string distinctGuessLetters = string.Join(string.Empty, Data.Alphabet.Take(AlphabetSize));
+        // Not null by construction of Data.Alphabet, and above assertion.
+        string distinctGuessLetters = string.Join(string.Empty, Data.Alphabet.Take(AlphabetSize));
 
-		DistinctLettersGuesserStrategy distinctLettersStrategy = new(MockWordList.Object);
+        DistinctLettersGuesserStrategy distinctLettersStrategy = new(MockWordList.Object);
 
-		distinctLettersStrategy.SetupGetAlreadyGuessedLettersMockReturn(previousGuessLetters);
+        distinctLettersStrategy.SetupGetAlreadyGuessedLettersMockReturn(previousGuessLetters);
 
-		double result = distinctLettersStrategy.ScoreForGuess(distinctGuessLetters);
+        double result = distinctLettersStrategy.ScoreForGuess(distinctGuessLetters);
 
-		result.Should()
-			.Be(numDistinctLetters, because);
-	}
+        result.Should()
+            .Be(numDistinctLetters, because);
+    }
 }

@@ -18,6 +18,7 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
+using AwesomeAssertions;
 using Moq;
 using WordleSolver.Library;
 using WordleSolver.Library.Extensions;
@@ -27,14 +28,58 @@ namespace WordleSolver.Tests.Extensions;
 
 public static class GuesserStrategiesMockExtensions
 {
-    public static void SetupGetAlreadyGuessedLettersMockReturn(this INextWordGuesserStrategy guesserStrategyUnderTest, HashSet<char> mockReturn)
+    public static INextWordGuesserStrategy SetupGetAlreadyGuessedLettersMockReturn(this INextWordGuesserStrategy guesserStrategyUnderTest, HashSet<char> mockReturn)
     {
         guesserStrategyUnderTest.PreviousGuesses.Clear();
-        guesserStrategyUnderTest.PreviousGuesses.Add(new(string.Join(null, mockReturn), []));
+        guesserStrategyUnderTest.PreviousGuesses.Add(new(string.Join(string.Empty, mockReturn), []));
+        return guesserStrategyUnderTest;
     }
 
-    public static void SetupPossibleLettersMockReturnCount(this Mock<IWordList> mockWordList, int expectedCount)
+    public static Mock<INextWordGuesserStrategy> VerifyWithPreviousGuessCalledWith(this Mock<INextWordGuesserStrategy> guesserStrategyMock, WordGuessAndResult param, string because)
     {
-        mockWordList.Setup(wordList => wordList.PossibleLetters).Returns(expectedCount.Repeat(_ => new HashSet<char>(['_'])));
+        guesserStrategyMock.Verify(guesserStrategy => guesserStrategy.WithPreviousGuess(param), because);
+        return guesserStrategyMock;
+    }
+
+    public static List<Mock<INextWordGuesserStrategy>> SetupWordGuessAndScoreReturnValues(this List<Mock<INextWordGuesserStrategy>> guesserStrategyMocks, List<WordGuessAndScore> expectedScores)
+    {
+        guesserStrategyMocks.Should()
+            .HaveCount(expectedScores.Count, "mock expected scores data should have the same length as calls to be made");
+
+        foreach (int idx in Enumerable.Range(0, guesserStrategyMocks.Count))
+        {
+            guesserStrategyMocks[idx]
+                .Setup(guesserStrategy => guesserStrategy.GuessNextWordAndScore())
+                .Returns(expectedScores[idx]);
+        }
+        return guesserStrategyMocks;
+    }
+
+    public static List<Mock<INextWordGuesserStrategy>> SetupIsSolvedMockReturns(this List<Mock<INextWordGuesserStrategy>> guesserStrategyMocks, List<bool> expectedIsSolveds)
+    {
+        guesserStrategyMocks.Should()
+            .HaveCount(expectedIsSolveds.Count, "mock expected solved valus should have the same length as calls to be made");
+
+        foreach (int idx in Enumerable.Range(0, guesserStrategyMocks.Count))
+        {
+            guesserStrategyMocks[idx]
+                .Setup(guesserStrategy => guesserStrategy.IsSolved())
+                .Returns(expectedIsSolveds[idx]);
+        }
+        return guesserStrategyMocks;
+    }
+
+    public static List<Mock<INextWordGuesserStrategy>> SetupHasSolutionMockReturns(this List<Mock<INextWordGuesserStrategy>> guesserStrategyMocks, List<bool> expectedHasSolutions)
+    {
+        guesserStrategyMocks.Should()
+            .HaveCount(expectedHasSolutions.Count, "mock expected solved valus should have the same length as calls to be made");
+
+        foreach (int idx in Enumerable.Range(0, guesserStrategyMocks.Count))
+        {
+            guesserStrategyMocks[idx]
+                .Setup(guesserStrategy => guesserStrategy.HasSolution())
+                .Returns(expectedHasSolutions[idx]);
+        }
+        return guesserStrategyMocks;
     }
 }

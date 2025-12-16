@@ -25,174 +25,171 @@ using Moq;
 using WordleSolver.Library;
 using WordleSolver.Library.Extensions;
 using WordleSolver.Library.GuesserStrategies;
-
+using WordleSolver.Tests.Extensions;
 
 public class NextWordBaseTestGuesserStrategy : NextWordGuesserStrategyBase
 {
-	public NextWordBaseTestGuesserStrategy(IWordList wordList) : base(wordList)
-	{ }
+    public NextWordBaseTestGuesserStrategy(IWordList wordList) : base(wordList)
+    { }
 
-	public override double ScoreForGuess(string guess)
-	{
-		return guess.Sum(ch => (int)ch);
-	}
+    public override double ScoreForGuess(string guess)
+    {
+        return guess.Sum(ch => (int)ch);
+    }
 }
 
-public class NextWordGuesserStrategyBaseTest : NextWordGuesserStrategyTestFixture<NextWordBaseTestGuesserStrategy>
+public class NextWordGuesserStrategyBaseTest : MockWordListFixture
 {
-	[Fact]
-	public void NextWordGuesserStrategyBase_Constructor_CanBeInstantiatedFromEmpty()
-	{
-		WordList emptyWordList = new([]);
-		NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(emptyWordList);
+    [Fact]
+    public void NextWordGuesserStrategyBase_Constructor_CanBeInstantiatedFromEmpty()
+    {
+        WordList emptyWordList = new([]);
+        NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(emptyWordList);
 
-		nextWordGuesserStrategy.Should()
-			.BeOfType<NextWordBaseTestGuesserStrategy>("strategy object should be instantiated");
-		nextWordGuesserStrategy.CandidateWordList.Should()
-			.BeOfType<WordList>("guesser word list should be instantiated");
-	}
+        nextWordGuesserStrategy.Should()
+            .NotBeNull("should be instantiated")
+            .And.BeOfType<NextWordBaseTestGuesserStrategy>($"should be a {nameof(NextWordBaseTestGuesserStrategy)}");
+        nextWordGuesserStrategy.CandidateWordList.Should()
+            .BeOfType<WordList>("guesser word list should be instantiated");
+    }
 
-	[Fact]
-	public void NextWordGuesserStrategyBase_GetAlreadyGuessedLetters_ReturnsSetOfAlreadyGuessedLetters()
-	{
-		WordGuessAndResult wordGuessAndResult = new("GUESS", [new(0, 'G', LetterAtPositionInWord.Mandatory)]);
+    [Fact]
+    public void NextWordGuesserStrategyBase_GetAlreadyGuessedLetters_ReturnsSetOfAlreadyGuessedLetters()
+    {
+        WordGuessAndResult wordGuessAndResult = new("GUESS", [new(0, 'G', LetterAtPositionInWord.Mandatory)]);
 
-		MockWordList.Setup(wordList => wordList.ProcessExclusionsFromRules(It.IsAny<List<LetterAtPositionInWordRule>>()));
-		NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
+        MockWordList.StubProcessExclusionsFromRules();
 
-		nextWordGuesserStrategy.PreviousGuesses.Should()
-			.BeEmpty("previous guesses should be empty on newly-created guesser");
+        NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
 
-		NextWordBaseTestGuesserStrategy guesserWithPreviousGuess = (NextWordBaseTestGuesserStrategy)nextWordGuesserStrategy.WithPreviousGuess(wordGuessAndResult);
+        nextWordGuesserStrategy.PreviousGuesses.Should()
+            .BeEmpty("previous guesses should be empty on newly-created guesser");
 
-		guesserWithPreviousGuess.PreviousGuesses.Should()
-			.Equal([wordGuessAndResult], "previous guess should be stored");
+        NextWordBaseTestGuesserStrategy guesserWithPreviousGuess = (NextWordBaseTestGuesserStrategy)nextWordGuesserStrategy.WithPreviousGuess(wordGuessAndResult);
 
-		HashSet<char> alreadyGuessedLetters = guesserWithPreviousGuess.GetAlreadyGuessedLetters();
+        guesserWithPreviousGuess.PreviousGuesses.Should()
+            .Equal([wordGuessAndResult], "previous guess should be stored");
 
-		alreadyGuessedLetters.Should()
-			.Equal(['G', 'U', 'E', 'S'], "set of guessed letter should be returned");
-	}
+        HashSet<char> alreadyGuessedLetters = guesserWithPreviousGuess.GetAlreadyGuessedLetters();
 
-	[Fact]
-	public void NextWordGuesserStrategyBase_GuessNextWordAndScore_ThrowsIfNoMoreGuesses()
-	{
-		MockWordList.Setup(wordList => wordList.Words).Returns([]);
-		NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
+        alreadyGuessedLetters.Should()
+            .Equal(['G', 'U', 'E', 'S'], "set of guessed letter should be returned");
+    }
 
-		Action testCall = () => nextWordGuesserStrategy.GuessNextWordAndScore();
+    [Fact]
+    public void NextWordGuesserStrategyBase_GuessNextWordAndScore_ThrowsIfNoMoreGuesses()
+    {
+        MockWordList.SetupWordsMockReturnValue([]);
+        NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
 
-		testCall.Should()
-			.Throw<NoMoreGuessesException>("candidate word list is empty");
-	}
+        Action testCall = () => nextWordGuesserStrategy.GuessNextWordAndScore();
 
-	[Fact]
-	public void NextWordGuesserStrategyBase_GuessNextWordAndScore_ReturnsNextHighestScoreGuessIfAtLeasOneGuessRemains()
-	{
-		List<string> testWords = ["AAAAA", "BBBBB", "CCCCC"];
+        testCall.Should()
+            .Throw<NoMoreGuessesException>("candidate word list is empty");
+    }
 
-		testWords.Should()
-			.BeInAscendingOrder("the highest-scoring word should be last");
+    [Fact]
+    public void NextWordGuesserStrategyBase_GuessNextWordAndScore_ReturnsNextHighestScoreGuessIfAtLeasOneGuessRemains()
+    {
+        List<string> testWords = ["AAAAA", "BBBBB", "CCCCC"];
 
-		MockWordList.Setup(WordList => WordList.Words).Returns(testWords);
-		NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
-		List<WordGuessAndScore> wordsWithScores = testWords.ConvertAll(word => new WordGuessAndScore(word, nextWordGuesserStrategy.ScoreForGuess(word)));
-		WordGuessAndScore expectedGuessAndScore = wordsWithScores.Last();
+        testWords.Should()
+            .BeInAscendingOrder("the highest-scoring word should be last");
 
-		WordGuessAndScore result = nextWordGuesserStrategy.GuessNextWordAndScore();
+        MockWordList.SetupWordsMockReturnValue(testWords);
+        NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
+        List<WordGuessAndScore> wordsWithScores = testWords.ConvertAll(word => new WordGuessAndScore(word, nextWordGuesserStrategy.ScoreForGuess(word)));
+        WordGuessAndScore expectedGuessAndScore = wordsWithScores.Last();
 
-		result.Should()
-			.BeEquivalentTo(expectedGuessAndScore, "the last word in alphabetic order should score highest by sum of ASCII values");
-	}
+        WordGuessAndScore result = nextWordGuesserStrategy.GuessNextWordAndScore();
 
-	[Fact]
-	public void NextWordGuesserStrategyBase_IsSolved_ReturnsTrueIfExactlyOneGuessRemains()
-	{
-		MockWordList.Setup(wordList => wordList.Words)
-			.Returns([""]);
-		NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
+        result.Should()
+            .BeEquivalentTo(expectedGuessAndScore, "the last word in alphabetic order should score highest by sum of ASCII values");
+    }
 
-		bool result = nextWordGuesserStrategy.IsSolved();
+    [Fact]
+    public void NextWordGuesserStrategyBase_IsSolved_ReturnsTrueIfExactlyOneGuessRemains()
+    {
+        MockWordList.SetupWordsMockReturnCount(1);
+        NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
 
-		result.Should()
-			.BeTrue("exactly one guess remains");
-	}
+        bool result = nextWordGuesserStrategy.IsSolved();
 
-	[Fact]
-	public void NextWordGuesserStrategyBase_IsSolved_ReturnsFalseIfNoGuessesRemain()
-	{
-		MockWordList.Setup(wordList => wordList.Words)
-			.Returns([]);
-		NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
+        result.Should()
+            .BeTrue("exactly one guess remains");
+    }
 
-		bool result = nextWordGuesserStrategy.IsSolved();
+    [Fact]
+    public void NextWordGuesserStrategyBase_IsSolved_ReturnsFalseIfNoGuessesRemain()
+    {
+        MockWordList.SetupWordsMockReturnCount(0);
+        NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
 
-		result.Should()
-			.BeFalse("no guesses remain");
-	}
+        bool result = nextWordGuesserStrategy.IsSolved();
 
-	[Fact]
-	public void NextWordGuesserStrategyBase_IsSolved_ReturnsFalseIfMoreThanOneGuessRemains()
-	{
-		MockWordList.Setup(wordList => wordList.Words)
-			.Returns(2.Repeat(_ => ""));
-		NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
+        result.Should()
+            .BeFalse("no guesses remain");
+    }
 
-		bool result = nextWordGuesserStrategy.IsSolved();
+    [Fact]
+    public void NextWordGuesserStrategyBase_IsSolved_ReturnsFalseIfMoreThanOneGuessRemains()
+    {
+        MockWordList.SetupWordsMockReturnCount(2);
+        NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
 
-		result.Should()
-			.BeFalse("more than one guess remains");
-	}
+        bool result = nextWordGuesserStrategy.IsSolved();
+
+        result.Should()
+            .BeFalse("more than one guess remains");
+    }
 
 
-	[Theory]
-	[InlineData(1)]
-	[InlineData(2)]
-	public void NextWordGuesserStrategyBase_HasSolution_ReturnsTrueIfAtLeastOneGuessRemains(int wordListLength)
-	{
-		MockWordList.Setup(wordList => wordList.Words)
-			.Returns(wordListLength.Repeat(_ => ""));
-		NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    public void NextWordGuesserStrategyBase_HasSolution_ReturnsTrueIfAtLeastOneGuessRemains(int wordListLength)
+    {
+        MockWordList.SetupWordsMockReturnCount(wordListLength);
+        NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
 
-		bool result = nextWordGuesserStrategy.HasSolution();
+        bool result = nextWordGuesserStrategy.HasSolution();
 
-		result.Should()
-			.BeTrue("at least one guess remains");
-	}
+        result.Should()
+            .BeTrue("at least one guess remains");
+    }
 
-	[Fact]
-	public void NextWordGuesserStrategyBase_HasSolution_ReturnsFalseIfNoGuessesRemain()
-	{
-		MockWordList.Setup(wordList => wordList.Words)
-			.Returns([]);
-		NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
+    [Fact]
+    public void NextWordGuesserStrategyBase_HasSolution_ReturnsFalseIfNoGuessesRemain()
+    {
+        MockWordList.SetupWordsMockReturnCount(0);
+        NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
 
-		bool result = nextWordGuesserStrategy.HasSolution();
+        bool result = nextWordGuesserStrategy.HasSolution();
 
-		result.Should()
-			.BeFalse("no guesses remain");
-	}
+        result.Should()
+            .BeFalse("no guesses remain");
+    }
 
-	[Fact]
-	public void NextWordGuesserStrategyBase_WithPreviousGuess_StoresThePreviousGuess()
-	{
-		WordGuessAndResult wordGuessAndResult = new("GUESS", [
-			new(0, 'G', LetterAtPositionInWord.Mandatory)
-		]);
-		MockWordList.Setup(wordList => wordList.ProcessExclusionsFromRules(It.IsAny<List<LetterAtPositionInWordRule>>()));
+    [Fact]
+    public void NextWordGuesserStrategyBase_WithPreviousGuess_StoresThePreviousGuess()
+    {
+        WordGuessAndResult wordGuessAndResult = new("GUESS", [
+            new(0, 'G', LetterAtPositionInWord.Mandatory)
+        ]);
+        MockWordList.StubProcessExclusionsFromRules();
 
-		NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
+        NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
 
-		nextWordGuesserStrategy.PreviousGuesses.Should()
-			.BeEmpty("previous guesses should be empty on newly-created guesser");
+        nextWordGuesserStrategy.PreviousGuesses.Should()
+            .BeEmpty("previous guesses should be empty on newly-created guesser");
 
-		NextWordBaseTestGuesserStrategy result = (NextWordBaseTestGuesserStrategy)nextWordGuesserStrategy.WithPreviousGuess(wordGuessAndResult);
+        NextWordBaseTestGuesserStrategy result = (NextWordBaseTestGuesserStrategy)nextWordGuesserStrategy.WithPreviousGuess(wordGuessAndResult);
 
-		result.Should()
-			.BeSameAs(nextWordGuesserStrategy, "should return the calling object for fluent chaining");
-		MockWordList.Verify(wordList => wordList.ProcessExclusionsFromRules(wordGuessAndResult.Result),
-			Times.Once(), "should add exlcusion rule from the guess result");
-		nextWordGuesserStrategy.PreviousGuesses.Should()
-			.Equal([wordGuessAndResult], "guesser should append previous guess to stored list");
-	}
+        result.Should()
+            .BeSameAs(nextWordGuesserStrategy, "should return the calling object for fluent chaining");
+        MockWordList.Verify(wordList => wordList.ProcessExclusionsFromRules(wordGuessAndResult.Result),
+            Times.Once(), "should add exlcusion rule from the guess result");
+        nextWordGuesserStrategy.PreviousGuesses.Should()
+            .Equal([wordGuessAndResult], "guesser should append previous guess to stored list");
+    }
 }

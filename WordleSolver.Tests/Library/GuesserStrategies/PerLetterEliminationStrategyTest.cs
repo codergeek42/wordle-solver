@@ -27,68 +27,68 @@ using WordleSolver.Tests.Extensions;
 
 namespace WordleSolver.Tests;
 
-public class PerLetterEliminationGuesserStrategyTest : NextWordGuesserStrategyTestFixture<PerLetterEliminationGuesserStrategy>
+public class PerLetterEliminationGuesserStrategyTest : MockWordListFixture
 {
-	[Fact]
-	public void PerLetterEliminationGuesserStrategy_Constructor_CanBeInstantiated()
-	{
-		PerLetterEliminationGuesserStrategy perLetterEliminationStrategy = new(MockWordList.Object);
+    [Fact]
+    public void PerLetterEliminationGuesserStrategy_Constructor_CanBeInstantiated()
+    {
+        PerLetterEliminationGuesserStrategy perLetterEliminationStrategy = new(MockWordList.Object);
 
-		perLetterEliminationStrategy.Should()
-			.NotBeNull()
-			.And.BeOfType<PerLetterEliminationGuesserStrategy>()
-			.And.BeAssignableTo<NextWordGuesserStrategyBase>();
-	}
+        perLetterEliminationStrategy.Should()
+            .NotBeNull("should be instantiated")
+            .And.BeOfType<PerLetterEliminationGuesserStrategy>($"should be a {nameof(PerLetterEliminationGuesserStrategy)}")
+            .And.BeAssignableTo<NextWordGuesserStrategyBase>($"should subclass ${nameof(NextWordGuesserStrategyBase)}");
+    }
 
-	[Fact]
-	public void PerLetterEliminationGuesserStrategy_GetTotalPossibleLettersInWordList_SumsNumberOfLetters()
-	{
-		MockWordList.Setup(wordList => wordList.PossibleLetters)
-			.Returns(Data.WordLength.Repeat(maxPos => Data.Alphabet.Take(1 + maxPos).ToHashSet()));
+    [Fact]
+    public void PerLetterEliminationGuesserStrategy_GetTotalPossibleLettersInWordList_SumsNumberOfLetters()
+    {
+        MockWordList.Setup(wordList => wordList.PossibleLetters)
+            .Returns(Data.WordLength.Repeat(maxPos => Data.Alphabet.Take(1 + maxPos).ToHashSet()));
 
-		int result = PerLetterEliminationGuesserStrategy.GetTotalPossibleLettersInWordList(MockWordList.Object);
+        int result = PerLetterEliminationGuesserStrategy.GetTotalPossibleLettersInWordList(MockWordList.Object);
 
-		MockWordList.Verify(wordList => wordList.PossibleLetters, Times.Once(), "should query the possible letters");
-		result.Should()
-			.Be(Enumerable.Range(1, Data.WordLength).Sum(), "should count the total possible letters");
-	}
+        MockWordList.Verify(wordList => wordList.PossibleLetters, Times.Once(), "should query the possible letters");
+        result.Should()
+            .Be(Enumerable.Range(1, Data.WordLength).Sum(), "should count the total possible letters");
+    }
 
-	[Fact]
-	public void PerLetterEliminationGuesserStrategy_GenerateGuessPositionLetterRules_CreatesRuleForEachGuessedLetterAsMisplaced()
-	{
-		string guess = string.Join(string.Empty, Data.Alphabet.Take(Data.WordLength));
-		List<LetterAtPositionInWordRule> result = PerLetterEliminationGuesserStrategy.GenerateGuessPositionLetterRules(guess);
-		List<LetterAtPositionInWordRule> expected = guess.Enumerate().ConvertAll(lwp =>
-			new LetterAtPositionInWordRule(lwp.Position, lwp.Letter, LetterAtPositionInWord.Misplaced)
-		);
+    [Fact]
+    public void PerLetterEliminationGuesserStrategy_GenerateGuessPositionLetterRules_CreatesRuleForEachGuessedLetterAsMisplaced()
+    {
+        string guess = string.Join(string.Empty, Data.Alphabet.Take(Data.WordLength));
+        List<LetterAtPositionInWordRule> result = PerLetterEliminationGuesserStrategy.GenerateGuessPositionLetterRules(guess);
+        List<LetterAtPositionInWordRule> expected = guess.Enumerate().ConvertAll(lwp =>
+            new LetterAtPositionInWordRule(lwp.Position, lwp.Letter, LetterAtPositionInWord.Misplaced)
+        );
 
-		result.Should()
-			.BeEquivalentTo(result, "should map the guess to rules with each letter Misplaced");
-	}
+        result.Should()
+            .BeEquivalentTo(result, "should map the guess to rules with each letter Misplaced");
+    }
 
-	[Fact]
-	public void PerLetterEliminationGuesserStrategy_ScoreForGuess_ScoresGuessByNumberOfLetterPossibilitiesEliminated()
-	{
-		WordList wordList = new(["WORDS"]);
-		WordList wordListOther = new(["OTHER"]);
-		Mock<IWordList> mockWordListWithPositionLetterRules = new();
-		string guess = "GUESS";
-		int expectedScore = 42;
+    [Fact]
+    public void PerLetterEliminationGuesserStrategy_ScoreForGuess_ScoresGuessByNumberOfLetterPossibilitiesEliminated()
+    {
+        WordList wordList = new(["WORDS"]);
+        WordList wordListOther = new(["OTHER"]);
+        Mock<IWordList> mockWordListWithPositionLetterRules = new();
+        string guess = "GUESS";
+        int expectedScore = 42;
 
-		MockWordList.SetupPossibleLettersMockReturnCount(1 + expectedScore);
-		mockWordListWithPositionLetterRules.SetupPossibleLettersMockReturnCount(1);
-		List<LetterAtPositionInWordRule> expectedGuessAsMisplacedRules = PerLetterEliminationGuesserStrategy.GenerateGuessPositionLetterRules(guess);
-		MockWordList.Setup(wordList => wordList.WithPositionLetterRules(It.IsAny<List<LetterAtPositionInWordRule>>())).Returns(mockWordListWithPositionLetterRules.Object);
-		PerLetterEliminationGuesserStrategy perLetterEliminationStrategy = new(MockWordList.Object);
+        MockWordList.SetupPossibleLettersMockReturnCount(1 + expectedScore);
+        mockWordListWithPositionLetterRules.SetupPossibleLettersMockReturnCount(1);
+        List<LetterAtPositionInWordRule> expectedGuessAsMisplacedRules = PerLetterEliminationGuesserStrategy.GenerateGuessPositionLetterRules(guess);
+        MockWordList.Setup(wordList => wordList.WithPositionLetterRules(It.IsAny<List<LetterAtPositionInWordRule>>())).Returns(mockWordListWithPositionLetterRules.Object);
+        PerLetterEliminationGuesserStrategy perLetterEliminationStrategy = new(MockWordList.Object);
 
-		double result = perLetterEliminationStrategy.ScoreForGuess(guess);
+        double result = perLetterEliminationStrategy.ScoreForGuess(guess);
 
 
-		MockWordList.Verify(wordList => wordList.PossibleLetters, Times.Once,
-			"should query possible letters from provided word list");
-		mockWordListWithPositionLetterRules.Verify(wordList => wordList.PossibleLetters, Times.Once,
-			"should query possible letters from word list with guess applied as all Misplaced");
-		result.Should()
-			.Be(expectedScore, "should calculate the total score based on difference of possible letters");
-	}
+        MockWordList.Verify(wordList => wordList.PossibleLetters, Times.Once,
+            "should query possible letters from provided word list");
+        mockWordListWithPositionLetterRules.Verify(wordList => wordList.PossibleLetters, Times.Once,
+            "should query possible letters from word list with guess applied as all Misplaced");
+        result.Should()
+            .Be(expectedScore, "should calculate the total score based on difference of possible letters");
+    }
 }

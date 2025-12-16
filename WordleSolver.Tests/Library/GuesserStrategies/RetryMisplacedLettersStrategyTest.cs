@@ -32,66 +32,66 @@ using Moq;
 
 namespace WordleSolver.Tests;
 
-public class RetryMisplacedLettersStrategyTest : NextWordGuesserStrategyTestFixture<RetryMisplacedLettersGuesserStrategy>
+public class RetryMisplacedLettersStrategyTest : MockWordListFixture
 {
-	public static IEnumerable<object[]> RetryMisplacedLettersScoreForGuessTestData()
-	{
-		IEnumerable<RetryMisplacedLettersTestCase> TestCases = (Data.WordLength + 1).Repeat((numMisplacedLetters) => (
-			CaseName: $"scores the guess based on the number of previously misplaced letters ({numMisplacedLetters})",
-			NumMisplacedLetters: numMisplacedLetters
-		));
+    public static IEnumerable<object[]> RetryMisplacedLettersScoreForGuessTestData()
+    {
+        IEnumerable<RetryMisplacedLettersTestCase> TestCases = (Data.WordLength + 1).Repeat((numMisplacedLetters) => (
+            CaseName: $"scores the guess based on the number of previously misplaced letters ({numMisplacedLetters})",
+            NumMisplacedLetters: numMisplacedLetters
+        ));
 
-		foreach (var (CaseName, NumMisplacedLetters) in TestCases)
-		{
-			yield return [CaseName, NumMisplacedLetters];
-		}
-	}
+        foreach (var (CaseName, NumMisplacedLetters) in TestCases)
+        {
+            yield return [CaseName, NumMisplacedLetters];
+        }
+    }
 
 
-	[Fact]
-	public void RetryMisplacedLettersGuesserStrategy_Constructor_CanBeInstantiated()
-	{
-		RetryMisplacedLettersGuesserStrategy retryMisplacedLettersStrategy = new(MockWordList.Object);
+    [Fact]
+    public void RetryMisplacedLettersGuesserStrategy_Constructor_CanBeInstantiated()
+    {
+        RetryMisplacedLettersGuesserStrategy retryMisplacedLettersStrategy = new(MockWordList.Object);
 
-		retryMisplacedLettersStrategy.SetupGetAlreadyGuessedLettersMockReturn(['A']);
+        retryMisplacedLettersStrategy.SetupGetAlreadyGuessedLettersMockReturn(['A']);
 
-		retryMisplacedLettersStrategy.Should()
-			.NotBeNull()
-			.And.BeOfType<RetryMisplacedLettersGuesserStrategy>()
-			.And.BeAssignableTo<NextWordGuesserStrategyBase>();
-	}
+        retryMisplacedLettersStrategy.Should()
+            .NotBeNull("should be instantiated")
+            .And.BeOfType<RetryMisplacedLettersGuesserStrategy>($"should be a {nameof(RetryMisplacedLettersGuesserStrategy)}")
+            .And.BeAssignableTo<NextWordGuesserStrategyBase>($"should subclass ${nameof(NextWordGuesserStrategyBase)}");
+    }
 
-	[Theory]
-	[MemberData(nameof(RetryMisplacedLettersScoreForGuessTestData))]
-	public void RetryMisplacedLettersGuesserStrategy_ScoreForGuess_ScoresGuessBasedOnDistinctUngessedLetters(string because, int numMisplacedLetters)
-	{
-		int TestAlphabetLength = numMisplacedLetters + 3;
+    [Theory]
+    [MemberData(nameof(RetryMisplacedLettersScoreForGuessTestData))]
+    public void RetryMisplacedLettersGuesserStrategy_ScoreForGuess_ScoresGuessBasedOnDistinctUngessedLetters(string because, int numMisplacedLetters)
+    {
+        int TestAlphabetLength = numMisplacedLetters + 3;
 
-		TestAlphabetLength.Should()
-			.BeLessThanOrEqualTo(Data.Alphabet.Count, "test data should contain valid misplaced letter quantities");
+        TestAlphabetLength.Should()
+            .BeLessThanOrEqualTo(Data.Alphabet.Count, "test data should contain valid misplaced letter quantities");
 
-		IEnumerable<char> Alphabet = Data.Alphabet.Take(TestAlphabetLength);
-		IEnumerable<char> MisplacedAlphabet = Alphabet.RotateRight();
+        IEnumerable<char> Alphabet = Data.Alphabet.Take(TestAlphabetLength);
+        IEnumerable<char> MisplacedAlphabet = Alphabet.RotateRight();
 
-		LetterAtPositionInWordRule ImpossibleLetterRule = new(null, Alphabet.ElementAt(^3), LetterAtPositionInWord.Impossible);
-		LetterAtPositionInWordRule NonMatchingMisplacedLetterRule = new(numMisplacedLetters + 1, Alphabet.ElementAt(^2), LetterAtPositionInWord.Misplaced);
-		List<LetterAtPositionInWordRule> PreviouslyMisplacedLetterRules = numMisplacedLetters.Repeat((position) => new LetterAtPositionInWordRule(position, Alphabet.ElementAt(position), LetterAtPositionInWord.Misplaced));
-		MockWordList.Setup(wordList => wordList.LetterRules).Returns([
-			ImpossibleLetterRule,
-			NonMatchingMisplacedLetterRule,
-			..PreviouslyMisplacedLetterRules
-		]);
+        LetterAtPositionInWordRule ImpossibleLetterRule = new(null, Alphabet.ElementAt(^3), LetterAtPositionInWord.Impossible);
+        LetterAtPositionInWordRule NonMatchingMisplacedLetterRule = new(numMisplacedLetters + 1, Alphabet.ElementAt(^2), LetterAtPositionInWord.Misplaced);
+        List<LetterAtPositionInWordRule> PreviouslyMisplacedLetterRules = numMisplacedLetters.Repeat((position) => new LetterAtPositionInWordRule(position, Alphabet.ElementAt(position), LetterAtPositionInWord.Misplaced));
+        MockWordList.Setup(wordList => wordList.LetterRules).Returns([
+            ImpossibleLetterRule,
+            NonMatchingMisplacedLetterRule,
+            ..PreviouslyMisplacedLetterRules
+        ]);
 
-		RetryMisplacedLettersGuesserStrategy retryMisplacedLettersStrategy = new(MockWordList.Object);
+        RetryMisplacedLettersGuesserStrategy retryMisplacedLettersStrategy = new(MockWordList.Object);
 
-		string Guess = string.Join(string.Empty, MisplacedAlphabet.Take(1 + numMisplacedLetters));
+        string Guess = string.Join(string.Empty, MisplacedAlphabet.Take(1 + numMisplacedLetters));
 
-		double Result = retryMisplacedLettersStrategy.ScoreForGuess(Guess);
+        double Result = retryMisplacedLettersStrategy.ScoreForGuess(Guess);
 
-		MockWordList.Verify(wordList => wordList.LetterRules, Times.Once,
-			"LetterRules should be invoked to determine previously misplaced letters");
+        MockWordList.Verify(wordList => wordList.LetterRules, Times.Once,
+            "LetterRules should be invoked to determine previously misplaced letters");
 
-		Result.Should()
-			.Be(numMisplacedLetters, because);
-	}
+        Result.Should()
+            .Be(numMisplacedLetters, because);
+    }
 }

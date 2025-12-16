@@ -25,19 +25,12 @@ using WordleSolver.Library.GuesserStrategies;
 
 namespace WordleSolver.Tests;
 
-public class NextWordGuesserStrategyTestFixture<NextWordGuesserStrategyType> : IDisposable
-	 where NextWordGuesserStrategyType : INextWordGuesserStrategy
-
+public class MockWordListFixture : IDisposable
 {
-	protected readonly Mock<IWordList> MockWordList;
+    protected readonly Mock<IWordList> MockWordList = new();
 
-	public NextWordGuesserStrategyTestFixture()
-	{
-		MockWordList = new Mock<IWordList>();
-	}
-
-	public void Dispose()
-	{
-		MockWordList.Reset();
-	}
+    public void Dispose()
+    {
+        MockWordList.Reset();
+    }
 }

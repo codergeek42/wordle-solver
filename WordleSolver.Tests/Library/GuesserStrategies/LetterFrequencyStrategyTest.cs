@@ -21,47 +21,49 @@
 using AwesomeAssertions;
 using WordleSolver.Library;
 using WordleSolver.Library.GuesserStrategies;
+using WordleSolver.Tests.Extensions;
 
 namespace WordleSolver.Tests;
 
-public class LetterFrequencyStrategyTest : NextWordGuesserStrategyTestFixture<LetterFrequencyGuesserStrategy>
+public class LetterFrequencyStrategyTest : MockWordListFixture
 {
-	[Fact]
-	public void LetterFrequencyGuesserStrategy_Constructor_CanBeInstantiated()
-	{
-		LetterFrequencyGuesserStrategy letterFrequencyStrategy = new(MockWordList.Object);
+    [Fact]
+    public void LetterFrequencyGuesserStrategy_Constructor_CanBeInstantiated()
+    {
+        LetterFrequencyGuesserStrategy letterFrequencyStrategy = new(MockWordList.Object);
 
-		letterFrequencyStrategy.Should()
-			.NotBeNull()
-			.And.BeOfType<LetterFrequencyGuesserStrategy>()
-			.And.BeAssignableTo<NextWordGuesserStrategyBase>();
-	}
+        letterFrequencyStrategy.Should()
+            .NotBeNull("should be instantiated")
+            .And.BeOfType<LetterFrequencyGuesserStrategy>($"should be a {nameof(LetterFrequencyGuesserStrategy)}")
+            .And.BeAssignableTo<NextWordGuesserStrategyBase>($"should subclass ${nameof(NextWordGuesserStrategyBase)}");
+    }
 
-	[Fact]
-	public void LetterFrequencyGuesserStrategy_ScoreForGuess_ScoresGuessBasedOnLetterFrequency()
-	{
-		List<string> TestWords = ["BREAD", "BROOD", "BLOOD", "CROOK"];
-		MockWordList.Setup(wordList => wordList.CountLetters()).Returns(new List<Dictionary<char, int>>([
-			new() { ['B'] = 3, ['C'] = 1 },
-			new() { ['L'] = 1, ['R'] = 3 },
-			new() { ['E'] = 1, ['O'] = 3 },
-			new() { ['A'] = 1, ['O'] = 3 },
-			new() { ['D'] = 3, ['K'] = 1 }
-		]));
-		MockWordList.Setup(WordList => WordList.Words).Returns(TestWords);
+    [Fact]
+    public void LetterFrequencyGuesserStrategy_ScoreForGuess_ScoresGuessBasedOnLetterFrequency()
+    {
+        List<string> TestWords = ["BREAD", "BROOD", "BLOOD", "CROOK"];
+        MockWordList
+            .SetupCountLettersMockReturnValue([
+                new() { ['B'] = 3, ['C'] = 1 },
+                new() { ['L'] = 1, ['R'] = 3 },
+                new() { ['E'] = 1, ['O'] = 3 },
+                new() { ['A'] = 1, ['O'] = 3 },
+                new() { ['D'] = 3, ['K'] = 1 }
+            ])
+            .SetupWordsMockReturnValue(TestWords);
 
-		LetterFrequencyGuesserStrategy letterFrequencyStrategy = new(MockWordList.Object);
+        LetterFrequencyGuesserStrategy letterFrequencyStrategy = new(MockWordList.Object);
 
-		List<WordGuessAndScore> results = TestWords
-			.ConvertAll(word => new WordGuessAndScore(word, letterFrequencyStrategy.ScoreForGuess(word)));
+        List<WordGuessAndScore> results = TestWords
+            .ConvertAll(word => new WordGuessAndScore(word, letterFrequencyStrategy.ScoreForGuess(word)));
 
-		results.Should()
-			.BeEquivalentTo([
-				new WordGuessAndScore("BLOOD", 3.25),
-				new WordGuessAndScore("BREAD", 2.75),
-				new WordGuessAndScore("BROOD", 3.75),
-				new WordGuessAndScore("CROOK", 2.75)
-			], "word scores should be calculated by letter frequency");
-	}
+        results.Should()
+            .BeEquivalentTo([
+                new WordGuessAndScore("BLOOD", 3.25),
+                new WordGuessAndScore("BREAD", 2.75),
+                new WordGuessAndScore("BROOD", 3.75),
+                new WordGuessAndScore("CROOK", 2.75)
+            ], "word scores should be calculated by letter frequency");
+    }
 
 }
