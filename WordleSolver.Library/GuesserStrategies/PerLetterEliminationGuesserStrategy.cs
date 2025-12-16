@@ -24,22 +24,22 @@ namespace WordleSolver.Library.GuesserStrategies;
 
 public class PerLetterEliminationGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
-	public override double ScoreForGuess(string guess)
-	{
-		int previousScore = GetTotalPossibleLettersInWordList(CandidateWordList);
-		int simulatedGuessAllLetterScore = GetTotalPossibleLettersInWordList(
-			CandidateWordList.WithPositionLetterRules(GenerateGuessPositionLetterRules(guess))
-		);
-		return previousScore - simulatedGuessAllLetterScore;
-	}
+    public override double ScoreForGuess(string guess)
+    {
+        int previousScore = GetTotalPossibleLettersInWordList(CandidateWordList);
+        int simulatedGuessAllLetterScore = GetTotalPossibleLettersInWordList(
+            CandidateWordList.WithPositionLetterRules(GenerateGuessPositionLetterRules(guess))
+        );
+        return previousScore - simulatedGuessAllLetterScore;
+    }
 
-	public static int GetTotalPossibleLettersInWordList(IWordList wordList)
-	{
-		return wordList.PossibleLetters.Sum(possibleLetters => possibleLetters.Count);
-	}
+    public static int GetTotalPossibleLettersInWordList(IWordList wordList)
+    {
+        return wordList.PossibleLetters.Sum(possibleLetters => possibleLetters.Count);
+    }
 
-	public static List<LetterAtPositionInWordRule> GenerateGuessPositionLetterRules(string guess)
-	{
-		return guess.Enumerate().ConvertAll(lwp => new LetterAtPositionInWordRule(lwp.Position, lwp.Letter, LetterAtPositionInWord.Misplaced));
-	}
+    public static List<LetterAtPositionInWordRule> GenerateGuessPositionLetterRules(string guess)
+    {
+        return guess.Enumerate().ConvertAll(lwp => new LetterAtPositionInWordRule(lwp.Position, lwp.Letter, LetterAtPositionInWord.Misplaced));
+    }
 }

@@ -22,16 +22,16 @@ namespace WordleSolver.Library.GuesserStrategies;
 
 public interface INextWordGuesserStrategy
 {
-	public List<WordGuessAndResult> PreviousGuesses { get; }
-	public IWordList CandidateWordList { get; }
+    public List<WordGuessAndResult> PreviousGuesses { get; }
+    public IWordList CandidateWordList { get; }
 
-	public INextWordGuesserStrategy WithPreviousGuess(WordGuessAndResult guessAndResult);
+    public INextWordGuesserStrategy WithPreviousGuess(WordGuessAndResult guessAndResult);
 
-	public WordGuessAndScore GuessNextWordAndScore();
+    public WordGuessAndScore GuessNextWordAndScore();
 
-	public HashSet<char> GetAlreadyGuessedLetters();
+    public HashSet<char> GetAlreadyGuessedLetters();
 
-	public bool IsSolved();
+    public bool IsSolved();
 
-	public bool HasSolution();
+    public bool HasSolution();
 }

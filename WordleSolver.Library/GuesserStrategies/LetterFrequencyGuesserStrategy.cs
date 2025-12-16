@@ -24,12 +24,12 @@ namespace WordleSolver.Library.GuesserStrategies;
 
 public class LetterFrequencyGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
-	public override double ScoreForGuess(string guess)
-	{
-		List<Dictionary<char, int>> LettersCount = CandidateWordList.CountLetters();
-		var enumerated = guess.Enumerate();
-		// Needs double cast to force floating-point division.
-		var summed = enumerated.Sum(lwp => (double)LettersCount[lwp.Position][lwp.Letter] / CandidateWordList.Words.Count);
-		return summed;
-	}
+    public override double ScoreForGuess(string guess)
+    {
+        List<Dictionary<char, int>> LettersCount = CandidateWordList.CountLetters();
+        var enumerated = guess.Enumerate();
+        // Needs double cast to force floating-point division.
+        var summed = enumerated.Sum(lwp => (double)LettersCount[lwp.Position][lwp.Letter] / CandidateWordList.Words.Count);
+        return summed;
+    }
 }

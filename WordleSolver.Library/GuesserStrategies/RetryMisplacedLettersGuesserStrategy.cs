@@ -24,20 +24,19 @@ namespace WordleSolver.Library.GuesserStrategies;
 
 public class RetryMisplacedLettersGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
-	public override double ScoreForGuess(string guess)
-	{
-		IEnumerable<LetterWithPosition> previouslyMisplacedLetters = CandidateWordList.LetterRules
-			.Where((rule) => rule.Required == LetterAtPositionInWord.Misplaced)
-			// Position is not null because non-Impossible rules must have a Position, validated by
-			// WordList.ProcessExclusionsFromRules as the guess is added.
-			.Select((rule) => new LetterWithPosition(rule.Letter, rule.Position.GetValueOrDefault()));
+    public override double ScoreForGuess(string guess)
+    {
+        IEnumerable<LetterWithPosition> previouslyMisplacedLetters = CandidateWordList.LetterRules
+            .Where((rule) => rule.Required == LetterAtPositionInWord.Misplaced)
+            // Position is not null because non-Impossible rules must have a Position, validated by
+            // WordList.ProcessExclusionsFromRules as the guess is added.
+            .Select((rule) => new LetterWithPosition(rule.Letter, rule.Position.GetValueOrDefault()));
 
-		return guess.Enumerate()
-			.Where((guessedLetterWithPosition) =>
-				previouslyMisplacedLetters.Any((previouslyMisplaced) =>
-					previouslyMisplaced.Letter == guessedLetterWithPosition.Letter &&
-					previouslyMisplaced.Position != guessedLetterWithPosition.Position
-			))
-			.Count();
-	}
+        return guess.Enumerate()
+            .Count((guessedLetterWithPosition) =>
+                previouslyMisplacedLetters.Any((previouslyMisplaced) =>
+                    previouslyMisplaced.Letter == guessedLetterWithPosition.Letter &&
+                    previouslyMisplaced.Position != guessedLetterWithPosition.Position
+            ));
+    }
 }

@@ -18,23 +18,10 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
-namespace WordleSolver.Library;
+namespace WordleSolver.Library.GuesserStrategies;
 
-public interface IWordList
+public interface INextWordGuesserStrategyFactory
 {
-    public HashSet<char> Alphabet { get; }
-    public List<LetterAtPositionInWordRule> LetterRules { get; }
-
-    public List<HashSet<char>> PossibleLetters { get; }
-    public List<string> Words { get; }
-
-    public bool DoesWordMatchAllRules(string word);
-
-    public void ProcessExclusionsFromRules(List<LetterAtPositionInWordRule> lettersAtPositionInWordRules);
-
-    public List<Dictionary<char, int>> CountLetters();
-
-    public IWordList WithPositionLetterRules(List<LetterAtPositionInWordRule> lettersAtPositionRules);
-
-    public IWordList WithExcludedWords(List<string> excludedWords);
+    public abstract List<INextWordGuesserStrategy> FromWordList(IWordList wordList);
 }
+

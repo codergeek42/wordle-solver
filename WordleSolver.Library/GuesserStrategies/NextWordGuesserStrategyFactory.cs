@@ -18,23 +18,23 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
-namespace WordleSolver.Library;
+using WordleSolver.Library.Extensions;
 
-public interface IWordList
+namespace WordleSolver.Library.GuesserStrategies;
+
+public class NextWordGuesserStrategyFactory : INextWordGuesserStrategyFactory
 {
-    public HashSet<char> Alphabet { get; }
-    public List<LetterAtPositionInWordRule> LetterRules { get; }
-
-    public List<HashSet<char>> PossibleLetters { get; }
-    public List<string> Words { get; }
-
-    public bool DoesWordMatchAllRules(string word);
-
-    public void ProcessExclusionsFromRules(List<LetterAtPositionInWordRule> lettersAtPositionInWordRules);
-
-    public List<Dictionary<char, int>> CountLetters();
-
-    public IWordList WithPositionLetterRules(List<LetterAtPositionInWordRule> lettersAtPositionRules);
-
-    public IWordList WithExcludedWords(List<string> excludedWords);
+    public List<INextWordGuesserStrategy> FromWordList(IWordList wordList)
+    {
+        // TODO: Use reflection to get all non-Test types implementing INextWordGuesserStrategy.
+        // NB: Copy the word list into each guesser to prevent cross-thread data access in 
+        // parallel GuessNextWordAndScore().
+        return [
+            new DistinctLettersGuesserStrategy(new WordList(wordList)),
+            new LetterFrequencyGuesserStrategy(new WordList(wordList)),
+            new PerLetterEliminationGuesserStrategy(new WordList(wordList)),
+            new RetryMisplacedLettersGuesserStrategy(new WordList(wordList))
+        ];
+    }
 }
+

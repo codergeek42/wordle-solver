@@ -18,13 +18,20 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
-namespace WordleSolver.Library.GuesserStrategies;
+using Newtonsoft.Json;
 
-public class DistinctLettersGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
+namespace WordleSolver.Library.Extensions;
+
+public static class ObjectExtensions
 {
-	public override double ScoreForGuess(string guess)
-	{
-		HashSet<char> alreadyGuessedLetters = GetAlreadyGuessedLetters();
-		return guess.ToHashSet().Except(alreadyGuessedLetters).Count();
-	}
+    public static T DeepCopy<T>(this T original)
+    {
+        // NB: Will only return null if the original is null; but that can't happen because this parameter is non-nullable.
+        return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(original))!;
+    }
+
+    public static string AsJson(this object obj, Formatting formatting = Formatting.Indented)
+    {
+        return JsonConvert.SerializeObject(obj, formatting);
+    }
 }

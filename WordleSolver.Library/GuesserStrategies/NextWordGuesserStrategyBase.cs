@@ -18,49 +18,53 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
+using Newtonsoft.Json;
+
 namespace WordleSolver.Library.GuesserStrategies;
 
 public abstract class NextWordGuesserStrategyBase(IWordList wordList) : INextWordGuesserStrategy
 {
-	public List<WordGuessAndResult> PreviousGuesses { get; private set; } = new([]);
-	public IWordList CandidateWordList { get; private set; } = wordList;
+    public List<WordGuessAndResult> PreviousGuesses { get; private set; } = new([]);
+    public IWordList CandidateWordList { get; private set; } = wordList;
 
-	public abstract double ScoreForGuess(string guess);
+    public abstract double ScoreForGuess(string guess);
 
-	public HashSet<char> GetAlreadyGuessedLetters()
-	{
-		return PreviousGuesses.SelectMany(guess => guess.Word).ToHashSet();
-	}
+    public HashSet<char> GetAlreadyGuessedLetters()
+    {
+        return PreviousGuesses.SelectMany(guess => guess.Word).ToHashSet();
+    }
 
-	public WordGuessAndScore GuessNextWordAndScore()
-	{
-		if (!HasSolution())
-		{
-			throw new NoMoreGuessesException();
-		}
-		List<WordGuessAndScore> wordsWithScores = CandidateWordList.Words
-			.ConvertAll(word => new WordGuessAndScore(word, ScoreForGuess(word)));
-		// NB: Not null because the word list is certainly non-empty here, as
-		// a NoMoreGuessesException would be thrown earlier otherwise.
-		return wordsWithScores.MaxBy(wordWithScore => wordWithScore.Score)!;
-	}
+    public WordGuessAndScore GuessNextWordAndScore()
+    {
+        if (!HasSolution())
+        {
+            throw new NoMoreGuessesException();
+        }
+        // Console.WriteLine($"TYPE = {GetType().Name}", JsonConvert.SerializeObject(CandidateWordList.Words));
+        return CandidateWordList.Words
+            .AsParallel()
+            .Select(word => new WordGuessAndScore(word, ScoreForGuess(word)))
+            // NB: Not null because the word list is certainly non-empty here, as
+            // a NoMoreGuessesException would be thrown earlier otherwise.
+            .MaxBy(wordWithScore => wordWithScore.Score)!;
+    }
 
 
-	public bool IsSolved()
-	{
-		return CandidateWordList.Words.Count == 1;
-	}
+    public bool IsSolved()
+    {
+        return CandidateWordList.Words.Count == 1;
+    }
 
-	public bool HasSolution()
-	{
-		return CandidateWordList.Words.Count >= 1;
-	}
+    public bool HasSolution()
+    {
+        return CandidateWordList.Words.Count >= 1;
+    }
 
-	public INextWordGuesserStrategy WithPreviousGuess(WordGuessAndResult guessAndResult)
-	{
-		CandidateWordList.ProcessExclusionsFromRules(guessAndResult.Result);
-		PreviousGuesses.Add(guessAndResult);
-		return this;
+    public INextWordGuesserStrategy WithPreviousGuess(WordGuessAndResult guessAndResult)
+    {
+        CandidateWordList.ProcessExclusionsFromRules(guessAndResult.Result);
+        PreviousGuesses.Add(guessAndResult);
+        return this;
 
-	}
+    }
 }

@@ -19,6 +19,7 @@
  */
 
 using System.IO.Abstractions;
+using Newtonsoft.Json;
 using WordleSolver.Library.Extensions;
 
 namespace WordleSolver.Library;
@@ -30,6 +31,14 @@ public class WordList : IWordList
 
     public List<HashSet<char>> PossibleLetters { get; private set; }
     public List<string> Words { get; private set; }
+
+    public WordList()
+    {
+        Alphabet = new HashSet<char>();
+        LetterRules = [];
+        PossibleLetters = [];
+        Words = [];
+    }
 
     public WordList(IList<string>? words = default(List<string>))
     {
@@ -103,6 +112,8 @@ public class WordList : IWordList
             }
         }
         LetterRules.AddRange(lettersAtPositionInWordRules);
+        var excludingWords = Words.Where(word => !DoesWordMatchAllRules(word)).ToList();
+        // Console.WriteLine("REMOVING WORDS: {0}", JsonConvert.SerializeObject(excludingWords));
         Words.RemoveAll(word => !DoesWordMatchAllRules(word));
         Alphabet = string.Join("", Words).ToHashSet();
     }
@@ -127,5 +138,16 @@ public class WordList : IWordList
         IWordList newWordList = new WordList(this);
         newWordList.ProcessExclusionsFromRules(lettersAtPositionRules);
         return newWordList;
+    }
+
+    public IWordList WithExcludedWords(List<string> excludedWords)
+    {
+        IEnumerable<string> wordsToRemove = excludedWords
+            .ConvertAll(word => word.Trim().ToUpper());
+        IWordList newWordList = new WordList(
+            Words.Except(wordsToRemove).ToList()
+        );
+        return newWordList;
+
     }
 }

@@ -25,13 +25,14 @@ namespace WordleSolver.Library;
 public interface IWordleSolver
 {
 
-	public List<INextWordGuesserStrategy> GuesserStrategies { get; }
+    public List<INextWordGuesserStrategy> GuesserStrategies { get; }
+    public IWordList CandidateWordList { get; }
 
-	public IWordleSolver WithPreviousGuess(WordGuessAndResult previousGuessAndResult);
+    public IWordleSolver WithPreviousGuess(WordGuessAndResult previousGuessAndResult);
 
-	public (INextWordGuesserStrategy, WordGuessAndScore) GuessNextWord();
-	public bool IsSolved();
+    public (string GuesserStrategy, WordGuessAndScore GuessAndScore) GuessNextWord();
+    public bool IsSolved();
 
-	public bool HasSolution();
+    public bool HasSolution();
 
 }
