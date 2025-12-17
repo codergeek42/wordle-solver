@@ -92,8 +92,8 @@
       },
       "Newtonsoft.Json": {
         "type": "Transitive",
-        "resolved": "13.0.4",
-        "contentHash": "pdgNNMai3zv51W5aq268sujXUyx7SNdE2bj1wZcWjAQrKMFZV260lbqYop1d2GM67JI1huLRwxo9ZqnfF/lC6A=="
+        "resolved": "13.0.1",
+        "contentHash": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A=="
       },
       "System.Diagnostics.EventLog": {
         "type": "Transitive",
@@ -161,7 +161,6 @@
       "wordlesolver.library": {
         "type": "Project",
         "dependencies": {
-          "Newtonsoft.Json": "[13.0.4, )",
           "TestableIO.System.IO.Abstractions.Wrappers": "[22.0.16, )"
         }
       }
