@@ -23,7 +23,6 @@ namespace WordleSolver.Tests;
 using AwesomeAssertions;
 using Moq;
 using WordleSolver.Library;
-using WordleSolver.Library.Extensions;
 using WordleSolver.Library.GuesserStrategies;
 using WordleSolver.Tests.Extensions;
 

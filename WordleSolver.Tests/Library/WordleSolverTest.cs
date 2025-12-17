@@ -21,7 +21,6 @@
 namespace WordleSolver.Tests;
 
 using AwesomeAssertions;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Moq;
 using WordleSolver.Library;
 using WordleSolver.Library.Extensions;

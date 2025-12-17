@@ -18,8 +18,6 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
-using Newtonsoft.Json;
-
 namespace WordleSolver.Library.GuesserStrategies;
 
 public abstract class NextWordGuesserStrategyBase(IWordList wordList) : INextWordGuesserStrategy

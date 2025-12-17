@@ -18,8 +18,6 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
-using WordleSolver.Library.Extensions;
-
 namespace WordleSolver.Library.GuesserStrategies;
 
 public class NextWordGuesserStrategyFactory : INextWordGuesserStrategyFactory

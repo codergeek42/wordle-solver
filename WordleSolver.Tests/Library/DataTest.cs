@@ -18,7 +18,6 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
-using System.ComponentModel;
 using AwesomeAssertions;
 using WordleSolver.Library;
 

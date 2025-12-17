@@ -21,7 +21,6 @@
 
 using Moq;
 using WordleSolver.Library;
-using WordleSolver.Library.GuesserStrategies;
 
 namespace WordleSolver.Tests;
 

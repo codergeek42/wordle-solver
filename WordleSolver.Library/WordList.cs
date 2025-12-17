@@ -19,7 +19,6 @@
  */
 
 using System.IO.Abstractions;
-using Newtonsoft.Json;
 using WordleSolver.Library.Extensions;
 
 namespace WordleSolver.Library;
