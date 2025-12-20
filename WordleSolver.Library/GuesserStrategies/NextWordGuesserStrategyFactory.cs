@@ -1,0 +1,43 @@
+/*
+ * WordleSolver: A clever algorithm and automated tool to solve the
+ * 	NYTimes daily Wordle puzzle game.
+ * Copyright (C) 2023 Peter Gordon <codergeek42@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program, namely the "LICENSE.txt" text file.  If not,
+ * see <https://www.gnu.org/licenses/gpl-3.0.html>.
+ */
+
+namespace WordleSolver.Library.GuesserStrategies;
+
+public class NextWordGuesserStrategyFactory : INextWordGuesserStrategyFactory
+{
+    /// <summary>
+    /// Build a list of all possible guesser strategies from the given word list.
+    /// </summary>
+    /// <param name="wordList">The word list from which to initialize each guesser strategy.</param>
+    /// <returns>A list of instantiated guesser strategies.</returns>
+    public List<INextWordGuesserStrategy> FromWordList(IWordList wordList)
+    {
+        // TODO: Use reflection to get all non-Test types implementing INextWordGuesserStrategy.
+        // NB: Copy the word list into each guesser to prevent cross-thread data access in 
+        // parallel GuessNextWordAndScore().
+        return [
+            new DistinctLettersGuesserStrategy(new WordList(wordList)),
+            new LetterFrequencyGuesserStrategy(new WordList(wordList)),
+            new PerLetterEliminationGuesserStrategy(new WordList(wordList)),
+            new RetryMisplacedLettersGuesserStrategy(new WordList(wordList))
+        ];
+    }
+}
+

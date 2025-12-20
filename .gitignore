@@ -1,3 +1,9 @@
+#.Net build stuff
+bin/
+obj/
+
+TestResults/
+
 # Logs
 logs
 *.log
