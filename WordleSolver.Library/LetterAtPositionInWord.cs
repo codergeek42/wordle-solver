@@ -54,7 +54,7 @@ public class LetterRule(char letter, LetterAtPositionInWord required)
     /// </summary>
     public char Letter { get; set; } = letter;
     /// <summary>
-    /// The letter (e.g. 'A', 'Z').
+    /// The requirement for this letter.
     /// </summary>
     public LetterAtPositionInWord Required = required;
 }

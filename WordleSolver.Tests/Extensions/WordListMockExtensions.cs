@@ -19,6 +19,7 @@
  */
 
 using Moq;
+
 using WordleSolver.Library;
 using WordleSolver.Library.Extensions;
 
@@ -94,6 +95,21 @@ public static class WordListMockExtensions
         mockWordList
             .Setup(wordList => wordList.PossibleLetters)
             .Returns(expectedPossibleLetters);
+        return mockWordList;
+    }
+
+    /// <summary>
+    /// Sets up the mock ProcessExclusionsFromRules as a no-op stub.
+    /// </summary>
+    /// <param name="mockWordList">The mock WordList.</param>
+    /// <returns>The calling mock.</returns>
+    public static Mock<IWordList> SetupProcessExclusionsFromRulesMockReturnValue(this Mock<IWordList> mockWordList, IWordList expectedReturn)
+    {
+        mockWordList
+            .Setup(wordList => wordList.WithPositionLetterRules(
+                It.IsAny<List<LetterAtPositionInWordRule>>()
+            ))
+            .Returns(expectedReturn);
         return mockWordList;
     }
 

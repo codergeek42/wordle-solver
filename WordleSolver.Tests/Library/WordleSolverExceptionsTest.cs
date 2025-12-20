@@ -19,10 +19,14 @@
  */
 
 using AwesomeAssertions;
+
 using WordleSolver.Library;
 
 namespace WordleSolver.Tests;
 
+/// <summary>
+/// Unit tests for <see cref="WordleSolverException"/>
+/// </summary>
 public class ExceptionsTest
 {
     [Fact]

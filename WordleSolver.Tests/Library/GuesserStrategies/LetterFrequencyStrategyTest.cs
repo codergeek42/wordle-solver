@@ -19,6 +19,7 @@
  */
 
 using AwesomeAssertions;
+
 using WordleSolver.Library;
 using WordleSolver.Library.GuesserStrategies;
 using WordleSolver.Tests.Extensions;

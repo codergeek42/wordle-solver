@@ -38,11 +38,20 @@ public abstract class NextWordGuesserStrategyBase(IWordList wordList) : INextWor
     /// <returns>The score for the guess based on the guessing strategy in use.</returns>
     public abstract double ScoreForGuess(string guess);
 
+    /// <summary>
+    /// Returns the set of all guessed letters.
+    /// </summary>
+    /// <returns>The set of all guessed letters.</returns>
     public HashSet<char> GetAlreadyGuessedLetters()
     {
         return PreviousGuesses.SelectMany(guess => guess.Word).ToHashSet();
     }
 
+    /// <summary>
+    /// Applies the guesser strategy's score metric to every word and returns the highest-scoring one.
+    /// </summary>
+    /// <returns>The highest-scoring word and guess.</returns>
+    /// <exception cref="NoMoreGuessesException">If the guesser strategy does not have a solution.</exception>
     public WordGuessAndScore GuessNextWordAndScore()
     {
         if (!HasSolution())
@@ -57,22 +66,33 @@ public abstract class NextWordGuesserStrategyBase(IWordList wordList) : INextWor
             .MaxBy(wordWithScore => wordWithScore.Score)!;
     }
 
-
+    /// <summary>
+    /// Determines if the guesser strategy is solved (i.e., has exactly one candidate word remaining).
+    /// </summary>
+    /// <returns>True if the guesser strategy has exactly one word remaining; False otherwise.</returns>
     public bool IsSolved()
     {
         return CandidateWordList.Words.Count == 1;
     }
 
+    /// <summary>
+    /// Determines if the guesser strategy has a solution (i.e., has at least one candidate word remaining).
+    /// </summary>
+    /// <returns>True if the guesser strategy has at least one word remaining; False otherwise.</returns>
     public bool HasSolution()
     {
         return CandidateWordList.Words.Count >= 1;
     }
 
+    /// <summary>
+    /// Proceess the resulting letter-position rules from the previous guess and stores the guess, then
+    /// returns the calling guesser strategy.
+    /// </summary>
+    /// <returns>The caller.</returns>
     public INextWordGuesserStrategy WithPreviousGuess(WordGuessAndResult guessAndResult)
     {
         CandidateWordList.ProcessExclusionsFromRules(guessAndResult.Result);
         PreviousGuesses.Add(guessAndResult);
         return this;
-
     }
 }

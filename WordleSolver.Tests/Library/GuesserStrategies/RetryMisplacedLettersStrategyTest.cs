@@ -18,17 +18,19 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
+using AwesomeAssertions;
+
+using Moq;
+
+using WordleSolver.Library;
+using WordleSolver.Library.Extensions;
+using WordleSolver.Library.GuesserStrategies;
+using WordleSolver.Tests.Extensions;
+
 using RetryMisplacedLettersTestCase = (
    string CaseName,
    int NumMisplacedLetters
 );
-
-using AwesomeAssertions;
-using WordleSolver.Library;
-using WordleSolver.Library.GuesserStrategies;
-using WordleSolver.Tests.Extensions;
-using WordleSolver.Library.Extensions;
-using Moq;
 
 namespace WordleSolver.Tests;
 
@@ -39,7 +41,7 @@ public class RetryMisplacedLettersStrategyTest : MockWordListFixture
 {
     public static IEnumerable<object[]> RetryMisplacedLettersScoreForGuessTestData()
     {
-        IEnumerable<RetryMisplacedLettersTestCase> TestCases = (Data.WordLength + 1).Repeat((numMisplacedLetters) => (
+        IEnumerable<RetryMisplacedLettersTestCase> TestCases = (Data.WordLength + 1).Repeat(numMisplacedLetters => (
             CaseName: $"scores the guess based on the number of previously misplaced letters ({numMisplacedLetters})",
             NumMisplacedLetters: numMisplacedLetters
         ));
@@ -78,8 +80,8 @@ public class RetryMisplacedLettersStrategyTest : MockWordListFixture
 
         LetterAtPositionInWordRule ImpossibleLetterRule = new(null, Alphabet.ElementAt(^3), LetterAtPositionInWord.Impossible);
         LetterAtPositionInWordRule NonMatchingMisplacedLetterRule = new(numMisplacedLetters + 1, Alphabet.ElementAt(^2), LetterAtPositionInWord.Misplaced);
-        List<LetterAtPositionInWordRule> PreviouslyMisplacedLetterRules = numMisplacedLetters.Repeat((position) => new LetterAtPositionInWordRule(position, Alphabet.ElementAt(position), LetterAtPositionInWord.Misplaced));
-        MockWordList.Setup(wordList => wordList.LetterRules).Returns([
+        List<LetterAtPositionInWordRule> PreviouslyMisplacedLetterRules = numMisplacedLetters.Repeat(position => new LetterAtPositionInWordRule(position, Alphabet.ElementAt(position), LetterAtPositionInWord.Misplaced));
+        MockWordList.SetupLetterRulesMockReturnValue([
             ImpossibleLetterRule,
             NonMatchingMisplacedLetterRule,
             ..PreviouslyMisplacedLetterRules
@@ -91,7 +93,7 @@ public class RetryMisplacedLettersStrategyTest : MockWordListFixture
 
         double Result = retryMisplacedLettersStrategy.ScoreForGuess(Guess);
 
-        MockWordList.Verify(wordList => wordList.LetterRules, Times.Once,
+        MockWordList.Verify(wordList => wordList.LetterRules, Times.Once(),
             "LetterRules should be invoked to determine previously misplaced letters");
 
         Result.Should()

@@ -44,15 +44,15 @@ public class RetryMisplacedLettersGuesserStrategy(IWordList wordList) : NextWord
     public override double ScoreForGuess(string guess)
     {
         IEnumerable<LetterWithPosition> previouslyMisplacedLetters = CandidateWordList.LetterRules
-            .Where((rule) => rule.Required == LetterAtPositionInWord.Misplaced)
+            .Where(rule => rule.Required == LetterAtPositionInWord.Misplaced)
             // Position is not null because non-Impossible rules must have a Position, validated by
             // WordList.ProcessExclusionsFromRules as the guess is added and by the
             // LetterAtPositionInWordRule constructor.
-            .Select((rule) => new LetterWithPosition(rule.Letter, rule.Position!.Value));
+            .Select(rule => new LetterWithPosition(rule.Letter, rule.Position!.Value));
 
         return guess.Enumerate()
-            .Count((guessedLetterWithPosition) =>
-                previouslyMisplacedLetters.Any((previouslyMisplaced) =>
+            .Count(guessedLetterWithPosition =>
+                previouslyMisplacedLetters.Any(previouslyMisplaced =>
                     previouslyMisplaced.Letter == guessedLetterWithPosition.Letter &&
                     previouslyMisplaced.Position != guessedLetterWithPosition.Position
             ));

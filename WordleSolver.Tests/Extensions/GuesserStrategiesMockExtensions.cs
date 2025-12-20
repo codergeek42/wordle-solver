@@ -19,7 +19,9 @@
  */
 
 using AwesomeAssertions;
+
 using Moq;
+
 using WordleSolver.Library;
 using WordleSolver.Library.GuesserStrategies;
 
@@ -74,7 +76,7 @@ public static class GuesserStrategiesMockExtensions
     public static List<Mock<INextWordGuesserStrategy>> SetupIsSolvedMockReturns(this List<Mock<INextWordGuesserStrategy>> guesserStrategyMocks, List<bool> expectedIsSolveds)
     {
         guesserStrategyMocks.Should()
-            .HaveCount(expectedIsSolveds.Count, "mock expected solved valus should have the same length as calls to be made");
+            .HaveCount(expectedIsSolveds.Count, "mock expected solved values should have the same length as calls to be made");
 
         foreach (int idx in Enumerable.Range(0, guesserStrategyMocks.Count))
         {
@@ -94,7 +96,7 @@ public static class GuesserStrategiesMockExtensions
     public static List<Mock<INextWordGuesserStrategy>> SetupHasSolutionMockReturns(this List<Mock<INextWordGuesserStrategy>> guesserStrategyMocks, List<bool> expectedHasSolutions)
     {
         guesserStrategyMocks.Should()
-            .HaveCount(expectedHasSolutions.Count, "mock expected solved valus should have the same length as calls to be made");
+            .HaveCount(expectedHasSolutions.Count, "mock expected solved values should have the same length as calls to be made");
 
         foreach (int idx in Enumerable.Range(0, guesserStrategyMocks.Count))
         {

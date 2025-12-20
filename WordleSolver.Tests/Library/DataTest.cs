@@ -19,6 +19,7 @@
  */
 
 using AwesomeAssertions;
+
 using WordleSolver.Library;
 
 namespace WordleSolver.Tests;

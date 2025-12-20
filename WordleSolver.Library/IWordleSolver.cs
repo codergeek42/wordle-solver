@@ -56,7 +56,7 @@ public interface IWordleSolver
     /// Determines if the ongoing solver is solved by at least one guessing strategy (i.e., there is exactly one
     /// possible word remaining).
     /// </summary>
-    /// <returns>True if at lesat one of the guesser strategies is solved; false otherwise.</returns>
+    /// <returns>True if at least one of the guesser strategies is solved; false otherwise.</returns>
     public bool IsSolved();
 
     /// <summary>

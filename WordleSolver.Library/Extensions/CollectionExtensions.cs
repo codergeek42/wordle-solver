@@ -44,9 +44,9 @@ public static class CollectionExtensions
     /// whose nth index element otherwise is that of index (n-1) from the original, where L is the count of the
     /// given enumerable.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="enumerable"></param>
-    /// <returns></returns>
+    /// <typeparam name="T">The type of the enumerable.</typeparam>
+    /// <param name="enumerable">The enumerabe to rotate.</param>
+    /// <returns>The given enumerable, rotated one element right.</returns>
     public static IEnumerable<T> RotateRight<T>(this IEnumerable<T> enumerable)
     {
         return enumerable.Take(^1..).Concat(enumerable.Take(..^1));

@@ -44,7 +44,7 @@ public class LetterFrequencyGuesserStrategy(IWordList wordList) : NextWordGuesse
     /// then the most and least frequently used letters at each position are `B`, `R`, `O`, `O`, and `D` respectively;
     /// so `BROOD` would be the highest-scoring candidate.
     /// </summary>
-    /// <param name="guess">the candidate word</param>
+    /// <param name="guess">The candidate word.</param>
     /// <returns>The sum of each letter's relative frequency at that position.</returns>
     public override double ScoreForGuess(string guess)
     {

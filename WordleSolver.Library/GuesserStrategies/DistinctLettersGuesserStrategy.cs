@@ -35,7 +35,7 @@ public class DistinctLettersGuesserStrategy(IWordList wordList) : NextWordGuesse
     /// Note that the letters shown in these example results are for demonstration only; and the actual
     /// returned score does not include the information about those letters, only their total count.
     /// </summary>
-    /// <param name="guess">the candidate word</param>
+    /// <param name="guess">The candidate word.</param>
     /// <returns>The number of letters in the given guess that have not previously been guessed.</returns>
     public override double ScoreForGuess(string guess)
     {

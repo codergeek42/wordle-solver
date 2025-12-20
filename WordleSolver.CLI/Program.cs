@@ -19,6 +19,7 @@
  */
 
 using System.IO.Abstractions;
+
 using WordleSolver.Library;
 using WordleSolver.Library.GuesserStrategies;
 
@@ -32,7 +33,6 @@ class WordleSolverCommandLineApp
         Console.WriteLine("Begin App WordleSolver");
         Console.WriteLine("reading words list...");
         var wordsFile = "/usr/share/dict/words";
-        // var wordsFile = "/home/pgordon/Projects/wordle_solver/words.txt";
         WordList wordList = await WordList.FromFileAsync(wordsFile, new FileSystem());
         Console.WriteLine("initializing solver...");
         Library.WordleSolver solver = new(wordList, new NextWordGuesserStrategyFactory());

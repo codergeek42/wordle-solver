@@ -21,6 +21,7 @@
 namespace WordleSolver.Tests;
 
 using AwesomeAssertions;
+
 using WordleSolver.Library;
 using WordleSolver.Library.Extensions;
 

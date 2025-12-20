@@ -30,7 +30,7 @@ namespace WordleSolver.Library.GuesserStrategies;
 public class PerLetterEliminationGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
     /// <summary>
-    /// Sscores the candidate word by the relative letter frequency at each position, calculating the number of
+    /// Scores the candidate word by the relative letter frequency at each position, calculating the number of
     /// position-letter pairings that the current solver rules have not specified that the given guess could
     /// potentially eliminate.
     /// 

@@ -19,6 +19,7 @@
  */
 
 using System.IO.Abstractions;
+
 using WordleSolver.Library.Extensions;
 
 namespace WordleSolver.Library;
@@ -130,28 +131,24 @@ public class WordList : IWordList
             {
                 PossibleLetters.ForEach(possibleLettersAtPos => possibleLettersAtPos.ExceptWith([rule.Letter]));
             }
-            else if (rule.Position is null)
-            {
-                throw new MissingLetterRulePositionException();
-            }
             else
             {
                 switch (rule.Required)
                 {
                     // NB: C# doesn't auto-detect that these cannot be null here for some reason; and
                     // without the explicit int assertions gives a CS1503 error, even though the thrown
-                    // MissingLetterRulePositionException in the preceding condition should prevent that.
+                    // MissingLetterRulePositionException from LetterAtPositionInWordRule should prevent that.
                     case LetterAtPositionInWord.Mandatory:
-                        PossibleLetters[(int)rule.Position] = [rule.Letter];
+                        PossibleLetters[(int)rule.Position!] = [rule.Letter];
                         break;
                     case LetterAtPositionInWord.Misplaced:
-                        PossibleLetters[(int)rule.Position].ExceptWith([rule.Letter]);
+                        PossibleLetters[(int)rule.Position!].ExceptWith([rule.Letter]);
                         break;
                 }
             }
         }
         LetterRules.AddRange(lettersAtPositionInWordRules);
-        var excludingWords = Words.Where(word => !DoesWordMatchAllRules(word)).ToList();
+        List<string> excludingWords = Words.Where(word => !DoesWordMatchAllRules(word)).ToList();
         Words.RemoveAll(word => !DoesWordMatchAllRules(word));
         Alphabet = string.Join("", Words).ToHashSet();
     }
@@ -172,9 +169,8 @@ public class WordList : IWordList
         return Data.WordLength
             .Repeat(position => Words
                 .CountBy(word => word[position])
-                .ToList()
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
-            ).ToList();
+            );
     }
 
     /// <summary>

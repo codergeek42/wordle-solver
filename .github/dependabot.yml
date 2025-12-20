@@ -7,6 +7,7 @@ version: 2
 updates:
   - package-ecosystem: "dotnet-sdk" # See documentation for possible values
     directories: # Location of package manifests
+    - "/WordleSolver.CLI"
     - "/WordleSolver.Library"
     - "/WordleSolver.Tests"
     schedule:

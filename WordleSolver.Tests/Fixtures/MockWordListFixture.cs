@@ -20,6 +20,7 @@
 
 
 using Moq;
+
 using WordleSolver.Library;
 
 namespace WordleSolver.Tests;

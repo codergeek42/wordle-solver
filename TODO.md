@@ -1,14 +1,14 @@
 # C#/.Net Port
-- [ ] Finish Solver library
+- [x] Finish Solver library
 - [ ] Use reflection to loop through all guesser strategies instead of having to explicitly populate them?
-- [ ] Use PLINQ to calculate next highest-scoring word
+- [x] Use PLINQ to calculate next highest-scoring word
 
 # CICD Pipeline
-- [ ] CodeQL
+- [x] CodeQL
 - [ ] Continuous Integration (build/test/coverage report/etc.)
 - [ ] Daily solver (after implemented)
 
-# Library
+# Usage
 Currently, only the basic solving algorithm is implemented alongside some guessing strategies (scoring metrics); but
 future work planned includes the following:
 

@@ -19,7 +19,9 @@
  */
 
 using AwesomeAssertions;
+
 using Moq;
+
 using WordleSolver.Library;
 using WordleSolver.Library.Extensions;
 using WordleSolver.Library.GuesserStrategies;
@@ -46,8 +48,9 @@ public class PerLetterEliminationGuesserStrategyTest : MockWordListFixture
     [Fact]
     public void PerLetterEliminationGuesserStrategy_GetTotalPossibleLettersInWordList_SumsNumberOfLetters()
     {
-        MockWordList.Setup(wordList => wordList.PossibleLetters)
-            .Returns(Data.WordLength.Repeat(maxPos => Data.Alphabet.Take(1 + maxPos).ToHashSet()));
+        MockWordList.SetupPossibleLettersMockReturnValue(
+            Data.WordLength.Repeat(maxPos => Data.Alphabet.Take(1 + maxPos).ToHashSet())
+        );
 
         int result = PerLetterEliminationGuesserStrategy.GetTotalPossibleLettersInWordList(MockWordList.Object);
 
@@ -81,15 +84,15 @@ public class PerLetterEliminationGuesserStrategyTest : MockWordListFixture
         MockWordList.SetupPossibleLettersMockReturnCount(1 + expectedScore);
         mockWordListWithPositionLetterRules.SetupPossibleLettersMockReturnCount(1);
         List<LetterAtPositionInWordRule> expectedGuessAsMisplacedRules = PerLetterEliminationGuesserStrategy.GenerateGuessPositionLetterRules(guess);
-        MockWordList.Setup(wordList => wordList.WithPositionLetterRules(It.IsAny<List<LetterAtPositionInWordRule>>())).Returns(mockWordListWithPositionLetterRules.Object);
+        MockWordList.SetupProcessExclusionsFromRulesMockReturnValue(mockWordListWithPositionLetterRules.Object);
         PerLetterEliminationGuesserStrategy perLetterEliminationStrategy = new(MockWordList.Object);
 
         double result = perLetterEliminationStrategy.ScoreForGuess(guess);
 
 
-        MockWordList.Verify(wordList => wordList.PossibleLetters, Times.Once,
+        MockWordList.Verify(wordList => wordList.PossibleLetters, Times.Once(),
             "should query possible letters from provided word list");
-        mockWordListWithPositionLetterRules.Verify(wordList => wordList.PossibleLetters, Times.Once,
+        mockWordListWithPositionLetterRules.Verify(wordList => wordList.PossibleLetters, Times.Once(),
             "should query possible letters from word list with guess applied as all Misplaced");
         result.Should()
             .Be(expectedScore, "should calculate the total score based on difference of possible letters");

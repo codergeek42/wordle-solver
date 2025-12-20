@@ -1,19 +1,3 @@
-
-using AwesomeAssertions;
-using WordleSolver.Library;
-using System.IO.Abstractions.TestingHelpers;
-using System.Text;
-using WordleSolver.Library.Extensions;
-
-// FIXME: Use TheoryDataRow & related to clean up this test case naming & output.
-using DoesWordMatchAllRulesTestCase = (
-    string CaseName,
-    string Alphabet,
-    System.Collections.Generic.List<WordleSolver.Library.LetterAtPositionInWordRule> PositionLetterRules,
-    System.Collections.Generic.List<(string Word, bool IsMatch)> ExpectedWordMatches
-);
-
-namespace WordleSolver.Tests;
 /*
  * WordleSolver: A clever algorithm and automated tool to solve the
  * 	NYTimes daily Wordle puzzle game.
@@ -33,6 +17,25 @@ namespace WordleSolver.Tests;
  * along with this program, namely the "LICENSE.txt" text file.  If not,
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
+
+using System.IO.Abstractions.TestingHelpers;
+using System.Text;
+
+using AwesomeAssertions;
+
+using WordleSolver.Library;
+using WordleSolver.Library.Extensions;
+
+// FIXME: Use TheoryDataRow & related to clean up this test case naming & output.
+using DoesWordMatchAllRulesTestCase = (
+    string CaseName,
+    string Alphabet,
+    System.Collections.Generic.List<WordleSolver.Library.LetterAtPositionInWordRule> PositionLetterRules,
+    System.Collections.Generic.List<(string Word, bool IsMatch)> ExpectedWordMatches
+);
+
+namespace WordleSolver.Tests;
+
 
 /// <summary>
 /// Unit tests for <see cref="WordList"/>
@@ -101,11 +104,22 @@ public class WordListTest
         WordList emptyWordList = new();
 
         emptyWordList.Words.Should()
-            .NotBeNull("should instantiate empty word list");
-        emptyWordList.Words.Should()
-            .BeEmpty("should have no words");
+            .NotBeNull("should instantiate empty word list")
+            .And.BeOfType<List<string>>("should be a string list")
+            .And.BeEmpty("should have no words");
         emptyWordList.Alphabet.Should()
-            .BeEmpty("should have no alphabet");
+            .NotBeNull("should instantiate alphabet")
+            .And.BeOfType<HashSet<char>>("should have alphabet be a set of chars")
+            .And.BeEmpty("should have empty alphabet");
+        emptyWordList.LetterRules.Should()
+            .NotBeNull("should instantiate letter rules")
+            .And.BeOfType<List<LetterAtPositionInWordRule>>("should have letter rules be a list of rules")
+            .And.BeEmpty("should have empty letter rules");
+        emptyWordList.PossibleLetters.Should()
+            .NotBeNull("should instantiate possible letters")
+            .And.BeOfType<List<HashSet<char>>>("should have possible letters be a list of sets of chars")
+            .And.BeEquivalentTo(Data.WordLength.Repeat(_ => new HashSet<char>()),
+                "should have an empty possible letters list of the correct length");
     }
 
     [Fact]
@@ -208,7 +222,12 @@ public class WordListTest
 
     [Theory]
     [MemberData(nameof(DoesWordMatchAllRulesTestData))]
-    public void WordList_DoesWordMatchAllRules_ShouldMatchAllRuleTypes(string because, string alphabet, List<LetterAtPositionInWordRule> positionLetterRules, List<(string Word, bool IsMatch)> expectedWordMatches)
+    public void WordList_DoesWordMatchAllRules_ShouldMatchAllRuleTypes(
+        string because,
+        string alphabet,
+        List<LetterAtPositionInWordRule> positionLetterRules,
+        List<(string Word, bool IsMatch)> expectedWordMatches
+    )
     {
         WordList testWordList = new(Data.GenerateAlphabetWords(alphabet));
         testWordList.ProcessExclusionsFromRules(positionLetterRules);
@@ -243,7 +262,7 @@ public class WordListTest
             new() { ['A'] = 1, ['B'] = 1, ['D'] = 1 }
         ];
 
-        var result = testWordList.CountLetters();
+        List<Dictionary<char, int>> result = testWordList.CountLetters();
 
         result.Should()
             .BeEquivalentTo(expectedCounts, "should count letters at each position");
@@ -252,8 +271,8 @@ public class WordListTest
     [Fact]
     public void WordList_WithPositionLetterRules_ReturnsCopyWithProcessedRules()
     {
-        WordList originalWordList = new WordList(Data.GenerateAlphabetWords("ABC"));
-        WordList originalCopy = new WordList(originalWordList);
+        WordList originalWordList = new(Data.GenerateAlphabetWords("ABC"));
+        WordList originalCopy = new(originalWordList);
 
         List<LetterAtPositionInWordRule> letterAtPositionInWordRules = [
             new LetterAtPositionInWordRule(null, 'A', LetterAtPositionInWord.Impossible),

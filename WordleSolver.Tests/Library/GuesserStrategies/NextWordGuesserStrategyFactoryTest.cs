@@ -19,6 +19,7 @@
  */
 
 using AwesomeAssertions;
+
 using WordleSolver.Library;
 using WordleSolver.Library.Extensions;
 using WordleSolver.Library.GuesserStrategies;
@@ -60,8 +61,7 @@ public class NextWordGuesserStrategyFactoryTest : MockWordListFixture
                 guesserStrategy.CandidateWordList.Should()
                     .BeEquivalentTo(new WordList(MockWordList.Object), $"should store word list into {guesserStrategy.GetType().Name}")
                     .And.NotBeSameAs(MockWordList.Object, $"should copy word list into {guesserStrategy.GetType().Name}");
-            },
-            "should copy word list into each guesser strategy, not store reference");
+            }, "should copy word list into each guesser strategy, not store reference");
     }
 }
 

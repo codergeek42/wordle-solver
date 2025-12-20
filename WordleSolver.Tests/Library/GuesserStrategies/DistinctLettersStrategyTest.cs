@@ -18,17 +18,18 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
+using AwesomeAssertions;
+
+using WordleSolver.Library;
+using WordleSolver.Library.Extensions;
+using WordleSolver.Library.GuesserStrategies;
+using WordleSolver.Tests.Extensions;
+
 using DistinctLettersScoreForGuessTestCase = (
     string CaseName,
     int NumGuessedLetters,
     int NumDistinctLetters
 );
-
-using AwesomeAssertions;
-using WordleSolver.Library;
-using WordleSolver.Library.GuesserStrategies;
-using WordleSolver.Tests.Extensions;
-using WordleSolver.Library.Extensions;
 
 namespace WordleSolver.Tests;
 
