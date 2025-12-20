@@ -29,12 +29,6 @@ namespace WordleSolver.Tests;
 /// </summary>
 public class DataTest
 {
-    [Fact(DisplayName = "This should fail in CI.")]
-    public void ExpectThisToFailForTestingCI()
-    {
-        "ABC".Should().BeNull();
-    }
-
     [Fact(DisplayName = "Alphabet has all A-Z exactly once in order.")]
     public void Alphabet_HasAll26Chars()
     {
