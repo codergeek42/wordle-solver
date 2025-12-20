@@ -37,6 +37,6 @@ class WordleSolverCommandLineApp
         Console.WriteLine("initializing solver...");
         Library.WordleSolver solver = new(wordList, new NextWordGuesserStrategyFactory());
         Console.WriteLine("...Guessing first word!");
-        var _ = solver.GuessNextWord();
+        var _unused = solver.GuessNextWord();
     }
 }
