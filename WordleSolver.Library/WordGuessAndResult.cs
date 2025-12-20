@@ -20,15 +20,39 @@
 
 namespace WordleSolver.Library;
 
+/// <summary>
+/// A pairing of a guessed word with its associated score.
+/// </summary>
+/// <param name="word">The guessed word.</param>
+/// <param name="score">The score for the word.</param>
 public class WordGuessAndScore(string word, double score)
 {
+    /// <summary>
+    /// The guessed word.
+    /// </summary>
     public string Word { get; set; } = word;
+
+    /// <summary>
+    /// The score for the guessed word.
+    /// </summary>
     public double Score { get; set; } = score;
 }
 
 
+/// <summary>
+/// A pairing of guessed word and its resulting letter-position rules.
+/// </summary>
+/// <param name="word">The guessed word.</param>
+/// <param name="result">The resulting letter-position rules.</param>
 public class WordGuessAndResult(string word, List<LetterAtPositionInWordRule> result)
 {
+    /// <summary>
+    /// The guessed word.
+    /// </summary>
     public string Word { get; set; } = word;
+
+    /// <summary>
+    /// The letter-position rules resulting from the guess.
+    /// </summary>
     public List<LetterAtPositionInWordRule> Result { get; set; } = result;
 }

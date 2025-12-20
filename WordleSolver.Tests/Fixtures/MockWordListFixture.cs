@@ -24,10 +24,19 @@ using WordleSolver.Library;
 
 namespace WordleSolver.Tests;
 
+/// <summary>
+/// A basic test fixture which stores and disposes of a mock WordList per test.
+/// </summary>
 public class MockWordListFixture : IDisposable
 {
+    /// <summary>
+    /// The mock WordList.
+    /// </summary>
     protected readonly Mock<IWordList> MockWordList = new();
 
+    /// <summary>
+    /// Clear the mock at test teardown.
+    /// </summary>
     public void Dispose()
     {
         MockWordList.Reset();

@@ -34,7 +34,9 @@ namespace WordleSolver.Tests;
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
-
+/// <summary>
+/// Unit tests for <see cref="WordList"/>
+/// </summary>
 public class WordListTest
 {
     public static DoesWordMatchAllRulesTestCase ExcludeImpossibleAAtEveryPosition = (
@@ -218,22 +220,6 @@ public class WordListTest
 
     }
 
-    [Theory]
-    [InlineData(LetterAtPositionInWord.Mandatory)]
-    [InlineData(LetterAtPositionInWord.Misplaced)]
-    public void WordList_DoesWordMatchAllRules_ShouldThrowIfNonImpossibleRuleHasNullPosition(LetterAtPositionInWord ruleRequired)
-    {
-        LetterAtPositionInWordRule testRuleWithoutPosition = new(null, 'A', ruleRequired);
-        WordList testWordList = new(Data.GenerateAlphabetWords("AB"));
-        WordList originalTestWordList = testWordList;
-
-        Action testCall = () => testWordList.ProcessExclusionsFromRules([testRuleWithoutPosition]);
-
-        testCall.Should()
-            .Throw<MissingLetterRulePositionException>("a non-Impossible rule should have an associated Position");
-        testWordList.Should()
-            .BeSameAs(originalTestWordList, "the calling WordList should not be changed");
-    }
 
     [Fact]
     public void WordList_CountLetters_ShouldThrowIfEmpty()

@@ -20,22 +20,33 @@
 
 namespace WordleSolver.Library.Extensions;
 
+/// <summary>
+/// Utility methods that are callable on collections of items.
+/// </summary>
 public static class CollectionExtensions
 {
-    public static Dictionary<int, T> Enumerate<T>(this IEnumerable<T> enumerable)
-    {
-        return enumerable.Count()
-            .Repeat((idx) => (idx, enumerable.ElementAt(idx)))
-            .ToDictionary();
-    }
-
+    /// <summary>
+    /// Converts the given string to a list of position-character pairs,
+    /// similar to Python's "enumerate(...)".
+    /// </summary>
+    /// <param name="stringToEnumerate">the string to enumerate</param>
+    /// <returns>A list of letters from the string with their corresponding positions.</returns>
     public static List<LetterWithPosition> Enumerate(this string stringToEnumerate)
     {
-        return stringToEnumerate.Enumerate<char>()
-            .Select(enumeratedLetter => new LetterWithPosition(enumeratedLetter.Value, enumeratedLetter.Key))
+        return stringToEnumerate
+            .Select((letter, position) => new LetterWithPosition(letter, position))
             .ToList();
     }
 
+    /// <summary>
+    /// Rotates the given enumerable one element to the right, shifting the rightmost element to be the leftmost.
+    /// More formally, returns a new enumerable whose 0th index element is that of index (L-1) from the original, and
+    /// whose nth index element otherwise is that of index (n-1) from the original, where L is the count of the
+    /// given enumerable.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="enumerable"></param>
+    /// <returns></returns>
     public static IEnumerable<T> RotateRight<T>(this IEnumerable<T> enumerable)
     {
         return enumerable.Take(^1..).Concat(enumerable.Take(..^1));

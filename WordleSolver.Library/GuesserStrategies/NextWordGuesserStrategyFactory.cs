@@ -22,6 +22,11 @@ namespace WordleSolver.Library.GuesserStrategies;
 
 public class NextWordGuesserStrategyFactory : INextWordGuesserStrategyFactory
 {
+    /// <summary>
+    /// Build a list of all possible guesser strategies from the given word list.
+    /// </summary>
+    /// <param name="wordList">The word list from which to initialize each guesser strategy.</param>
+    /// <returns>A list of instantiated guesser strategies.</returns>
     public List<INextWordGuesserStrategy> FromWordList(IWordList wordList)
     {
         // TODO: Use reflection to get all non-Test types implementing INextWordGuesserStrategy.

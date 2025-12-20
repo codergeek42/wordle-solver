@@ -20,11 +20,22 @@
 
 namespace WordleSolver.Library.GuesserStrategies;
 
+/// <summary>
+/// Base guesser strategy implementation, of common methods & logic. Guesser strategies should subclass this instead
+/// of implementing INextWordGuesserStrategy directly.
+/// </summary>
+/// <param name="wordList">The word list from which to initialize the guesser strategy.</param>
 public abstract class NextWordGuesserStrategyBase(IWordList wordList) : INextWordGuesserStrategy
 {
     public List<WordGuessAndResult> PreviousGuesses { get; private set; } = new([]);
     public IWordList CandidateWordList { get; private set; } = wordList;
 
+    /// <summary>
+    /// Calculates the score for the candidate guess based on the guesser strategy's metric.
+    /// Guesser strategies must each implement this method. 
+    /// </summary>
+    /// <param name="guess">The candidate word.</param>
+    /// <returns>The score for the guess based on the guessing strategy in use.</returns>
     public abstract double ScoreForGuess(string guess);
 
     public HashSet<char> GetAlreadyGuessedLetters()
@@ -38,7 +49,6 @@ public abstract class NextWordGuesserStrategyBase(IWordList wordList) : INextWor
         {
             throw new NoMoreGuessesException();
         }
-        // Console.WriteLine($"TYPE = {GetType().Name}", JsonConvert.SerializeObject(CandidateWordList.Words));
         return CandidateWordList.Words
             .AsParallel()
             .Select(word => new WordGuessAndScore(word, ScoreForGuess(word)))

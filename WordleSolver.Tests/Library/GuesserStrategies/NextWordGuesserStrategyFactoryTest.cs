@@ -26,6 +26,9 @@ using WordleSolver.Tests.Extensions;
 
 namespace WordleSolver.Tests;
 
+/// <summary>
+/// Unit tests for <see cref="NextWordGuesserStrategyFactory"/>
+/// </summary>
 public class NextWordGuesserStrategyFactoryTest : MockWordListFixture
 {
 

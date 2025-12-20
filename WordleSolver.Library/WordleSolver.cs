@@ -22,13 +22,30 @@ using WordleSolver.Library.GuesserStrategies;
 
 namespace WordleSolver.Library;
 
+/// <summary>
+/// The core Wordle-solving library, storing a list of guesser strategies and applying solving iterations to each
+/// simultaneously.
+/// </summary>
+/// <param name="wordList">The word list from which to initialize the solver.</param>
+/// <param name="guesserStrategyFactory">Factory for creating the list of guesser stratgies.</param>
 public class WordleSolver(IWordList wordList, INextWordGuesserStrategyFactory guesserStrategyFactory) : IWordleSolver
 {
 
+    /// <summary>
+    /// The list of guesser stratgies.
+    /// </summary>
     public List<INextWordGuesserStrategy> GuesserStrategies { get; private set; } = guesserStrategyFactory.FromWordList(wordList);
 
+    /// <summary>
+    /// The list of potential words remaining.
+    /// </summary>
     public IWordList CandidateWordList { get; private set; } = wordList;
 
+    /// <summary>
+    /// Applies the previous guess to each guessing strategy and returns the calling (modified) solver instance.
+    /// </summary>
+    /// <param name="previousGuessAndResult">The previous guessed word and its resulting letter-position rules.</param>
+    /// <returns>The modified <see cref="WordleSolver"/> instance.</returns>
     public IWordleSolver WithPreviousGuess(WordGuessAndResult previousGuessAndResult)
     {
 
@@ -39,8 +56,13 @@ public class WordleSolver(IWordList wordList, INextWordGuesserStrategyFactory gu
         return this;
     }
 
+    /// <summary>
+    /// Scores every candidate word with every guesser strategy and finds the highest-scoring one.
+    /// </summary>
+    /// <returns>The name of the guesser strategy and the highest-scoring next word to guess.</returns>
     public (string GuesserStrategy, WordGuessAndScore GuessAndScore) GuessNextWord()
     {
+        // TODO: add priority for immediate guesser strategy guess if it  IsSolved()
         var result = GuesserStrategies
             .AsParallel()
             .Select(guesserStrategy => (
@@ -50,11 +72,24 @@ public class WordleSolver(IWordList wordList, INextWordGuesserStrategyFactory gu
             .MaxBy(guesserStrategy => guesserStrategy.GuessAndScore.Score);
         return result;
     }
+
+
+    /// <summary>
+    /// Determines if the guesser strategies together are solved (i.e., at least one of them has exactly one candidate
+    /// word remaining).
+    /// </summary>
+    /// <returns>True if at least one guesser strategy is solved; False otherwise.</returns>
     public bool IsSolved()
     {
         return GuesserStrategies.Any(guesserStrategy => guesserStrategy.IsSolved());
     }
 
+
+    /// <summary>
+    /// Determines if the guesser strategies together still have a solution (i.e., all them have at least one candidate
+    /// word remaining).
+    /// </summary>
+    /// <returns>True if all guesser strategies have a solution; False otherwise.</returns>
     public bool HasSolution()
     {
         return GuesserStrategies.All(guesserStrategy => guesserStrategy.HasSolution());

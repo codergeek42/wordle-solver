@@ -25,6 +25,9 @@ using WordleSolver.Tests.Extensions;
 
 namespace WordleSolver.Tests;
 
+/// <summary>
+/// Unit tests for <see cref="LetterFrequencyGuesserStrategy"/>
+/// </summary>
 public class LetterFrequencyStrategyTest : MockWordListFixture
 {
     [Fact]

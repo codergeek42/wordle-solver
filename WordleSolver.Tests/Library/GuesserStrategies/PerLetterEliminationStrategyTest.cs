@@ -27,6 +27,9 @@ using WordleSolver.Tests.Extensions;
 
 namespace WordleSolver.Tests;
 
+/// <summary>
+/// Unit tests for <see cref="PerLetterEliminationGuesserStrategy"/>
+/// </summary>
 public class PerLetterEliminationGuesserStrategyTest : MockWordListFixture
 {
     [Fact]

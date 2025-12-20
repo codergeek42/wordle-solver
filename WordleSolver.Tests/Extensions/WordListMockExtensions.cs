@@ -24,8 +24,18 @@ using WordleSolver.Library.Extensions;
 
 namespace WordleSolver.Tests.Extensions;
 
+/// <summary>
+/// Extensions for mocking the WordList to centralize method & property usage, and allow fluent chaining
+/// for slightly nicer setup calls.
+/// </summary>
 public static class WordListMockExtensions
 {
+    /// <summary>
+    /// Sets up the mock Alphabet return.
+    /// </summary>
+    /// <param name="mockWordList">The mock WordList.</param>
+    /// <param name="expectedAlphabet">The alphabet to return.</param>
+    /// <returns>The calling mock.</returns>
     public static Mock<IWordList> SetupAlphabetMockReturnValue(this Mock<IWordList> mockWordList, HashSet<char> expectedAlphabet)
     {
         mockWordList
@@ -34,6 +44,12 @@ public static class WordListMockExtensions
         return mockWordList;
     }
 
+    /// <summary>
+    /// Sets up the mock CountLetters return value.
+    /// </summary>
+    /// <param name="mockWordList">The mock WordList.</param>
+    /// <param name="expectedAlphabet">The counts of letters to return.</param>
+    /// <returns>The calling mock.</returns>
     public static Mock<IWordList> SetupCountLettersMockReturnValue(this Mock<IWordList> mockWordList, List<Dictionary<char, int>> expectedPossibleLetters)
     {
         mockWordList
@@ -42,6 +58,12 @@ public static class WordListMockExtensions
         return mockWordList;
     }
 
+    /// <summary>
+    /// Sets up the mock LetterRules to return the given list.
+    /// </summary>
+    /// <param name="mockWordList">The mock WordList.</param>
+    /// <param name="expectedAlphabet">The list of letter-position rules to return.</param>
+    /// <returns>The calling mock.</returns>
     public static Mock<IWordList> SetupLetterRulesMockReturnValue(this Mock<IWordList> mockWordList, List<LetterAtPositionInWordRule> expectedLetterRules)
     {
         mockWordList
@@ -49,12 +71,24 @@ public static class WordListMockExtensions
             .Returns(expectedLetterRules);
         return mockWordList;
     }
+
+    /// <summary>
+    /// Sets up the mock PossibleLetters to return a list of the given count. 
+    /// </summary>
+    /// <param name="mockWordList">The mock WordList.</param>
+    /// <param name="expectedAlphabet">The count (size) of the list to return.</param>
+    /// <returns>The calling mock.</returns>
     public static Mock<IWordList> SetupPossibleLettersMockReturnCount(this Mock<IWordList> mockWordList, int expectedCount)
     {
         return mockWordList.SetupPossibleLettersMockReturnValue(expectedCount.Repeat(_ => new HashSet<char>(['_'])));
     }
 
-
+    /// <summary>
+    /// Sets up the mock PossibleLetters to return the given list of sets.
+    /// </summary>
+    /// <param name="mockWordList">The mock WordList.</param>
+    /// <param name="expectedAlphabet">The list of sets to return..</param>
+    /// <returns>The calling mock.</returns>
     public static Mock<IWordList> SetupPossibleLettersMockReturnValue(this Mock<IWordList> mockWordList, List<HashSet<char>> expectedPossibleLetters)
     {
         mockWordList
@@ -63,6 +97,11 @@ public static class WordListMockExtensions
         return mockWordList;
     }
 
+    /// <summary>
+    /// Sets up the mock ProcessExclusionsFromRules as a no-op stub.
+    /// </summary>
+    /// <param name="mockWordList">The mock WordList.</param>
+    /// <returns>The calling mock.</returns>
     public static Mock<IWordList> StubProcessExclusionsFromRules(this Mock<IWordList> mockWordList)
     {
         mockWordList
@@ -70,12 +109,23 @@ public static class WordListMockExtensions
         return mockWordList;
     }
 
+    /// <summary>
+    /// Sets up the mock Words to return a list of the given count. 
+    /// </summary>
+    /// <param name="mockWordList">The mock WordList.</param>
+    /// <param name="expectedAlphabet">The count (size) of the list to return.</param>
+    /// <returns>The calling mock.</returns>
     public static Mock<IWordList> SetupWordsMockReturnCount(this Mock<IWordList> mockWordList, int expectedWordsCount)
     {
         return mockWordList.SetupWordsMockReturnValue(expectedWordsCount.Repeat(_ => ""));
     }
 
-
+    /// <summary>
+    /// Sets up the mock Words to return the given list. 
+    /// </summary>
+    /// <param name="mockWordList">The mock WordList.</param>
+    /// <param name="expectedAlphabet">The count (size) of the list to return.</param>
+    /// <returns>The calling mock.</returns>
     public static Mock<IWordList> SetupWordsMockReturnValue(this Mock<IWordList> mockWordList, List<string> expectedWords)
     {
         mockWordList

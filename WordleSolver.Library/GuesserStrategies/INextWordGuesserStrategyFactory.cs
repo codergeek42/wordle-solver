@@ -20,8 +20,16 @@
 
 namespace WordleSolver.Library.GuesserStrategies;
 
+/// <summary>
+/// Common interface for the strategy factory method.
+/// </summary>
 public interface INextWordGuesserStrategyFactory
 {
+    /// <summary>
+    /// Factory methods should implement this to initialize a list of guesser strategies.
+    /// </summary>
+    /// <param name="wordList">The word list to use for guessing.</param>
+    /// <returns>A list of guesser strategies initialized with the given word list.</returns>
     public abstract List<INextWordGuesserStrategy> FromWordList(IWordList wordList);
 }
 

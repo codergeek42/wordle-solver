@@ -22,17 +22,48 @@ using WordleSolver.Library.GuesserStrategies;
 
 namespace WordleSolver.Library;
 
+/// <summary>
+/// The interface prototype for the WordleSolver methods.
+/// </summary>
 public interface IWordleSolver
 {
 
+    /// <summary>
+    /// List of instantiated guesser strategies.
+    /// </summary>
     public List<INextWordGuesserStrategy> GuesserStrategies { get; }
+
+    /// <summary>
+    /// The word list from which the guesser strategies are initiated.
+    /// </summary>
     public IWordList CandidateWordList { get; }
 
+    /// <summary>
+    /// Applies the previous guess to each guesser strategy and appends the resulting rules to the ongoing solver.
+    /// </summary>
+    /// <param name="previousGuessAndResult">The previous guess and its resulting list of letter rules.</param>
+    /// <returns>The calling object after modification.</returns>
     public IWordleSolver WithPreviousGuess(WordGuessAndResult previousGuessAndResult);
 
+    /// <summary>
+    /// From all of the guesser strategies, returns the highest-scoring word along with its corresponding score and
+    /// the name of the guesser strategy which gave that score.
+    /// </summary>
+    /// <returns>The highest-scoring guess and its score with the name of the used guesser strategy.</returns>
     public (string GuesserStrategy, WordGuessAndScore GuessAndScore) GuessNextWord();
+
+    /// <summary>
+    /// Determines if the ongoing solver is solved by at least one guessing strategy (i.e., there is exactly one
+    /// possible word remaining).
+    /// </summary>
+    /// <returns>True if at lesat one of the guesser strategies is solved; false otherwise.</returns>
     public bool IsSolved();
 
+    /// <summary>
+    /// Determines if the ongoing solver has a solution by every guessing strategy (i.e., there is at least one
+    /// possible word remaining).
+    /// </summary>
+    /// <returns>True if all of the guesser strategies have a solution; false otherwise.</returns>
     public bool HasSolution();
 
 }

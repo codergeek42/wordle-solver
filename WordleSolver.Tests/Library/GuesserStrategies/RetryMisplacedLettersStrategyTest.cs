@@ -32,6 +32,9 @@ using Moq;
 
 namespace WordleSolver.Tests;
 
+/// <summary>
+/// Unit tests for <see cref="RetryMisplacedLettersGuesserStrategy"/>
+/// </summary>
 public class RetryMisplacedLettersStrategyTest : MockWordListFixture
 {
     public static IEnumerable<object[]> RetryMisplacedLettersScoreForGuessTestData()

@@ -22,8 +22,30 @@ using WordleSolver.Library.Extensions;
 
 namespace WordleSolver.Library.GuesserStrategies;
 
+/// <summary>
+/// A guessing strategy that scores each guess by the relative letter frequency at each position.
+/// </summary>
+/// <param name="wordList">The word list from which to initialize the guesser strategy.</param>
 public class LetterFrequencyGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
+    /// <summary>
+    /// Scores the guess by the relative letter frequency at each position, using the word list's dictionary of
+    /// possible words. This is the total sum of, at each position, the relative proportion at that position of the
+    /// corresponding guessed letter to total number of possibilities at that position.
+    /// 
+    /// For example, if the dictionary is:
+    /// ```
+    ///     BREAD,
+    ///     BROOD,
+    ///     BLOOD,
+    ///     CROOK,
+    ///     CLEAR,
+    /// ```
+    /// then the most and least frequently used letters at each position are `B`, `R`, `O`, `O`, and `D` respectively;
+    /// so `BROOD` would be the highest-scoring candidate.
+    /// </summary>
+    /// <param name="guess">the candidate word</param>
+    /// <returns>The sum of each letter's relative frequency at that position.</returns>
     public override double ScoreForGuess(string guess)
     {
         List<Dictionary<char, int>> LettersCount = CandidateWordList.CountLetters();

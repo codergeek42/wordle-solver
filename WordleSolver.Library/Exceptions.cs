@@ -20,6 +20,9 @@
 
 namespace WordleSolver.Library;
 
+/// <summary>
+/// Generic WordleSolver exception base class.
+/// </summary>
 public class WordleSolverException : Exception
 {
     public WordleSolverException() { }
@@ -28,14 +31,23 @@ public class WordleSolverException : Exception
     public WordleSolverException(string message, Exception innerException) : base(message, innerException) { }
 }
 
+/// <summary>
+/// An error occured in one the test setup helpers, such as `GenerateAlphabetWords`.
+/// </summary>
 public class WordleSolverTestException : WordleSolverException
 {
     public WordleSolverTestException(string message) : base(message) { }
 }
 
-
+/// <summary>
+/// A `LetterAtPositionInWordRule` or `LetterWithPosition` was attempted to be processed that required a `Position`
+/// property but did not have it.
+/// </summary>
 public class MissingLetterRulePositionException : WordleSolverException { }
 
+/// <summary>
+/// There are no more possible guesses (i.e., the set of possible words has become empty).
+/// </summary>
 public class NoMoreGuessesException : WordleSolverException { }
 
 

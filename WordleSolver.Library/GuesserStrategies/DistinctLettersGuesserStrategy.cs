@@ -20,8 +20,23 @@
 
 namespace WordleSolver.Library.GuesserStrategies;
 
+/// <summary>
+/// A guessing strategy that scores each guess by the number of distinct unguessed letters, ignoring repetitionss.
+/// </summary>
+/// <param name="wordList">The word list from which to initialize the guesser strategy.</param>
 public class DistinctLettersGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
+    /// <summary>
+    /// Scores the guess based on the number of distinct unguessed letters, ignoring repetitions.
+    /// For example, if there are no guesses yet, `BREAD` would yield 5 and `BOOKS` would yield 4;
+    /// but if `BAKER` had already been guessed before those, then `BREAD` would yield only 1 (D), while
+    /// `BOOKS` would yield 2 (O and S).
+    /// 
+    /// Note that the letters shown in these example results are for demonstration only; and the actual
+    /// returned score does not include the information about those letters, only their total count.
+    /// </summary>
+    /// <param name="guess">the candidate word</param>
+    /// <returns>The number of letters in the given guess that have not previously been guessed.</returns>
     public override double ScoreForGuess(string guess)
     {
         HashSet<char> alreadyGuessedLetters = GetAlreadyGuessedLetters();

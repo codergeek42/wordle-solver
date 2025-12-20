@@ -25,8 +25,19 @@ using WordleSolver.Library.GuesserStrategies;
 
 namespace WordleSolver.Tests.Extensions;
 
+/// <summary>
+/// Extensions for mocking INextWordGuesserStrategy to centralize method & property usage, and allow fluent chaining
+/// for slightly nicer setup calls.
+/// </summary>
 public static class GuesserStrategiesMockExtensions
 {
+    /// <summary>
+    /// Sets up the AlreadyGuessedLetters to return the specified set.
+    /// </summary>
+    /// <param name="guesserStrategyUnderTest">The mock gueser strategy</param>
+    /// <param name="mockReturn">The desired return value.</param>
+    /// <returns>The calling mock.</returns>
+    // TODO make this go on the Mock directly instead of the INextWordGuesserStrategy.
     public static INextWordGuesserStrategy SetupGetAlreadyGuessedLettersMockReturn(this INextWordGuesserStrategy guesserStrategyUnderTest, HashSet<char> mockReturn)
     {
         guesserStrategyUnderTest.PreviousGuesses.Clear();
@@ -34,12 +45,12 @@ public static class GuesserStrategiesMockExtensions
         return guesserStrategyUnderTest;
     }
 
-    public static Mock<INextWordGuesserStrategy> VerifyWithPreviousGuessCalledWith(this Mock<INextWordGuesserStrategy> guesserStrategyMock, WordGuessAndResult param, string because)
-    {
-        guesserStrategyMock.Verify(guesserStrategy => guesserStrategy.WithPreviousGuess(param), because);
-        return guesserStrategyMock;
-    }
-
+    /// <summary>
+    /// Sets up each guesser strategy mock so that their GuessNextWordAndScore() in order return the specified score of the same index.
+    /// </summary>
+    /// <param name="guesserStrategyMocks">The mock guesser strategy.</param>
+    /// <param name="expectedScores">The desired return values.</param>
+    /// <returns>The calling mock.</returns>
     public static List<Mock<INextWordGuesserStrategy>> SetupWordGuessAndScoreReturnValues(this List<Mock<INextWordGuesserStrategy>> guesserStrategyMocks, List<WordGuessAndScore> expectedScores)
     {
         guesserStrategyMocks.Should()
@@ -54,6 +65,12 @@ public static class GuesserStrategiesMockExtensions
         return guesserStrategyMocks;
     }
 
+    /// <summary>
+    /// Sets up each guesser strategy mock so that their IsSolved() return the specified value of the same index.
+    /// </summary>
+    /// <param name="guesserStrategyMocks">The mock guesser strategy</param>
+    /// <param name="expectedIsSolveds">The desired return values.</param>
+    /// <returns>The calling mock.</returns>
     public static List<Mock<INextWordGuesserStrategy>> SetupIsSolvedMockReturns(this List<Mock<INextWordGuesserStrategy>> guesserStrategyMocks, List<bool> expectedIsSolveds)
     {
         guesserStrategyMocks.Should()
@@ -68,6 +85,12 @@ public static class GuesserStrategiesMockExtensions
         return guesserStrategyMocks;
     }
 
+    /// <summary>
+    /// Sets up each guesser strategy mock so that their HasSolution() return the specified value of the same index.
+    /// </summary>
+    /// <param name="guesserStrategyMocks">The mock guesser strategy</param>
+    /// <param name="expectedIsSolveds">The desired return values.</param>
+    /// <returns>The calling mock.</returns>
     public static List<Mock<INextWordGuesserStrategy>> SetupHasSolutionMockReturns(this List<Mock<INextWordGuesserStrategy>> guesserStrategyMocks, List<bool> expectedHasSolutions)
     {
         guesserStrategyMocks.Should()

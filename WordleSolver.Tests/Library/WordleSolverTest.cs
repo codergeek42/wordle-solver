@@ -27,7 +27,10 @@ using WordleSolver.Library.Extensions;
 using WordleSolver.Library.GuesserStrategies;
 using WordleSolver.Tests.Extensions;
 
-public class WordleSolverTest : MockWordListFixture, IDisposable
+/// <summary>
+/// Unit tests for <see cref="WordleSolver"/>
+/// </summary>
+public class WordleSolverTest : MockWordListFixture
 {
     [Fact]
     public void WordleSolver_Constructor_ShouldStoreWordList()

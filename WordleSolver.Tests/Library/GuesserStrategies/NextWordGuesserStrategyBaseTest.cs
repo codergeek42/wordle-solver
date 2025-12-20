@@ -26,17 +26,29 @@ using WordleSolver.Library;
 using WordleSolver.Library.GuesserStrategies;
 using WordleSolver.Tests.Extensions;
 
+/// <summary>
+/// A fully-implemented guesser strategy from NextWordGuesserStrategyBase, in order to be able to instantiate it
+/// for testing.
+/// </summary>
 public class NextWordBaseTestGuesserStrategy : NextWordGuesserStrategyBase
 {
     public NextWordBaseTestGuesserStrategy(IWordList wordList) : base(wordList)
     { }
 
+    /// <summary>
+    /// Scores the guess based on the sum of the ASCII values of its letters.
+    /// </summary>
+    /// <param name="guess">The candidate guess.</param>
+    /// <returns>The calculated sum.</returns>
     public override double ScoreForGuess(string guess)
     {
         return guess.Sum(ch => (int)ch);
     }
 }
 
+/// <summary>
+/// Unit tests for <see cref="NextWordGuesserStrategyBase"/>
+/// </summary>
 public class NextWordGuesserStrategyBaseTest : MockWordListFixture
 {
     [Fact]

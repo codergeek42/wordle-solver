@@ -20,26 +20,75 @@
 
 namespace WordleSolver.Library;
 
+/// <summary>
+/// Determination of the letter requirement at some position in the word. 
+/// </summary>
 public enum LetterAtPositionInWord
 {
     // Mandatory rules should be processed last.
+    /// <summary>
+    /// The letter at this position must be the given letter.
+    /// </summary>
     Mandatory = 10,
+
+    /// <summary>
+    /// The given letter is certainly in the word, but not at this position.
+    /// </summary>
     Misplaced = 1,
+
+    /// <summary>
+    /// The given letter is certainly not in the word, at any position.
+    /// </summary>
     Impossible = 2,
 };
 
+/// <summary>
+/// A pairing of a letter to its position rule.
+/// </summary>
+/// <param name="letter">The letter (e.g. 'A', 'Z').</param>
+/// <param name="required">The letter-position requirement.</param>
 public class LetterRule(char letter, LetterAtPositionInWord required)
 {
+    /// <summary>
+    /// The letter (e.g. 'A', 'Z').
+    /// </summary>
     public char Letter { get; set; } = letter;
+    /// <summary>
+    /// The letter (e.g. 'A', 'Z').
+    /// </summary>
     public LetterAtPositionInWord Required = required;
 }
 
-
-public class LetterAtPositionInWordRule(int? position, char letter, LetterAtPositionInWord required) : LetterRule(letter, required)
+/// <summary>
+/// Pairing of a <see cref="LetterRule"/> with its associated position (optional).
+/// </summary>
+public class LetterAtPositionInWordRule : LetterRule
 {
-    public int? Position { get; set; } = position;
+    public int? Position { get; set; }
+
+    /// <summary>
+    /// Ensure that non-Impossible rules must have a Position set.
+    /// </summary>
+    /// <param name="position">The (0-based) position in the word.</param>
+    /// <param name="letter">The letter (e.g. 'A', 'Z').</param>
+    /// <param name="required">The letter-position requirement.</param>
+    /// <exception cref="MissingLetterRulePositionException"></exception>
+    public LetterAtPositionInWordRule(int? position, char letter, LetterAtPositionInWord required)
+        : base(letter, required)
+    {
+        Position = position;
+        if (position is null && required != LetterAtPositionInWord.Impossible)
+        {
+            throw new MissingLetterRulePositionException();
+        }
+    }
 }
 
+/// <summary>
+/// A pairing of only a letter with its position, both required.
+/// </summary>
+/// <param name="letter">The letter (e.g. 'A', 'Z').</param>
+/// <param name="required">The letter-position requirement.</param>
 public class LetterWithPosition(char letter, int position)
 {
     public int Position { get; set; } = position;

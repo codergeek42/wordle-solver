@@ -24,14 +24,24 @@ using Moq;
 
 namespace WordleSolver.Library.GuesserStrategies;
 
-
+/// <summary>
+/// Test fixture which provides multiple mock guesser strategies.
+/// </summary>
 public class MockMultiNextWordGuesserStrategyFactory : INextWordGuesserStrategyFactory
 {
+    /// <summary>
+    /// The list of mock guesser strategies.
+    /// </summary>
     public List<Mock<INextWordGuesserStrategy>> NextWordGuesserStrategies { get; private set; } = [
         new Mock<INextWordGuesserStrategy>(),
         new Mock<INextWordGuesserStrategy>()
     ];
 
+    /// <summary>
+    /// Factory method to "instantiate" the mock guesser strategies.
+    /// </summary>
+    /// <param name="wordList">The mock WordList.</param>
+    /// <returns>The list of mock guesser strategy objects.</returns>
     public List<INextWordGuesserStrategy> FromWordList(IWordList wordList)
     {
         return NextWordGuesserStrategies.ConvertAll(mockNextWordGuesserStrategy => mockNextWordGuesserStrategy.Object);

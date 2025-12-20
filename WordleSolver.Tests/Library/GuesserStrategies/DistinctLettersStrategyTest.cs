@@ -32,6 +32,9 @@ using WordleSolver.Library.Extensions;
 
 namespace WordleSolver.Tests;
 
+/// <summary>
+/// Unit tests for <see cref="DistinctLettersGuesserStrategy"/>
+/// </summary>
 public class DistinctLettersStrategyTest : MockWordListFixture
 {
     public static IEnumerable<object[]> DistinctLettersScoreForGuessTestData()

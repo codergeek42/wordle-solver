@@ -22,15 +22,33 @@ using WordleSolver.Library.Extensions;
 
 namespace WordleSolver.Library.GuesserStrategies;
 
+/// <summary>
+/// A guessing strategy that scores each guess by the number of previously-Misplaced letters that are retried
+/// at different positions.
+/// </summary>
+/// <param name="wordList">The word list from which to initialize the guesser strategy.</param>
 public class RetryMisplacedLettersGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
+    /// <summary>
+    /// Scores the guess by the number of retried misplaced letters, i.e. the number of letters in the guess
+    /// that previous rules have determined are Misplaced at other position(s).
+    /// 
+    /// For example: if only `STONE` was guessed so far and all five letters were Misplaced, then a candidate guess
+    /// of `NOTES` would score the highest (5), as all five letters are used in difference positions; but `ATONE`
+    /// would score the lowest of 0 (because all of `T`, `O`, `N`, and `E` are not in other positions and `A` was not
+    /// already guessed in any position. `STENO` would score between them at 2, because only its `E` and `O` are
+    /// retried in different positions, but `S`, T`, and `N` are guessed at their same positions.
+    /// </summary>
+    /// <param name="guess"></param>
+    /// <returns></returns>
     public override double ScoreForGuess(string guess)
     {
         IEnumerable<LetterWithPosition> previouslyMisplacedLetters = CandidateWordList.LetterRules
             .Where((rule) => rule.Required == LetterAtPositionInWord.Misplaced)
             // Position is not null because non-Impossible rules must have a Position, validated by
-            // WordList.ProcessExclusionsFromRules as the guess is added.
-            .Select((rule) => new LetterWithPosition(rule.Letter, rule.Position.GetValueOrDefault()));
+            // WordList.ProcessExclusionsFromRules as the guess is added and by the
+            // LetterAtPositionInWordRule constructor.
+            .Select((rule) => new LetterWithPosition(rule.Letter, rule.Position!.Value));
 
         return guess.Enumerate()
             .Count((guessedLetterWithPosition) =>

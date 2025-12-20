@@ -25,10 +25,21 @@ using Moq;
 namespace WordleSolver.Library.GuesserStrategies;
 
 
+/// <summary>
+/// Test fixture which provides exactly one mock guesser strategy.
+/// </summary>
 public class MockSingleNextWordGuesserStrategyFactory : INextWordGuesserStrategyFactory
 {
+    /// <summary>
+    /// The list of mock guesser strategies.
+    /// </summary>
     public Mock<INextWordGuesserStrategy> NextWordGuesserStrategy { get; private set; } = new();
 
+    /// <summary>
+    /// Factory method to "instantiate" the mock guesser strategy.
+    /// </summary>
+    /// <param name="wordList">The mock WordList.</param>
+    /// <returns>The singleton list of mock guesser strategy objects.</returns>
     public List<INextWordGuesserStrategy> FromWordList(IWordList wordList)
     {
         return [NextWordGuesserStrategy.Object];

@@ -23,6 +23,9 @@ using WordleSolver.Library;
 
 namespace WordleSolver.Tests;
 
+/// <summary>
+/// Unit tests for <see cref="Data"/>
+/// </summary>
 public class DataTest
 {
     [Fact(DisplayName = "Alphabet has all A-Z exactly once in order.")]

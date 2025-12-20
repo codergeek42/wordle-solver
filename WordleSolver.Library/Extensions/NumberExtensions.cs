@@ -20,13 +20,32 @@
 
 namespace WordleSolver.Library.Extensions;
 
+/// <summary>
+/// Utility methods that extend numbers.
+/// </summary>
 public static class NumberExtensions
 {
+    /// <summary>
+    /// Repeat the given callback for the given count of times and returns a list of the results,
+    /// like the "times" function from JavaScript's lodash.
+    /// </summary>
+    /// <typeparam name="T">the return type of the callback</typeparam>
+    /// <param name="count">Count of times to call the given callback</param>
+    /// <param name="callback">A function that maps the integer (0-based index) to some single value</param>
+    /// <returns>A list of the callback results, called for each index from 0 to (count-1).
     public static List<T> Repeat<T>(this int count, Func<int, T> callback)
     {
         return Enumerable.Range(0, count).Select(callback).ToList();
     }
 
+    /// <summary>
+    /// Repeat the given callback for the given count of times and returns a list of the results, flattened one level,
+    /// like chaining the "times" function from JavaScript's lodash with flatMap.
+    /// </summary>
+    /// <typeparam name="T">the type of the callback's returned enumerables</typeparam>
+    /// <param name="count">Count of times to call the given callback</param>
+    /// <param name="callback">A function that maps the integer (0-based index) to some enumerable value</param>
+    /// <returns>A list of the callback results, called for each index from 0 to (count-1).
     public static List<T> RepeatMany<T>(this int count, Func<int, IEnumerable<T>> callback)
     {
         return Enumerable.Range(0, count).SelectMany(callback).ToList();
