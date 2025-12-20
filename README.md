@@ -96,7 +96,8 @@ Congratulations, the player has won this game after a total of 3 guesses!
 
 # How To Use (Interactive)
 
-The solver is exposed via a menu-driven command-line app: run `npm run cli` from the source to begin.
+The solver is exposed via a menu-driven command-line app: run `dotnet run --project WordleSolver.CLI` from the source
+to begin.
 
 You will be given a list of candidate words for each [guessing strategy](#guessing-strategies--scoring), where each
 candidate word is the highest-scoring for that particular strategy's metric. Upon choosing a word from the menu, you
