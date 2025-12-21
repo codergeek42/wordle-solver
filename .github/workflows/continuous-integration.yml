@@ -11,7 +11,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  CI:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
