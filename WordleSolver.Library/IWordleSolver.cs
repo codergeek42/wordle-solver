@@ -66,4 +66,10 @@ public interface IWordleSolver
     /// <returns>True if all of the guesser strategies have a solution; false otherwise.</returns>
     public bool HasSolution();
 
+    /// <summary>
+    /// Determines which positions are already solved (i.e., have an associated Mandatory letter rule).
+    /// </summary>
+    /// <returns>A list of (0-based) positions that are already solved.</returns>
+    public List<int> SolvedPositions();
+
 }
