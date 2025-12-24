@@ -22,6 +22,8 @@
 - [ ] If excluded words file provided, add words to it after marked as not a valid guess.
 - [x] Make the CLI app give a nice message when it's solved
 - [ ] Add 6-guess limit.
+- [ ] Add repeatability: When multiple scores identical for various words/strategies, use first in alphabetic order,
+  or by strategy based on guess count/ShouldRun/etc.
 
 
 # Usage
