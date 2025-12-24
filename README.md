@@ -28,7 +28,7 @@ Yellow, and Black color-coded positions as described above):
 
 ```
 S T O N E
-G Y Y B B
+G B Y Y B
 ```
 
 This tells us that
@@ -62,8 +62,8 @@ From these results we know that
 
 The combination of these with the previous three criteria gives us the result that the word must start with "SON" and
 must not contain any of A, E, R, or T. Using the built-in dictionary of a typical Linux or Unix system
-(`/usr/share/dict/words`), we can see that this greatly reduces the potential words to guess, to only a proverbial
-handful:
+(e.g. `/usr/share/dict/words`), we can see that this greatly reduces the potential words to guess, to only a
+proverbial handful:
 
 ```
 SONCY
@@ -80,7 +80,7 @@ SONSY
 
 The player might then realize that many of these potentials include another S, N, or O in the last two letters. An
 astute player might at this step decide against guessing any of these, in order to guess another word instead which
-includes more yet-unguessed letters. This would give the player information about a broader selection of letters, more
+includes more yet-unguessed letters. This would give the player more information about a broader selection of letters
 than just S, O, and N. In this case, it would be advisable to try to first guess all of the vowels, so that those can be
 ascertained. In this example, that means that "SONGO", "SONIC", "SONNI" would be reasonable next guesses -- except that
 "SONGO" and "SONNI" both contain repeated letters (O and N, respectively), so "SONIC" would be a more informative guess
@@ -97,19 +97,35 @@ Congratulations, the player has won this game after a total of 3 guesses!
 # How To Use (Interactive)
 
 The solver is exposed via a menu-driven command-line app: run `dotnet run --project WordleSolver.CLI` from the source
-to begin.
+to begin. It accepts two command-line optional parameters:
+1. `--dictionary` or `-d`: The path to a text file to use as the base dictionary (list of potential words), one per
+   line. This could be the system dictionary on a Unix-like OS (such as the default `/usr/share/dict/words`) or 
+   something more manual, such as
+   [`valid-wordle-words.txt`](https://gist.github.com/dracos/dd0668f281e685bad51479e5acaadb93>)
+   kept by GitHub user"Dracos".
+2. `--excluded-words` or `-x`: The path to a text file containing words that should not ever be guessed, perhaps
+   because they were the solution to a previous day, or they are 5-letter words that are not valid for the game of
+   Wordle (such as `LATIN`).
 
-You will be given a list of candidate words for each [guessing strategy](#guessing-strategies--scoring), where each
-candidate word is the highest-scoring for that particular strategy's metric. Upon choosing a word from the menu, you
-will then be prompted to input the result from the Wordle site as a sequence of characters corresponding to the colors
-in its results:
+> [!NOTE]
+> In order to use these parameters on the command-line, they must be prefixed with a double dash (`--`) to distinguish
+> them from the `dotnet` parameters, for example
+> `dotnet run --project WordleSolver.CLI -- --excluded-words ~/.wordle-excluded-words.txt`
 
-- `G` if the letter at that position is correct (green),
-- `Y` if the letter at that position is incorrect, but is included in the word at a different position (yellow), or
-- `B` if the letter at that position is excluded from the word entirely (black).
+At each iteration the solver, will use every [guessing strategy](#guessing-strategies--scoring) to score
+every remaining candidate word, and print out the highest-scoring one. At that point, you will then be prompted to inpu
+the result from the Wordle site as a sequence of characters corresponding to the requirement of its position;
+
+- `R` (for "Required") if the letter at that position is correct (green),
+- `M` (for "Misplaced") if the letter at that position is incorrect, but is included in the word at a different
+  position (yellow), or
+- `I` (for "Impossible") if the letter at that position is excluded from the word entirely (black).
 
 The solver will then process the letter exclusions from the guess results and suggest a more specific candidate word in
-the same way, looping until the word must be solved (i.e., there is only one possible candidate word remaining).
+the same way, looping until the either the word must be solved (i.e., there is only one possible candidate word
+remaining), or there is no more possible solution (i.e., that no possible candidate words remain). In the latter case,
+we expect this is not possible unless the results have been mistakenly entered into the solver prompts; and retrying
+should correct it.
 
 # Solver Algorithm
 
