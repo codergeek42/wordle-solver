@@ -12,4 +12,7 @@
     <ProjectReference Include="../WordleSolver.Library/WordleSolver.Library.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.1" />
+  </ItemGroup>
 </Project>
