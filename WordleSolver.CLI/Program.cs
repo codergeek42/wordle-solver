@@ -18,25 +18,43 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
+using System.Diagnostics;
 using System.IO.Abstractions;
+using System.Threading.Tasks;
 
 using WordleSolver.Library;
 using WordleSolver.Library.GuesserStrategies;
 
 namespace WordleSolver.CLI;
 
-class WordleSolverCommandLineApp
+public class WordleSolverCommandLineApp
 {
-    // TODO: Very rudimentary PoC, expand on this with guess loop and menuing.
-    static async Task Main(string[] args)
+    public static async Task Main(string[] args)
     {
-        Console.WriteLine("Begin App WordleSolver");
-        Console.WriteLine("reading words list...");
-        var wordsFile = "/usr/share/dict/words";
-        WordList wordList = await WordList.FromFileAsync(wordsFile, new FileSystem());
-        Console.WriteLine("initializing solver...");
-        Library.WordleSolver solver = new(wordList, new NextWordGuesserStrategyFactory());
-        Console.WriteLine("...Guessing first word!");
-        var _unused = solver.GuessNextWord();
+        CommandLineOptions cliOptions = CommandLineArguments.Parse(args);
+
+        Console.WriteLine(LegalTexts.AppTitle);
+        Console.WriteLine(LegalTexts.WelcomeBanner);
+
+        TextMenu mainMenu = new TextMenu("===== Main Menu =====")
+            .WithAsyncItem("Begin guessing!",
+                async () =>
+                {
+                    GuessLoop mainGuesserLoop = await GuessLoop.Initialize(cliOptions);
+                    await mainGuesserLoop.RunGuessLoop();
+                })
+            .WithItem("(No) Warranty Information", () => Console.WriteLine(LegalTexts.DisclaimerOfWarranty))
+            .WithItem("Copyleft Information", () => Console.WriteLine(LegalTexts.CopyleftInformation))
+            .WithItem("Exit", () => Environment.Exit(0))
+            .WithPrompt("?")
+            .WithOptions(new()
+            {
+                IsMultiline = true,
+                ItemSelector = TextMenuItemSelector.AutoNumbered
+            });
+        while (true)
+        {
+            await mainMenu.RunPrompt();
+        }
     }
 }
