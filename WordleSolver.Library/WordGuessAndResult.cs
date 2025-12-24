@@ -44,12 +44,15 @@ public class WordGuessAndScore(string word, double score)
 /// </summary>
 /// <param name="word">The guessed word.</param>
 /// <param name="result">The resulting letter-position rules.</param>
-public class WordGuessAndResult(string word, List<LetterAtPositionInWordRule> result)
+/// <param name="wasValidGuess">Whether or not the guess was valid.</param>
+public class WordGuessAndResult(string word, List<LetterAtPositionInWordRule> result, bool wasValidGuess = true)
 {
     /// <summary>
     /// The guessed word.
     /// </summary>
     public string Word { get; set; } = word;
+
+    public bool WasValidGuess { get; set; } = wasValidGuess;
 
     /// <summary>
     /// The letter-position rules resulting from the guess.

@@ -91,8 +91,15 @@ public abstract class NextWordGuesserStrategyBase(IWordList wordList) : INextWor
     /// <returns>The caller.</returns>
     public INextWordGuesserStrategy WithPreviousGuess(WordGuessAndResult guessAndResult)
     {
-        CandidateWordList.ProcessExclusionsFromRules(guessAndResult.Result);
-        PreviousGuesses.Add(guessAndResult);
+        if (guessAndResult.WasValidGuess)
+        {
+            CandidateWordList.ProcessExclusionsFromRules(guessAndResult.Result);
+            PreviousGuesses.Add(guessAndResult);
+        }
+        else
+        {
+            CandidateWordList = CandidateWordList.WithExcludedWords([guessAndResult.Word]);
+        }
         return this;
     }
 }
