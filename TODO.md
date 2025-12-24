@@ -21,6 +21,7 @@
 - [-] Make Main be invoked from command-line root command handler to only run when not given --version/--help options.
 - [ ] If excluded words file provided, add words to it after marked as not a valid guess.
 - [x] Make the CLI app give a nice message when it's solved
+- [ ] Add 6-guess limit.
 
 
 # Usage
