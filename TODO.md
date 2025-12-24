@@ -1,12 +1,27 @@
 # C#/.Net Port
 - [x] Finish Solver library
-- [ ] Use reflection to loop through all guesser strategies instead of having to explicitly populate them?
-- [x] Use PLINQ to calculate next highest-scoring word
+- [ ] Use Unity for dependency injection for filesystem and guesser strategies instead of having to explicitly populate
+    them.
+
 
 # CICD Pipeline
 - [x] CodeQL
-- [ ] Continuous Integration (build/test/coverage report/etc.)
+- [-] Continuous Integration (build/test/coverage report/etc.)
 - [ ] Daily solver (after implemented)
+
+# Performance
+- [x] Use PLINQ to calculate next highest-scoring word
+- [ ] Cache results between guesses and mark a "should run" per strategy:
+    * initial strategy should be LetterFrequency or PerLetterElimination; DistinctLetters is always highest at 5
+    at start for words that have no repeated letters, but is not useful if no previous guesses have been made yet;
+    * no need to (re)calculate RetryMisplacedLetters if no guesses have been made that include one or more Misplaced
+    letters.
+
+# Aesthetic 
+- [-] Make Main be invoked from command-line root command handler to only run when not given --version/--help options.
+- [ ] If excluded words file provided, add words to it after marked as not a valid guess.
+- [x] Make the CLI app give a nice message when it's solved
+
 
 # Usage
 Currently, only the basic solving algorithm is implemented alongside some guessing strategies (scoring metrics); but
@@ -26,5 +41,6 @@ hobby projects, is to learn by doing. 🙃
 
 
 # Tests
+- [ ] Add unit tests for most of the CLI utility methods.
 - [ ] Refactor test data and case naming for nicer coverage reporting.
 - [ ] Make nicer reasons for Theory tests for clearer output visibility.
