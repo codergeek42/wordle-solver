@@ -48,6 +48,19 @@ public static class GuesserStrategiesMockExtensions
     }
 
     /// <summary>
+    /// Sets up the PreviousGuesses to return the specified list.
+    /// </summary>
+    /// <param name="guesserStrategyUnderTest">The mock gueser strategy</param>
+    /// <param name="mockReturn">The desired return value.</param>
+    /// <returns>The calling mock.</returns>
+    public static Mock<INextWordGuesserStrategy> SetupPreviousGuessesMockReturn(this Mock<INextWordGuesserStrategy> guesserStrategyUnderTest, List<WordGuessAndResult> mockReturn)
+    {
+        guesserStrategyUnderTest.Setup(guesserStrategyMock => guesserStrategyMock.PreviousGuesses).Returns(mockReturn);
+        return guesserStrategyUnderTest;
+    }
+
+
+    /// <summary>
     /// Sets up each guesser strategy mock so that their GuessNextWordAndScore() in order return the specified score of the same index.
     /// </summary>
     /// <param name="guesserStrategyMocks">The mock guesser strategy.</param>
