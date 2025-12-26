@@ -52,6 +52,9 @@ public class WordGuessAndResult(string word, List<LetterAtPositionInWordRule> re
     /// </summary>
     public string Word { get; set; } = word;
 
+    /// <summary>
+    /// Marks if the guess was valid (i.e., in the word list).
+    /// </summary>
     public bool WasValidGuess { get; set; } = wasValidGuess;
 
     /// <summary>
