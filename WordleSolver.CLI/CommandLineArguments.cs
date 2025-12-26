@@ -29,14 +29,12 @@ public struct CommandLineOptions
     public FileInfo DictionaryFilePath { get; set; }
 
     public FileInfo? ExcludedWordsFilePath { get; set; }
-    public bool ShouldSkipMain { get; set; }
 }
 
 public class CommandLineArguments
 {
     public static CommandLineOptions Parse(string[] arguments)
     {
-        // bool shouldSkipMain = false;
         Option<FileInfo> dictionaryFilePathOption = new("--dictionary", "-d")
         {
             DefaultValueFactory = _ => new FileInfo("/usr/share/dict/words"),
@@ -76,7 +74,6 @@ public class CommandLineArguments
                 ExcludedWordsFilePath = parseResult.GetValue(excludedWordsFilePathOption)
             };
             return parsedArguments;
-
         }
         else
         {
