@@ -184,25 +184,52 @@ public class NextWordGuesserStrategyBaseTest : MockWordListFixture
     }
 
     [Fact]
-    public void NextWordGuesserStrategyBase_WithPreviousGuess_StoresThePreviousGuess()
+    public void NextWordGuesserStrategyBase_WithPreviousGuess_StoresThePreviousGuessIfItWasValid()
     {
-        WordGuessAndResult wordGuessAndResult = new("GUESS", [
-            new(0, 'G', LetterAtPositionInWord.Mandatory)
-        ]);
+        WordGuessAndResult validGuessResult = new(
+            "GUESS",
+            [new(0, 'G', LetterAtPositionInWord.Mandatory)],
+            true
+        );
         MockWordList.StubProcessExclusionsFromRules();
 
         NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
 
         nextWordGuesserStrategy.PreviousGuesses.Should()
-            .BeEmpty("previous guesses should be empty on newly-created guesser");
+            .BeEmpty("previous guesses should be empty on newly-created guesser strategy");
 
-        NextWordBaseTestGuesserStrategy result = (NextWordBaseTestGuesserStrategy)nextWordGuesserStrategy.WithPreviousGuess(wordGuessAndResult);
+        NextWordBaseTestGuesserStrategy result = (NextWordBaseTestGuesserStrategy)nextWordGuesserStrategy.WithPreviousGuess(validGuessResult);
 
         result.Should()
             .BeSameAs(nextWordGuesserStrategy, "should return the calling object for fluent chaining");
-        MockWordList.Verify(wordList => wordList.ProcessExclusionsFromRules(wordGuessAndResult.Result),
+        MockWordList.Verify(wordList => wordList.ProcessExclusionsFromRules(validGuessResult.Result),
             Times.Once(), "should add exlcusion rule from the guess result");
         nextWordGuesserStrategy.PreviousGuesses.Should()
-            .Equal([wordGuessAndResult], "guesser should append previous guess to stored list");
+            .Equal([validGuessResult], "guesser should append previous guess to stored list");
+    }
+
+    [Fact]
+    public void NextWordGuesserStrategyBase_WithPreviousGuess_ExcludesThePreviousGuessIfItWasInvalid()
+    {
+        WordGuessAndResult invalidGuessResult = new(
+            "GUESS",
+            [],
+            false
+        );
+        MockWordList.StubWithExcludedWords();
+
+        NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
+
+        nextWordGuesserStrategy.PreviousGuesses.Should()
+            .BeEmpty("previous guesses should be empty on newly-created guesser strategy");
+
+        NextWordBaseTestGuesserStrategy result = (NextWordBaseTestGuesserStrategy)nextWordGuesserStrategy.WithPreviousGuess(invalidGuessResult);
+
+        result.Should()
+            .BeSameAs(nextWordGuesserStrategy, "should return the calling object for fluent chaining");
+        MockWordList.Verify(wordList => wordList.WithExcludedWords(new List<string> { invalidGuessResult.Word }),
+            Times.Once(), "should add the word to the exclusion list");
+        MockWordList.Verify(wordList => wordList.ProcessExclusionsFromRules(It.IsAny<List<LetterAtPositionInWordRule>>()),
+            Times.Never(), "Should not call process exclusions when guess is invalid");
     }
 }
