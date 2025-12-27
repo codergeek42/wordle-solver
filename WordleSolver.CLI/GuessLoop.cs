@@ -43,12 +43,14 @@ public class GuessLoop
         FileSystem fileSystem = new();
         Console.WriteLine("Populating word list...");
         guesserLoop.CandidateWordList = await WordList.FromFileAsync(
-            cliOpts.DictionaryFilePath.FullName, fileSystem
+            cliOpts.DictionaryFilePath, fileSystem
         );
-        if (cliOpts.ExcludedWordsFilePath?.Exists ?? false)
+
+        if (!string.IsNullOrEmpty(cliOpts.ExcludedWordsFilePath)
+            && new FileInfo(cliOpts.ExcludedWordsFilePath).Exists)
         {
             guesserLoop.CandidateWordList = (WordList)guesserLoop.CandidateWordList.WithExcludedWords(
-                [.. await fileSystem.File.ReadAllLinesAsync(cliOpts.ExcludedWordsFilePath.FullName)]
+                [.. await fileSystem.File.ReadAllLinesAsync(cliOpts.ExcludedWordsFilePath)]
             );
         }
         guesserLoop.Solver = new(guesserLoop.CandidateWordList, new NextWordGuesserStrategyFactory());

@@ -26,24 +26,24 @@ using WordleSolver.Library;
 
 public struct CommandLineOptions
 {
-    public FileInfo DictionaryFilePath { get; set; }
+    public string DictionaryFilePath { get; set; }
 
-    public FileInfo? ExcludedWordsFilePath { get; set; }
+    public string? ExcludedWordsFilePath { get; set; }
 }
 
 public class CommandLineArguments
 {
     public static CommandLineOptions Parse(string[] arguments)
     {
-        Option<FileInfo> dictionaryFilePathOption = new("--dictionary", "-d")
+        Option<string> dictionaryFilePathOption = new("--dictionary", "-d")
         {
-            DefaultValueFactory = _ => new FileInfo("/usr/share/dict/words"),
+            DefaultValueFactory = _ => "/usr/share/dict/words",
             Description = "File to use as the dictionary of words, one per line.",
             HelpName = "/path/to/dictionary/file"
         };
-        Option<FileInfo> excludedWordsFilePathOption = new("--excluded-words", "-x")
+        Option<string> excludedWordsFilePathOption = new("--excluded-words", "-x")
         {
-            DefaultValueFactory = _ => new FileInfo(".wordle-solver-excluded-words.txt"),
+            DefaultValueFactory = _ => ".wordle-solver-excluded-words.txt",
             Description = "File with words to exclude from the guesser, one per line.",
             HelpName = "/path/to/excluded/words/file"
         };
@@ -65,13 +65,14 @@ public class CommandLineArguments
         }
         if (
             parseResult.Errors.Count == 0
-            && parseResult.GetValue(dictionaryFilePathOption) is FileInfo dictionaryFilePath
+            && parseResult.GetValue(dictionaryFilePathOption) is string dictionaryFilePath
+            && parseResult.GetValue(excludedWordsFilePathOption) is string excludedWordsFilePath
         )
         {
             CommandLineOptions parsedArguments = new()
             {
                 DictionaryFilePath = dictionaryFilePath,
-                ExcludedWordsFilePath = parseResult.GetValue(excludedWordsFilePathOption)
+                ExcludedWordsFilePath = excludedWordsFilePath
             };
             return parsedArguments;
         }
