@@ -18,20 +18,13 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
-using System.Diagnostics;
-using System.IO.Abstractions;
-using System.Threading.Tasks;
-
-using WordleSolver.Library;
-using WordleSolver.Library.GuesserStrategies;
-
 namespace WordleSolver.CLI;
 
 public class WordleSolverCommandLineApp
 {
     public static async Task Main(string[] args)
     {
-        CommandLineOptions cliOptions = CommandLineArguments.Parse(args);
+        CommandLineOptions cliOptions = CommandLineArguments.Parse(args, Environment.Exit);
 
         Console.WriteLine(LegalTexts.AppTitle);
         Console.WriteLine(LegalTexts.WelcomeBanner);

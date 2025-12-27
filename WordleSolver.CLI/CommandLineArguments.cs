@@ -19,70 +19,54 @@
  */
 
 using System.CommandLine;
-using System.CommandLine.Parsing;
 
 using WordleSolver.CLI;
-using WordleSolver.Library;
 
-public struct CommandLineOptions
+public class CommandLineOptions(FileInfo dictionaryFilePath, FileInfo? excludedWordsFilePath)
 {
-    public string DictionaryFilePath { get; set; }
+    public FileInfo DictionaryFilePath { get; set; } = dictionaryFilePath;
 
-    public string? ExcludedWordsFilePath { get; set; }
+    public FileInfo? ExcludedWordsFilePath { get; set; } = excludedWordsFilePath;
+
 }
 
 public class CommandLineArguments
 {
-    public static CommandLineOptions Parse(string[] arguments)
+    public static CommandLineOptions Parse(string[] arguments, Action<int> exitCallback)
     {
-        Option<string> dictionaryFilePathOption = new("--dictionary", "-d")
+        Option<FileInfo> dictionaryFilePathOption = new("--dictionary", "-d")
         {
-            DefaultValueFactory = _ => "/usr/share/dict/words",
+            DefaultValueFactory = _ => new FileInfo("/usr/share/dict/words"),
             Description = "File to use as the dictionary of words, one per line.",
-            HelpName = "/path/to/dictionary/file"
+            HelpName = "/path/to/dictionary/file",
         };
-        Option<string> excludedWordsFilePathOption = new("--excluded-words", "-x")
+        Option<FileInfo> excludedWordsFilePathOption = new("--excluded-words", "-x")
         {
-            DefaultValueFactory = _ => ".wordle-solver-excluded-words.txt",
             Description = "File with words to exclude from the guesser, one per line.",
             HelpName = "/path/to/excluded/words/file"
         };
 
         RootCommand rootCommand = new(LegalTexts.AppTitle) {
-            dictionaryFilePathOption,
-            excludedWordsFilePathOption
+            dictionaryFilePathOption.AcceptExistingOnly(),
+            excludedWordsFilePathOption.AcceptExistingOnly()
         };
 
         ParseResult parseResult = rootCommand.Parse(arguments);
         // Automagic handling of -h/--help and such.
-        parseResult.Invoke(new()
-        {
-
-        });
+        parseResult.Invoke(new() { });
         if (parseResult.Action?.Terminating ?? false)
         {
-            Environment.Exit(0);
+            // The rootCommand.Parse call will validate arguments.
+            exitCallback(
+                parseResult.Errors.Count == 0
+                ? ExitCode.OK
+                : ExitCode.InvalidCommandLineArguments
+            );
+            throw new WordleSolverUnterminatedExitException();
         }
-        if (
-            parseResult.Errors.Count == 0
-            && parseResult.GetValue(dictionaryFilePathOption) is string dictionaryFilePath
-            && parseResult.GetValue(excludedWordsFilePathOption) is string excludedWordsFilePath
-        )
-        {
-            CommandLineOptions parsedArguments = new()
-            {
-                DictionaryFilePath = dictionaryFilePath,
-                ExcludedWordsFilePath = excludedWordsFilePath
-            };
-            return parsedArguments;
-        }
-        else
-        {
-            foreach (ParseError error in parseResult.Errors)
-            {
-                Console.Error.WriteLine(error);
-            }
-            throw new WordleSolverException("Invalid command-line arguments: ");
-        }
+        return new CommandLineOptions(
+            dictionaryFilePath: parseResult.GetRequiredValue(dictionaryFilePathOption),
+            excludedWordsFilePath: parseResult.GetValue(excludedWordsFilePathOption)
+        );
     }
 }
