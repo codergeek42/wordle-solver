@@ -37,12 +37,11 @@ public class WordleSolverCommandLineApp
         Console.WriteLine(LegalTexts.WelcomeBanner);
 
         TextMenu mainMenu = new TextMenu("===== Main Menu =====")
-            .WithAsyncItem("Begin guessing!",
-                async () =>
-                {
-                    GuessLoop mainGuesserLoop = await GuessLoop.Initialize(cliOptions);
-                    await mainGuesserLoop.RunGuessLoop();
-                })
+            .WithAsyncItem("Begin guessing!", async () =>
+            {
+                GuessLoop mainGuesserLoop = await GuessLoop.Initialize(cliOptions);
+                await mainGuesserLoop.RunGuessLoop();
+            })
             .WithItem("(No) Warranty Information", () => Console.WriteLine(LegalTexts.DisclaimerOfWarranty))
             .WithItem("Copyleft Information", () => Console.WriteLine(LegalTexts.CopyleftInformation))
             .WithItem("Exit", () => Environment.Exit(0))

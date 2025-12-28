@@ -18,18 +18,18 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
+using AwesomeAssertions;
+
+using Moq;
+
+using WordleSolver.CLI;
+
 using CommandLineArgumentsParseTestCase = (
     string CaseName,
     string DictionaryArgument,
     string ExcludedWordsArgument,
     CommandLineOptions ExpectedCommandLineOptions
 );
-
-using Moq;
-
-using AwesomeAssertions;
-
-using WordleSolver.CLI;
 
 namespace WordleSolver.Tests.CLI;
 

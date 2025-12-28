@@ -19,7 +19,6 @@
  */
 
 using System.IO.Abstractions;
-using System.Threading.Tasks;
 
 using WordleSolver.CLI;
 using WordleSolver.Library;
