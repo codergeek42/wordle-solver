@@ -79,6 +79,9 @@ public class WordleSolverTest : MockWordListFixture
         WordGuessAndScore lowScore = new("GUESS", 4.9);
         WordGuessAndScore highScore = new("SCORE", 5.0);
         mockGuesserStrategyFactory.NextWordGuesserStrategies.SetupWordGuessAndScoreReturnValues([lowScore, highScore]);
+        mockGuesserStrategyFactory.NextWordGuesserStrategies.ForEach(
+            mockGuesserStrategy => mockGuesserStrategy.SetupShouldRunMockReturn(true)
+        );
 
         (string GuesserStrategy, WordGuessAndScore GuessAndScore) result = wordleSolver.GuessNextWord();
 
@@ -92,6 +95,37 @@ public class WordleSolverTest : MockWordListFixture
             .NotBeNull("should return a result");
         result.GuessAndScore.Should()
             .Be(highScore, "should return the highest-scoring guess");
+    }
+
+    [Fact]
+    public void WordleSolver_GuessNextWord_RunsOnlyThoseStrategiesThatShould()
+    {
+        MockMultiNextWordGuesserStrategyFactory mockGuesserStrategyFactory = new();
+        WordleSolver wordleSolver = new(MockWordList.Object, mockGuesserStrategyFactory);
+        WordGuessAndScore lowScore = new("GUESS", 4.9);
+        WordGuessAndScore highScore = new("SCORE", 5.0);
+
+        mockGuesserStrategyFactory.NextWordGuesserStrategies.SetupWordGuessAndScoreReturnValues([lowScore, highScore]);
+        mockGuesserStrategyFactory.NextWordGuesserStrategies.SetupShouldRunMockReturnValues([true, false]);
+
+        (string GuesserStrategy, WordGuessAndScore GuessAndScore) result = wordleSolver.GuessNextWord();
+
+        mockGuesserStrategyFactory.NextWordGuesserStrategies.Should()
+            .AllSatisfy(
+                guesserStrategy => guesserStrategy.Verify(guesserStrategy => guesserStrategy.ShouldRun()),
+                "should check each guesser strategy's ShouldRun"
+            )
+            .And.SatisfyRespectively(
+                guesserStrategy => guesserStrategy.Verify(guesserStrategy => guesserStrategy.GuessNextWordAndScore(),
+                    Times.Once(), "should have used the guesser strategy where ShouldRun is true"),
+                guesserStrategy => guesserStrategy.Verify(guesserStrategy => guesserStrategy.GuessNextWordAndScore(),
+                    Times.Never(), "should not have used the guesser strategy where ShouldRun is false")
+            );
+
+        result.Should()
+            .NotBeNull("should return a result");
+        result.GuessAndScore.Should()
+            .Be(lowScore, "should return the highest-scoring guess among the ones that should run");
     }
 
     [Theory]

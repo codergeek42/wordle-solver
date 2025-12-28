@@ -59,6 +59,36 @@ public static class GuesserStrategiesMockExtensions
         return guesserStrategyUnderTest;
     }
 
+    /// <summary>
+    /// Sets up the ShouldRun to return the specified value.
+    /// </summary>
+    /// <param name="guesserStrategyUnderTest">The mock gueser strategy</param>
+    /// <param name="mockReturn">The desired return value.</param>
+    /// <returns>The calling mock.</returns>
+    public static Mock<INextWordGuesserStrategy> SetupShouldRunMockReturn(this Mock<INextWordGuesserStrategy> guesserStrategyUnderTest, bool mockReturn)
+    {
+        guesserStrategyUnderTest.Setup(guesserStrategyMock => guesserStrategyMock.ShouldRun()).Returns(mockReturn);
+        return guesserStrategyUnderTest;
+    }
+
+    /// <summary>
+    /// Sets up the ShouldRun on the strategies to return the specified list.
+    /// </summary>
+    /// <param name="guesserStrategyUnderTest">The mock gueser strategy</param>
+    /// <param name="mockReturn">The desired return value.</param>
+    /// <returns>The calling mock.</returns>
+    public static List<Mock<INextWordGuesserStrategy>> SetupShouldRunMockReturnValues(this List<Mock<INextWordGuesserStrategy>> guesserStrategyMocks, List<bool> expectedShouldRuns)
+    {
+        guesserStrategyMocks.Should()
+            .HaveCount(expectedShouldRuns.Count, "mock expected ShouldRun values should have the same length as calls to be made");
+
+        foreach (int idx in Enumerable.Range(0, guesserStrategyMocks.Count))
+        {
+            guesserStrategyMocks[idx].SetupShouldRunMockReturn(expectedShouldRuns[idx]);
+        }
+        return guesserStrategyMocks;
+    }
+
 
     /// <summary>
     /// Sets up each guesser strategy mock so that their GuessNextWordAndScore() in order return the specified score of the same index.
