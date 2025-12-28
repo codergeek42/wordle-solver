@@ -36,6 +36,12 @@ public interface INextWordGuesserStrategy
     public IWordList CandidateWordList { get; }
 
     /// <summary>
+    /// Determines whether the guesser strategy should be used for scoring this iteration.
+    /// </summary>
+    /// <returns>True if it should be used; False otherwise.</returns>
+    public bool ShouldRun();
+
+    /// <summary>
     /// Stores the previous guess and result, then returns the caller for fluent chaining.
     /// </summary>
     /// <param name="guessAndResult">The previous guess and its resulting exclusion rules.</param>

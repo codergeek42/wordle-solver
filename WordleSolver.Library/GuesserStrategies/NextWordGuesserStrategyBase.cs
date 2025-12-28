@@ -39,6 +39,16 @@ public abstract class NextWordGuesserStrategyBase(IWordList wordList) : INextWor
     public abstract double ScoreForGuess(string guess);
 
     /// <summary>
+    /// Override this with a strategy-specific definition to determines whether the guesser strategy should be used
+    /// for scoring the current iteration.
+    /// </summary>
+    /// <returns>True if it should be used; False otherwise.</returns>
+    public virtual bool ShouldRun()
+    {
+        return true;
+    }
+
+    /// <summary>
     /// Returns the set of all guessed letters.
     /// </summary>
     /// <returns>The set of all guessed letters.</returns>
@@ -102,4 +112,6 @@ public abstract class NextWordGuesserStrategyBase(IWordList wordList) : INextWor
         }
         return this;
     }
+
+
 }

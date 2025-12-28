@@ -27,6 +27,15 @@ namespace WordleSolver.Library.GuesserStrategies;
 public class DistinctLettersGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
     /// <summary>
+    /// Only run this guesser strategy if there are any previous guesses.
+    /// </summary>
+    /// <returns>True if there is at least one previous guess; False otherwise.</returns>
+    public override bool ShouldRun()
+    {
+        return PreviousGuesses.Count > 0;
+    }
+
+    /// <summary>
     /// Scores the guess based on the number of distinct unguessed letters, ignoring repetitions.
     /// For example, if there are no guesses yet, `BREAD` would yield 5 and `BOOKS` would yield 4;
     /// but if `BAKER` had already been guessed before those, then `BREAD` would yield only 1 (D), while

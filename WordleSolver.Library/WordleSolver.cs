@@ -64,6 +64,7 @@ public class WordleSolver(IWordList wordList, INextWordGuesserStrategyFactory gu
     {
         // TODO: add priority for immediate guesser strategy guess if it  IsSolved()
         var result = GuesserStrategies
+            .Where(guesserStrategy => guesserStrategy.ShouldRun())
             .AsParallel()
             .Select(guesserStrategy => (
                 GuesserStrategy: guesserStrategy.GetType().Name,
