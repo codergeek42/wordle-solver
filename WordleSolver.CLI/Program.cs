@@ -20,8 +20,15 @@
 
 namespace WordleSolver.CLI;
 
+/// <summary>
+/// The main CLI application class.
+/// </summary>
 public class WordleSolverCommandLineApp
 {
+    /// <summary>
+    /// The main CLI application.
+    /// </summary>
+    /// <param name="args">The command-line arguments.</param>
     public static async Task Main(string[] args)
     {
         CommandLineOptions cliOptions = CommandLineArguments.Parse(args, Environment.Exit);

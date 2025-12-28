@@ -22,16 +22,39 @@ using System.CommandLine;
 
 using WordleSolver.CLI;
 
+/// <summary>
+/// Command-line arguments parsed from how the app was invoked.
+/// </summary>
+/// <param name="dictionaryFilePath">The dictionary (file of all possible words, one per line).</param>
+/// <param name="excludedWordsFilePath">The list of words to exclude (one per line).</param>
 public class CommandLineOptions(FileInfo dictionaryFilePath, FileInfo? excludedWordsFilePath)
 {
+    /// <summary>
+    /// The dictionary (file of all possible words, one per line).
+    /// </summary>
     public FileInfo DictionaryFilePath { get; set; } = dictionaryFilePath;
 
+    /// <summary>
+    /// The list of words to exclude (one per line).
+    /// </summary>
     public FileInfo? ExcludedWordsFilePath { get; set; } = excludedWordsFilePath;
 
 }
 
+/// <summary>
+/// Command-line argument parser.
+/// </summary>
 public class CommandLineArguments
 {
+    /// <summary>
+    /// Given the command-line arguments, parses them and returns the parsed object. Calls the given
+    /// exitCallback with an appropriate exit status if that results in a flow that should exit (such
+    /// as showing the help or version) or a parse error (such as in )
+    /// </summary>
+    /// <param name="arguments"></param>
+    /// <param name="exitCallback"></param>
+    /// <returns>The parsed command-line options object.</returns>
+    /// <exception cref="WordleSolverUnterminatedExitException">If the given exitCallback returned without exiting.</exception>
     public static CommandLineOptions Parse(string[] arguments, Action<int> exitCallback)
     {
         Option<FileInfo> dictionaryFilePathOption = new("--dictionary", "-d")

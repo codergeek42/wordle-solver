@@ -20,8 +20,18 @@
 
 namespace WordleSolver.CLI;
 
+/// <summary>
+/// Potential exit code constants to give some meaningful label.
+/// </summary>
 public class ExitCode
 {
+    /// <summary>
+    /// Exit with successful result (no errors).
+    /// </summary>
     public static int OK = 0;
+
+    /// <summary>
+    /// Exit because of invalid command-line arguments or a parse error thereof.
+    /// </summary>
     public static int InvalidCommandLineArguments = 1;
 }
