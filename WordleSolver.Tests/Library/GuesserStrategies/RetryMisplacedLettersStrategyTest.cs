@@ -53,6 +53,14 @@ public class RetryMisplacedLettersStrategyTest : MockWordListFixture
         }
     }
 
+    public static IEnumerable<object[]> RetryMisplacedLettersShouldRunTestData()
+    {
+        foreach (LetterAtPositionInWord required in Enum.GetValues(typeof(LetterAtPositionInWord)))
+        {
+            yield return [required, required == LetterAtPositionInWord.Misplaced];
+        }
+    }
+
 
     [Fact]
     public void RetryMisplacedLettersGuesserStrategy_Constructor_CanBeInstantiated()
@@ -99,5 +107,24 @@ public class RetryMisplacedLettersStrategyTest : MockWordListFixture
 
         Result.Should()
             .Be(numMisplacedLetters, because);
+    }
+
+    [Theory]
+    [MemberData(nameof(RetryMisplacedLettersShouldRunTestData))]
+    public void retryMisplacedLettersStrategy_ShouldRun_ShouldRunOnlyIfPreviouslyMisplacedGuess(
+        LetterAtPositionInWord required,
+        bool expectedShouldRun
+    )
+    {
+        RetryMisplacedLettersGuesserStrategy retryMisplacedLettersStrategy = new(MockWordList.Object);
+
+        retryMisplacedLettersStrategy.PreviousGuesses.Add(new WordGuessAndResult("", [
+            new(0, 'A', required)
+        ]));
+
+        bool result = retryMisplacedLettersStrategy.ShouldRun();
+
+        result.Should()
+            .Be(expectedShouldRun, "should only run if a previous guess is Misplaced");
     }
 }

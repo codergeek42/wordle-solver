@@ -233,4 +233,15 @@ public class NextWordGuesserStrategyBaseTest : MockWordListFixture
         MockWordList.Verify(wordList => wordList.ProcessExclusionsFromRules(It.IsAny<List<LetterAtPositionInWordRule>>()),
             Times.Never(), "Should not call process exclusions when guess is invalid");
     }
+
+    [Fact]
+    public void NextWordGuesserStrategyBase_ShouldRun_DefaultsToTrue()
+    {
+        NextWordBaseTestGuesserStrategy nextWordGuesserStrategy = new(MockWordList.Object);
+
+        bool result = nextWordGuesserStrategy.ShouldRun();
+
+        result.Should()
+            .BeTrue("base guesser strategy should default to run");
+    }
 }

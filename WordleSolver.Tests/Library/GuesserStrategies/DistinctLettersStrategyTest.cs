@@ -90,4 +90,21 @@ public class DistinctLettersStrategyTest : MockWordListFixture
         result.Should()
             .Be(numDistinctLetters, because);
     }
+
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(1, true)]
+    [InlineData(2, true)]
+    public void DistinctLettersStrategy_ShouldRun_ShouldRunIfHasPreviousGuesses(int previousGuessCount, bool expectedShouldRun)
+    {
+        DistinctLettersGuesserStrategy distinctLettersStrategy = new(MockWordList.Object);
+        distinctLettersStrategy.PreviousGuesses.AddRange(
+            previousGuessCount.Repeat(_ => new WordGuessAndResult("", []))
+        );
+
+        bool result = distinctLettersStrategy.ShouldRun();
+
+        result.Should()
+            .Be(expectedShouldRun, "should run only if has any previous guesses");
+    }
 }
