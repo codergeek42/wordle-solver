@@ -30,6 +30,7 @@ namespace WordleSolver.Tests;
 /// <summary>
 /// Unit tests for <see cref="NextWordGuesserStrategyFactory"/>
 /// </summary>
+[Trait("Category", "Unit")]
 public class NextWordGuesserStrategyFactoryTest : MockWordListFixture
 {
 

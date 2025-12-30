@@ -37,22 +37,21 @@ namespace WordleSolver.Tests.CLI;
 /// <summary>
 /// Unit tests for <see cref="CommandLineArguments"/>
 /// </summary>
-public class CommandLineArgumentsTest : IDisposable
+[Trait("Category", "Unit")]
+public class CommandLineArgumentsTest : MockConsoleFixture
 {
     public Mock<Action<int>> MockExitCallback { get; set; } = new();
 
-    private StringWriter MockConsoleOutput { get; set; } = new();
-
     public CommandLineArgumentsTest()
+        : base()
     {
         MockExitCallback.Setup(call => call(It.IsAny<int>()));
-        Console.SetOut(MockConsoleOutput);
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
+        base.Dispose();
         MockExitCallback.Reset();
-        Console.SetOut(new StreamWriter(Console.OpenStandardOutput()));
     }
 
     public static CommandLineArgumentsParseTestCase ParseDefaultOptionsTestCase = (

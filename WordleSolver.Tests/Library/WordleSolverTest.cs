@@ -32,6 +32,7 @@ using WordleSolver.Tests.Extensions;
 /// <summary>
 /// Unit tests for <see cref="WordleSolver"/>
 /// </summary>
+[Trait("Category", "Unit")]
 public class WordleSolverTest : MockWordListFixture
 {
     [Fact]

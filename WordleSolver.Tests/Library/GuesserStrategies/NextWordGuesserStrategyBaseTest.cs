@@ -51,6 +51,7 @@ public class NextWordBaseTestGuesserStrategy : NextWordGuesserStrategyBase
 /// <summary>
 /// Unit tests for <see cref="NextWordGuesserStrategyBase"/>
 /// </summary>
+[Trait("Category", "Unit")]
 public class NextWordGuesserStrategyBaseTest : MockWordListFixture
 {
     [Fact]

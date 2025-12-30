@@ -40,6 +40,7 @@ namespace WordleSolver.Tests;
 /// <summary>
 /// Unit tests for <see cref="WordList"/>
 /// </summary>
+[Trait("Category", "Unit")]
 public class WordListTest
 {
     public static DoesWordMatchAllRulesTestCase ExcludeImpossibleAAtEveryPosition = (

@@ -36,6 +36,7 @@ namespace WordleSolver.Tests;
 /// <summary>
 /// Unit tests for <see cref="DistinctLettersGuesserStrategy"/>
 /// </summary>
+[Trait("Category", "Unit")]
 public class DistinctLettersStrategyTest : MockWordListFixture
 {
     public static IEnumerable<object[]> DistinctLettersScoreForGuessTestData()

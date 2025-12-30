@@ -28,6 +28,8 @@ using WordleSolver.Library.Extensions;
 /// <summary>
 /// Unit tests for <see cref="NumberExtensions"/>.
 /// </summary>
+
+[Trait("Category", "Unit")]
 public class NumberExtensionsTest
 {
 

@@ -37,6 +37,7 @@ namespace WordleSolver.Tests;
 /// <summary>
 /// Unit tests for <see cref="RetryMisplacedLettersGuesserStrategy"/>
 /// </summary>
+[Trait("Category", "Unit")]
 public class RetryMisplacedLettersStrategyTest : MockWordListFixture
 {
     public static IEnumerable<object[]> RetryMisplacedLettersScoreForGuessTestData()
