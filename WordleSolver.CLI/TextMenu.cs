@@ -180,8 +180,17 @@ public class TextMenu(string title)
                 string displayedIndex = (index + 1).ToString().PadLeft(numberWidth);
                 return $"({displayedIndex}) {itemAtIndex}";
             case TextMenuItemSelector.FirstLetter:
-                char displayedLetter = itemAtIndex.ToUpper().First(char.IsLetterOrDigit);
-                int indexOfLetter = itemAtIndex.IndexOf(displayedLetter);
+                // FIXME: Splitting this .ToUpper().FirstOrDefault(...) expression chain here is needed
+                // for Coverlet to properly detect the full code coverage.
+                string uppercasedItem = itemAtIndex.ToUpper();
+                char displayedLetter = uppercasedItem.FirstOrDefault(char.IsLetterOrDigit);
+                if (displayedLetter == default(char))
+                {
+                    throw new TextMenuException(
+                        $"FirstLetter selector enabled; but item '{itemAtIndex}' at index {index} is not alphanumeric."
+                    );
+                }
+                int indexOfLetter = itemAtIndex.ToUpper().IndexOf(displayedLetter);
                 return $"{itemAtIndex[..indexOfLetter]}({displayedLetter}){itemAtIndex[(indexOfLetter + 1)..]}";
             default:
                 throw new TextMenuException("Unhandled item selector.");
@@ -191,7 +200,7 @@ public class TextMenu(string title)
     /// <summary>
     /// Displayes the menu items, one per line.
     /// </summary>
-    private void DisplayMenuItemsMultiLine()
+    public void DisplayMenuItemsMultiLine()
     {
         foreach (var line in Items.Index())
         {
@@ -202,7 +211,7 @@ public class TextMenu(string title)
     /// <summary>
     /// Displays the menu items in one line, separated by semicolons.
     /// </summary>
-    private void DisplayMenuItemsSingleLine()
+    public void DisplayMenuItemsSingleLine()
     {
         foreach (var line in Items.Index())
         {
@@ -220,8 +229,12 @@ public class TextMenu(string title)
     /// <param name="choice">The choice made by the user.</param>
     /// <returns>The (0-based) item index of the chosen item.</returns>
     /// <exception cref="TextMenuException">If the item selector is invalid.</exception>
-    private int ParseChoiceToEntriesIndex(string choice)
+    public int ParseChoiceToEntriesIndex(string? choice)
     {
+        if (string.IsNullOrEmpty(choice))
+        {
+            return -1;
+        }
         switch (Options.ItemSelector)
         {
             case TextMenuItemSelector.AutoNumbered:
@@ -269,15 +282,15 @@ public class TextMenu(string title)
         while (true)
         {
             Console.Write($"{Prompt} ");
-            int choice = ParseChoiceToEntriesIndex(Console.ReadLine() ?? "");
-            if (choice < 0 || choice > Items.Count)
-            {
-                Console.WriteLine("Invalid choice!");
-            }
-            else
+            int choice = ParseChoiceToEntriesIndex(Console.ReadLine());
+            if (0 <= choice && choice < Items.Count)
             {
                 await Callbacks[choice]();
                 return;
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice!");
             }
         }
     }
