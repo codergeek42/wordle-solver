@@ -25,17 +25,30 @@ using WordleSolver.Library;
 using WordleSolver.Library.Extensions;
 using WordleSolver.Library.GuesserStrategies;
 
+
+/// <summary>
+/// The main guesser loop of the CLI app.
+/// </summary>
 public class GuessLoop
 {
     public WordList CandidateWordList { get; private set; }
     public WordleSolver.Library.WordleSolver Solver { get; private set; }
 
+
+    /// <summary>
+    /// Constructor: initializes with empty WordList and Solver instances.
+    /// </summary>
     public GuessLoop()
     {
         CandidateWordList = new WordList([]);
         Solver = new(CandidateWordList, new NextWordGuesserStrategyFactory());
     }
 
+    /// <summary>
+    /// Initializes a GuessLoop with the given CLI options. 
+    /// </summary>
+    /// <param name="cliOpts">Command-line options to use, including dictionary and excluded words files.</param>
+    /// <returns>A GuessLoop to run the main solver loop logic.</returns>
     public static async Task<GuessLoop> Initialize(CommandLineOptions cliOpts)
     {
         GuessLoop guesserLoop = new();
@@ -56,6 +69,13 @@ public class GuessLoop
         return guesserLoop;
     }
 
+
+    /// <summary>
+    /// Prompts the user for the result of each letter of the guess at its corresponding position, and
+    /// creates a list of letter-position rules matching their input.
+    /// </summary>
+    /// <param name="guess">The previously-guessed word.</param>
+    /// <returns>The created list of letter-position rules.</returns>
     public async Task<List<LetterAtPositionInWordRule>> GetResultingRulesFromGuess(string guess)
     {
         List<LetterAtPositionInWordRule> letterRules = [];
@@ -102,6 +122,12 @@ public class GuessLoop
         return letterRules;
     }
 
+    /// <summary>
+    /// Main guess-and-check loop: Calculates the next optimal guess, prompts the user for its result,
+    /// calls the solver to processes the resulting letter-position rules, and repeats until either
+    /// the word is solved or the solution can no longer be determined (for instance, if the result was
+    /// mistakenly entered and caused all remaining words to be excluded).
+    /// </summary>
     public async Task RunGuessLoop()
     {
         int guessCount = 0;
