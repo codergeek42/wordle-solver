@@ -101,17 +101,50 @@ to begin. It accepts two command-line optional parameters:
 1. `--dictionary` or `-d`: The path to a text file to use as the base dictionary (list of potential words), one per
    line. This could be the system dictionary on a Unix-like OS (such as the default `/usr/share/dict/words`) or 
    something more manual, such as
-   [`valid-wordle-words.txt`](https://gist.github.com/dracos/dd0668f281e685bad51479e5acaadb93>)
-   kept by GitHub user"Dracos".
+   [`valid-wordle-words.txt`](https://gist.github.com/dracos/dd0668f281e685bad51479e5acaadb93)
+   kept by GitHub user "Dracos", or
+   [`words_alpha.txt`](https://github.com/dwyl/english-words/blob/master/words_alpha.txt)
+   from various GitHub users in the "dwyl" repository; and
 2. `--excluded-words` or `-x`: The path to a text file containing words that should not ever be guessed, perhaps
    because they were the solution to a previous day, or they are 5-letter words that are not valid for the game of
-   Wordle (such as `LATIN`).
+   Wordle (such as `LATIN` or other proper nouns and names).
 
 > [!NOTE]
 > In order to use these parameters on the command-line, they must be prefixed with a double dash (`--`) to distinguish
 > them from the `dotnet` parameters, for example
-> `dotnet run --project WordleSolver.CLI -- --excluded-words ~/.wordle-excluded-words.txt`
+> `dotnet run --project WordleSolver.CLI -- --excluded-words /path/to/wordle-excluded-words.txt`
 
+## Dictionary File
+The solver requires a dictionary file, which is a list of candidate words, one per line. Potential lists include
+1. the standard list of English words on a typical Unix or Linux system, such as `/usr/share/dict/words`;
+2. the comprehensive `words_alpha.txt` from this List of English Words GitHub project: 
+<https://github.com/dwyl/english-words/>
+
+
+These can be easily combined into one file with `wget` and `cat` or similar command-line tools. For example, 
+```bash
+wget -O - \
+https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words_alpha.txt \
+https://gist.githubusercontent.com/dracos/dd0668f281e685bad51479e5acaadb93/raw/6bfa15d263d6d5b63840a8e5b64e04b382fdb079/valid-wordle-words.txt \
+| cat - /usr/share/dict/words \
+| sort --dictionary-order  --ignore-case --unique \
+> dictionary.txt
+```
+This downloads the above `words_alpha.txt` and `valid-wordle-words.txt` files, appends the existing list from the
+system `/usr/share/dict/words` file, orders and deduplicates it, then outputs that to the `dictionary.txt` file in
+the current directory.
+
+> [!NOTE]
+> This Wordle Solver project is not affiliated or partnered with either of the two linked English word lists or their
+associated projects or contributors in any way, other than as a potential user of those list files. Please be sure
+to ALWAYS verify your file downloads are safe and from a reputable source.
+
+## Excluded Words File
+This is a list of words, also one per line, that should be excluded as possible answers or guesses. This could be for
+a number of reasons, such as if it's a 5-letter name or proper noun that is a valid word but not not a valid Wordle
+word, or perhaps it was one that was already the solution to a previous day's puzzle, e
+
+## Interactive Steps
 At each iteration the solver, will use every [guessing strategy](#guessing-strategies--scoring) to score
 every remaining candidate word, and print out the highest-scoring one. At that point, you will then be prompted to inpu
 the result from the Wordle site as a sequence of characters corresponding to the requirement of its position;

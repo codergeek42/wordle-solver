@@ -20,7 +20,7 @@
 # Aesthetic 
 - [-] Make Main be invoked from command-line root command handler to only run when not given --version/--help options.
 - [ ] If excluded words file provided, add words to it after marked as not a valid guess.
-- [x] Make the CLI app give a nice message when it's solved
+- [x] Make the CLI app give a nice message when it's solved.
 - [ ] Add 6-guess limit.
 - [ ] Add repeatability: When multiple scores identical for various words/strategies, use first in alphabetic order,
   or by strategy based on guess count/ShouldRun/etc.
@@ -30,8 +30,9 @@
 Currently, only the basic solving algorithm is implemented alongside some guessing strategies (scoring metrics); but
 future work planned includes the following:
 
-- [ ] create a simple guess-and-check text interface for testing and whatnot (i.e, print optimal guess and prompt for
+- [x] create a simple guess-and-check text interface for testing and whatnot (i.e, print optimal guess and prompt for
       result);
+- [ ] implement a generator for the dictionary file to download & merge with existing word list(s);
 - [ ] implement an automated solver for the current daily puzzle using Playwright;
 - [ ] wrap the solver backend as a GraphQL microservice; and
 - [ ] publish this resulting GraphQL microservice within a Docker image; then
@@ -44,6 +45,6 @@ hobby projects, is to learn by doing. 🙃
 
 
 # Tests
-- [ ] Add unit tests for most of the CLI utility methods.
-- [ ] Refactor test data and case naming for nicer coverage reporting.
+- [-] Add unit tests for most of the CLI utility methods.
+- [-] Refactor test data and case naming for nicer coverage reporting.
 - [ ] Make nicer reasons for Theory tests for clearer output visibility.
