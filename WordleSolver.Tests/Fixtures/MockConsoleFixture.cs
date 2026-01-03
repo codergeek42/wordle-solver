@@ -18,11 +18,6 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
-
-using Moq;
-
-using WordleSolver.Library;
-
 namespace WordleSolver.Tests;
 
 /// <summary>
@@ -42,9 +37,9 @@ public class MockConsoleFixture : IDisposable
 
     public MockConsoleFixture()
     {
-        MockConsoleInput = new StringReader(string.Empty);
-        MockConsoleOutput = new StringWriter();
-        MockConsoleError = new StringWriter();
+        MockConsoleInput = new(string.Empty);
+        MockConsoleOutput = new();
+        MockConsoleError = new();
 
         Console.SetIn(MockConsoleInput);
         Console.SetOut(MockConsoleOutput);
@@ -53,9 +48,9 @@ public class MockConsoleFixture : IDisposable
 
     public virtual void Dispose()
     {
-        StreamReader stdIn = new StreamReader(Console.OpenStandardInput());
-        StreamWriter stdOut = new StreamWriter(Console.OpenStandardOutput());
-        StreamWriter stdErr = new StreamWriter(Console.OpenStandardError());
+        StreamReader stdIn = new(Console.OpenStandardInput());
+        StreamWriter stdOut = new(Console.OpenStandardOutput());
+        StreamWriter stdErr = new(Console.OpenStandardError());
         stdOut.AutoFlush = true;
         stdErr.AutoFlush = true;
 
