@@ -36,7 +36,7 @@ using ParseChoiceToEntriesIndexTestCase = (
 );
 
 /// <summary>
-/// Unit tests for TextMenu.
+/// Unit tests for <see cref="TextMenu"/>.
 /// </summary>
 [Trait("Category", "Unit")]
 public class TextMenuTest : MockConsoleFixture
