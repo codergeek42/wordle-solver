@@ -29,6 +29,7 @@ namespace WordleSolver.Tests;
 /// <summary>
 /// Unit tests for <see cref="LetterFrequencyGuesserStrategy"/>
 /// </summary>
+[Trait("Category", "Unit")]
 public class LetterFrequencyStrategyTest : MockWordListFixture
 {
     [Fact]

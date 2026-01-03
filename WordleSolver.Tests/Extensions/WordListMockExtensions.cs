@@ -150,4 +150,17 @@ public static class WordListMockExtensions
         return mockWordList;
     }
 
+    /// <summary>
+    /// Sets up the mock ProcessExclusionsFromRules as a no-op stub.
+    /// </summary>
+    /// <param name="mockWordList">The mock WordList.</param>
+    /// <returns>The calling mock.</returns>
+    public static Mock<IWordList> StubWithExcludedWords(this Mock<IWordList> mockWordList)
+    {
+        mockWordList
+            .Setup(wordList => wordList.WithExcludedWords(It.IsAny<List<string>>()));
+        return mockWordList;
+    }
+
+
 }

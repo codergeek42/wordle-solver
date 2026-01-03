@@ -28,6 +28,7 @@ namespace WordleSolver.Tests;
 /// <summary>
 /// Unit tests for <see cref="LetterAtPositionInWordRule"/>
 /// </summary>
+[Trait("Category", "Unit")]
 public class LetterAtPositionInWordRuleTest
 {
     [Theory]

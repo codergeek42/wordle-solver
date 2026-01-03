@@ -18,6 +18,7 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
+using WordleSolver.Library.Extensions;
 using WordleSolver.Library.GuesserStrategies;
 
 namespace WordleSolver.Library;
@@ -48,7 +49,6 @@ public class WordleSolver(IWordList wordList, INextWordGuesserStrategyFactory gu
     /// <returns>The modified <see cref="WordleSolver"/> instance.</returns>
     public IWordleSolver WithPreviousGuess(WordGuessAndResult previousGuessAndResult)
     {
-
         GuesserStrategies = GuesserStrategies
             .AsParallel()
             .Select(guesserStrategy => guesserStrategy.WithPreviousGuess(previousGuessAndResult))
@@ -64,6 +64,7 @@ public class WordleSolver(IWordList wordList, INextWordGuesserStrategyFactory gu
     {
         // TODO: add priority for immediate guesser strategy guess if it  IsSolved()
         var result = GuesserStrategies
+            .Where(guesserStrategy => guesserStrategy.ShouldRun())
             .AsParallel()
             .Select(guesserStrategy => (
                 GuesserStrategy: guesserStrategy.GetType().Name,
@@ -93,5 +94,23 @@ public class WordleSolver(IWordList wordList, INextWordGuesserStrategyFactory gu
     public bool HasSolution()
     {
         return GuesserStrategies.All(guesserStrategy => guesserStrategy.HasSolution());
+    }
+
+    /// <summary>
+    /// Determines which positions are already solved (i.e., have an associated Mandatory letter rule).
+    /// </summary>
+    /// <returns>A list of (0-based) positions that are already solved.</returns>
+    public List<int> SolvedPositions()
+    {
+        return Data.WordLength.Repeat(identity => identity).Where(position =>
+            GuesserStrategies.Any(guesserStrategy =>
+                guesserStrategy.PreviousGuesses
+                    .SelectMany(previousGuess => previousGuess.Result)
+                    .Any(letterPositionWord =>
+                        letterPositionWord.Position == position
+                        && letterPositionWord.Required == LetterAtPositionInWord.Mandatory
+                    )
+            )
+        ).ToList();
     }
 }

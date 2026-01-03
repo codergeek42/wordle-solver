@@ -95,6 +95,11 @@
         "resolved": "13.0.1",
         "contentHash": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A=="
       },
+      "System.CommandLine": {
+        "type": "Transitive",
+        "resolved": "2.0.1",
+        "contentHash": "GLc43eDFq8KbpxIb7UhTwV0vC5CzB0NspJvfFbfhoW4O057xCJXuO18KLpVn9x3JykQn2mRske6+I6JXHwqmDg=="
+      },
       "System.Diagnostics.EventLog": {
         "type": "Transitive",
         "resolved": "6.0.0",
@@ -156,6 +161,13 @@
         "contentHash": "rKMpq4GsIUIJibXuZoZ8lYp5EpROlnYaRpwu9Zr0sRZXE7JqJfEEbCsUriZqB+ByXCLFBJyjkTRULMdC+U566g==",
         "dependencies": {
           "xunit.extensibility.core": "[2.9.2]"
+        }
+      },
+      "wordlesolver.cli": {
+        "type": "Project",
+        "dependencies": {
+          "System.CommandLine": "[2.0.1, )",
+          "WordleSolver.Library": "[1.0.0, )"
         }
       },
       "wordlesolver.library": {

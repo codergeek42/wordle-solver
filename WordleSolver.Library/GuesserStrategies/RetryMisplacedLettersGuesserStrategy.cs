@@ -30,6 +30,18 @@ namespace WordleSolver.Library.GuesserStrategies;
 public class RetryMisplacedLettersGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
     /// <summary>
+    /// Only run this guesser strategy if there is at least one already-Misplaced guess.
+    /// </summary>
+    /// <returns>True if there is at least one Misplaced letter guessed; False otherwise.</returns>
+    public override bool ShouldRun()
+    {
+        return PreviousGuesses
+            .SelectMany(guessAndResult => guessAndResult.Result)
+            .Any(letterPositionRule => letterPositionRule.Required == LetterAtPositionInWord.Misplaced);
+    }
+
+
+    /// <summary>
     /// Scores the guess by the number of retried misplaced letters, i.e. the number of letters in the guess
     /// that previous rules have determined are Misplaced at other position(s).
     /// 

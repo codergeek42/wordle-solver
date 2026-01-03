@@ -29,6 +29,7 @@ using WordleSolver.Library.Extensions;
 /// <summary>
 /// Unit tests for <see cref="CollectionExtensions"/> .
 /// </summary>
+[Trait("Category", "Unit")]
 public class CollectionExtensionsTest
 {
     [Fact]

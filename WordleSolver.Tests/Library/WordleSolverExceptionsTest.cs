@@ -26,6 +26,7 @@ namespace WordleSolver.Tests;
 
 /// <summary>
 /// Unit tests for <see cref="WordleSolverException"/>
+[Trait("Category", "Unit")]
 /// </summary>
 public class ExceptionsTest
 {

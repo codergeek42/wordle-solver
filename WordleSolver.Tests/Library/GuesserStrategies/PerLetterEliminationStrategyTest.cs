@@ -32,6 +32,7 @@ namespace WordleSolver.Tests;
 /// <summary>
 /// Unit tests for <see cref="PerLetterEliminationGuesserStrategy"/>
 /// </summary>
+[Trait("Category", "Unit")]
 public class PerLetterEliminationGuesserStrategyTest : MockWordListFixture
 {
     [Fact]

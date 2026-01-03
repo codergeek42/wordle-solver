@@ -60,6 +60,7 @@ public class WordList : IWordList
         words ??= [];
 
         Words = words
+            .AsParallel()
             .Select(word => word.Trim().ToUpper())
             .Where(word => word.Length == Data.WordLength && word.All(letter => Data.Alphabet.Contains(letter)))
             .Order()

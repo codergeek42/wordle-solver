@@ -32,6 +32,7 @@ using WordleSolver.Tests.Extensions;
 /// <summary>
 /// Unit tests for <see cref="WordleSolver"/>
 /// </summary>
+[Trait("Category", "Unit")]
 public class WordleSolverTest : MockWordListFixture
 {
     [Fact]
@@ -79,6 +80,9 @@ public class WordleSolverTest : MockWordListFixture
         WordGuessAndScore lowScore = new("GUESS", 4.9);
         WordGuessAndScore highScore = new("SCORE", 5.0);
         mockGuesserStrategyFactory.NextWordGuesserStrategies.SetupWordGuessAndScoreReturnValues([lowScore, highScore]);
+        mockGuesserStrategyFactory.NextWordGuesserStrategies.ForEach(
+            mockGuesserStrategy => mockGuesserStrategy.SetupShouldRunMockReturn(true)
+        );
 
         (string GuesserStrategy, WordGuessAndScore GuessAndScore) result = wordleSolver.GuessNextWord();
 
@@ -92,6 +96,37 @@ public class WordleSolverTest : MockWordListFixture
             .NotBeNull("should return a result");
         result.GuessAndScore.Should()
             .Be(highScore, "should return the highest-scoring guess");
+    }
+
+    [Fact]
+    public void WordleSolver_GuessNextWord_RunsOnlyThoseStrategiesThatShould()
+    {
+        MockMultiNextWordGuesserStrategyFactory mockGuesserStrategyFactory = new();
+        WordleSolver wordleSolver = new(MockWordList.Object, mockGuesserStrategyFactory);
+        WordGuessAndScore lowScore = new("GUESS", 4.9);
+        WordGuessAndScore highScore = new("SCORE", 5.0);
+
+        mockGuesserStrategyFactory.NextWordGuesserStrategies.SetupWordGuessAndScoreReturnValues([lowScore, highScore]);
+        mockGuesserStrategyFactory.NextWordGuesserStrategies.SetupShouldRunMockReturnValues([true, false]);
+
+        (string GuesserStrategy, WordGuessAndScore GuessAndScore) result = wordleSolver.GuessNextWord();
+
+        mockGuesserStrategyFactory.NextWordGuesserStrategies.Should()
+            .AllSatisfy(
+                guesserStrategy => guesserStrategy.Verify(guesserStrategy => guesserStrategy.ShouldRun()),
+                "should check each guesser strategy's ShouldRun"
+            )
+            .And.SatisfyRespectively(
+                guesserStrategy => guesserStrategy.Verify(guesserStrategy => guesserStrategy.GuessNextWordAndScore(),
+                    Times.Once(), "should have used the guesser strategy where ShouldRun is true"),
+                guesserStrategy => guesserStrategy.Verify(guesserStrategy => guesserStrategy.GuessNextWordAndScore(),
+                    Times.Never(), "should not have used the guesser strategy where ShouldRun is false")
+            );
+
+        result.Should()
+            .NotBeNull("should return a result");
+        result.GuessAndScore.Should()
+            .Be(lowScore, "should return the highest-scoring guess among the ones that should run");
     }
 
     [Theory]
@@ -160,5 +195,35 @@ public class WordleSolverTest : MockWordListFixture
 
         result.Should()
             .Be(expectedSolved, $"should be {expectedSolved} because {countGuesserStrategiesUnsolved}/2 are false");
+    }
+
+    [Fact]
+    public void WordleSolver_SolvedPositions_ReturnsAllPositionsThatHaveMandatoryLetter()
+    {
+        List<LetterAtPositionInWordRule> noRulesAt0 = [];
+        LetterAtPositionInWordRule mandatoryAAt1 = new(1, 'A', LetterAtPositionInWord.Mandatory);
+        LetterAtPositionInWordRule misplacedBAt2 = new(2, 'B', LetterAtPositionInWord.Misplaced);
+        LetterAtPositionInWordRule impossibleCAt3 = new(3, 'C', LetterAtPositionInWord.Impossible);
+        List<LetterAtPositionInWordRule> mandatoryDAt4WithOtherLettersMisplacedAndImpossible = [
+            new(4, 'D', LetterAtPositionInWord.Mandatory),
+            new(4, 'E', LetterAtPositionInWord.Misplaced),
+            new(4, 'F', LetterAtPositionInWord.Impossible)
+        ];
+
+        MockSingleNextWordGuesserStrategyFactory guesserStrategyFactory = new();
+        guesserStrategyFactory.NextWordGuesserStrategy.SetupPreviousGuessesMockReturn([
+            new WordGuessAndResult("GUESS", [
+                ..noRulesAt0,
+                mandatoryAAt1,
+                misplacedBAt2,
+                impossibleCAt3,
+                ..mandatoryDAt4WithOtherLettersMisplacedAndImpossible
+            ])
+        ]);
+        WordleSolver wordleSolver = new WordleSolver(MockWordList.Object, guesserStrategyFactory);
+        List<int> result = wordleSolver.SolvedPositions();
+
+        result.Should()
+            .Equal([1, 4], "should return all positions that have an associated Mandatory letter rule");
     }
 }
