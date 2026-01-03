@@ -142,12 +142,12 @@ to ALWAYS verify your file downloads are safe and from a reputable source.
 ## Excluded Words File
 This is a list of words, also one per line, that should be excluded as possible answers or guesses. This could be for
 a number of reasons, such as if it's a 5-letter name or proper noun that is a valid word but not not a valid Wordle
-word, or perhaps it was one that was already the solution to a previous day's puzzle, e
+word, or perhaps it was one that was already the solution to a previous day's puzzle.
 
 ## Interactive Steps
 At each iteration the solver, will use every [guessing strategy](#guessing-strategies--scoring) to score
-every remaining candidate word, and print out the highest-scoring one. At that point, you will then be prompted to inpu
-the result from the Wordle site as a sequence of characters corresponding to the requirement of its position;
+every remaining candidate word, and print out the highest-scoring one. At that point, you will then be prompted to
+input the result from the Wordle site as a sequence of characters corresponding to the requirement of its position:
 
 - `R` (for "Required") if the letter at that position is correct (green),
 - `M` (for "Misplaced") if the letter at that position is incorrect, but is included in the word at a different
