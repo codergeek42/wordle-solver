@@ -107,7 +107,6 @@ public class GuessLoop
         int guessCount = 0;
         while (Solver.HasSolution())
         {
-            guessCount += 1;
             Console.WriteLine("Calculating next word. This may take some time! ...");
             (string nextGuessStrategy, WordGuessAndScore wordAndScore) = Solver.GuessNextWord();
             Console.WriteLine($"{wordAndScore.Word} ({wordAndScore.Score} by {nextGuessStrategy}):");
@@ -119,16 +118,17 @@ public class GuessLoop
             TextMenu isWordPossibleMenu = new TextMenu($"Is {wordAndScore.Word} a possible solution?")
                 .WithAsyncItem("Yes", async () =>
                 {
+                    guessCount += 1;
                     List<LetterAtPositionInWordRule> letterRules = await GetResultingRulesFromGuess(wordAndScore.Word);
                     Solver.WithPreviousGuess(new WordGuessAndResult(wordAndScore.Word, letterRules));
                 })
                 .WithItem("No", () =>
                 {
                     Solver.WithPreviousGuess(new WordGuessAndResult(wordAndScore.Word, [], false));
-                    guessCount -= 1;
                 })
                 .WithItem("Solved!", () =>
                 {
+                    guessCount += 1;
                     Solver.WithPreviousGuess(new WordGuessAndResult(
                         wordAndScore.Word, wordAndScore.Word.Enumerate().ConvertAll(
                             lwp => new LetterAtPositionInWordRule(
