@@ -128,7 +128,6 @@ public class GuessLoop
                 })
                 .WithItem("Solved!", () =>
                 {
-                    guessCount += 1;
                     Solver.WithPreviousGuess(new WordGuessAndResult(
                         wordAndScore.Word, wordAndScore.Word.Enumerate().ConvertAll(
                             lwp => new LetterAtPositionInWordRule(
@@ -150,8 +149,9 @@ public class GuessLoop
             Console.WriteLine($"All possible words exhausted after {guessCount} guesses; no solution found!");
             Console.WriteLine("(Did you typo the guess results somewhere, perhaps?)");
         }
-        else
+        else // IsSolved
         {
+            guessCount += 1;
             Console.WriteLine($"Wordle solved in {guessCount} guesses!");
         }
     }
