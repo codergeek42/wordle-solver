@@ -20,8 +20,16 @@
 
 namespace WordleSolver.Tests;
 
+/// <summary>
+/// Extension methods for the mock Console I/O functionality.
+/// </summary>
 public static class MockConsoleExtensions
 {
+    /// <summary>
+    /// Sets the console input so that the read result will have the given input data.
+    /// </summary>
+    /// <param name="_mockConsoleIn">The calling mock console reader.</param>
+    /// <param name="inputText">The desired input to mock.</param>
     public static void SetInputText(this StringReader _mockConsoleIn, string inputText)
     {
         StringReader consoleReader = new(inputText);

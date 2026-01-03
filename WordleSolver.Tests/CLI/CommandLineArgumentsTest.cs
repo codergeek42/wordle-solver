@@ -64,6 +64,10 @@ public class CommandLineArgumentsTest : MockConsoleFixture
         )
     );
 
+    // NB: The AcceptExistingOnly settings in the root command for the argument parsing
+    // necessitates that the file paths exist; but for the purposes of our unit tests, we
+    // only need to validate that those specific paths are stored (that is, instead of the defaults),
+    // not any functionality around opening/reading them.
     public static CommandLineArgumentsParseTestCase ParseSpecifiedOptionsTestCase = (
         CaseName: "Specific arguments",
         DictionaryArgument: ".",

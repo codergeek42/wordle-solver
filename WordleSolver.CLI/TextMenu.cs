@@ -44,7 +44,8 @@ public enum TextMenuItemSelector
     AutoNumbered,
 
     /// <summary>
-    /// Use the uppercase first alphabetic letter of the item.
+    /// Use the uppercase first alphabetic letter of the item: "F" for the item with text "[first]", "S" for the item
+    /// with text "Second", and so on.
     /// </summary>
     // TODO: Add check if multiple items have same first letter.
     FirstLetter
@@ -227,7 +228,8 @@ public class TextMenu(string title)
     /// Converts the user choice to the index of the item that was chosen.
     /// </summary>
     /// <param name="choice">The choice made by the user.</param>
-    /// <returns>The (0-based) item index of the chosen item.</returns>
+    /// <returns>The (0-based) item index of the chosen item, or -1 if that chosen item was null, empty, or not in
+    /// the Items list.</returns>
     /// <exception cref="TextMenuException">If the item selector is invalid.</exception>
     public int ParseChoiceToEntriesIndex(string? choice)
     {

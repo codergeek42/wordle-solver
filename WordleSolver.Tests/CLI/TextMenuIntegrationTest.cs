@@ -25,7 +25,7 @@ using WordleSolver.Tests;
 namespace WordleSolver.CLI;
 
 /// <summary>
-/// Integration tests for TextMenu.
+/// Integration tests for <see cref="TextMenu"/>.
 /// </summary>
 [Trait("Category", "Integration")]
 public class TextMenuIntegrationTest : MockConsoleFixture
