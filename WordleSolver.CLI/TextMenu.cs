@@ -214,14 +214,12 @@ public class TextMenu(string title)
     /// </summary>
     public void DisplayMenuItemsSingleLine()
     {
-        foreach (var line in Items.Index())
-        {
-            Console.Write(GetItemAtIndex(line.Index));
-            if (line.Index + 1 < Items.Count)
-            {
-                Console.Write("; ");
-            }
-        }
+        Console.Write(
+            string.Join(
+                "; ",
+                Items.Select((_, itemIdx) => GetItemAtIndex(itemIdx))
+            )
+        );
     }
 
     /// <summary>

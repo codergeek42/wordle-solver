@@ -160,7 +160,7 @@ public class CommandLineArgumentsTest : MockConsoleFixture
             .Throw<WordleSolverUnterminatedExitException>("callback returns");
         MockExitCallback
             .Verify(callback => callback(ExitCode.InvalidCommandLineArguments),
-            $"exit with {ExitCode.InvalidCommandLineArguments}"
+            $"exit with {ExitCode.InvalidCommandLineArguments} exitCode"
         );
     }
 }
