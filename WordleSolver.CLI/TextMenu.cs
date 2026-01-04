@@ -124,7 +124,7 @@ public class TextMenu(string title)
     /// <param name="displayedText">The text to display for the user.</param>
     /// <param name="callback">The async code to run when the user chooses this item.</param>
     /// <returns>The caller.</returns>
-    public TextMenu WithAsyncItem(string displayedText, Func<Task> asyncCallback)
+    public TextMenu WithItem(string displayedText, Func<Task> asyncCallback)
     {
         Items.Add(displayedText);
         Callbacks.Add(asyncCallback);

@@ -195,7 +195,7 @@ public class TextMenuTest : MockConsoleFixture
     }
 
     [Fact]
-    public async Task TextMenu_WithAsyncItem_AddsItemAndReturnsCaller()
+    public async Task TextMenu_WithItem_AddsAsyncItemAndReturnsCaller()
     {
         TextMenu testMenu = new TextMenu("test-title");
 
@@ -208,7 +208,7 @@ public class TextMenuTest : MockConsoleFixture
         bool callbackCalled = false;
         Func<Task> asyncCallbackToAdd = async () => await Task.Run(() => callbackCalled = true);
 
-        TextMenu result = testMenu.WithAsyncItem(itemDescription, asyncCallbackToAdd);
+        TextMenu result = testMenu.WithItem(itemDescription, asyncCallbackToAdd);
 
         result.Should()
             .BeSameAs(testMenu, "should return modified calling object");

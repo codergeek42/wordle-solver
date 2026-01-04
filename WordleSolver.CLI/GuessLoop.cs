@@ -143,7 +143,7 @@ public class GuessLoop
                 break;
             }
             TextMenu isWordPossibleMenu = new TextMenu($"Is {wordAndScore.Word} a possible solution?")
-                .WithAsyncItem("Yes", async () =>
+                .WithItem("Yes", async () =>
                 {
                     guessCount += 1;
                     List<LetterAtPositionInWordRule> letterRules = await GetResultingRulesFromGuessAsync(wordAndScore.Word);

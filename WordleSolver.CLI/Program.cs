@@ -37,7 +37,7 @@ public class WordleSolverCommandLineApp
         Console.WriteLine(LegalTexts.WelcomeBanner);
 
         TextMenu mainMenu = new TextMenu("===== Main Menu =====")
-            .WithAsyncItem("Begin guessing!", async () =>
+            .WithItem("Begin guessing!", async () =>
             {
                 GuessLoop mainGuesserLoop = await GuessLoop.InitializeAsync(cliOptions);
                 await mainGuesserLoop.RunGuessLoopAsync();
