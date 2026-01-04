@@ -128,7 +128,7 @@ public class TextMenuIntegrationTest : MockConsoleFixture
 
         MockConsoleInput.SetInputText(string.Join(Environment.NewLine, testInputs));
 
-        await testMenu.RunPrompt();
+        await testMenu.RunPromptAsync();
 
         string resultOutput = MockConsoleOutput.ToString();
         resultOutput.Should()
