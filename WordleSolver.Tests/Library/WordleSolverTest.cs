@@ -198,7 +198,7 @@ public class WordleSolverTest : MockWordListFixture
     }
 
     [Fact]
-    public void WordleSolver_SolvedPositions_ReturnsAllPositionsThatHaveMandatoryLetter()
+    public void WordleSolver_SolvedPositions_ReturnsAllPositionsFromValidGuessesThatHaveMandatoryLetter()
     {
         List<LetterAtPositionInWordRule> noRulesAt0 = [];
         LetterAtPositionInWordRule mandatoryAAt1 = new(1, 'A', LetterAtPositionInWord.Mandatory);
@@ -209,21 +209,39 @@ public class WordleSolverTest : MockWordListFixture
             new(4, 'E', LetterAtPositionInWord.Misplaced),
             new(4, 'F', LetterAtPositionInWord.Impossible)
         ];
+        LetterAtPositionInWordRule mandatoryGAt0 = new(0, 'G', LetterAtPositionInWord.Mandatory);
+        LetterAtPositionInWordRule misplacedHAt1 = new(1, 'H', LetterAtPositionInWord.Misplaced);
+        LetterAtPositionInWordRule impossibleIAt2 = new(2, 'I', LetterAtPositionInWord.Impossible);
+        List<LetterAtPositionInWordRule> mandatoryJAt3WithOtherLettersMisplacedAndImpossible = [
+            new(3, 'J', LetterAtPositionInWord.Mandatory),
+            new(3, 'K', LetterAtPositionInWord.Misplaced),
+            new(3, 'L', LetterAtPositionInWord.Impossible)
+        ];
 
         MockSingleNextWordGuesserStrategyFactory guesserStrategyFactory = new();
         guesserStrategyFactory.NextWordGuesserStrategy.SetupPreviousGuessesMockReturn([
-            new WordGuessAndResult("GUESS", [
+            new WordGuessAndResult("VALID", [
                 ..noRulesAt0,
                 mandatoryAAt1,
                 misplacedBAt2,
                 impossibleCAt3,
                 ..mandatoryDAt4WithOtherLettersMisplacedAndImpossible
-            ])
+            ], true),
+             new WordGuessAndResult("NTVLD", [
+                mandatoryGAt0,
+                misplacedHAt1,
+                impossibleIAt2,
+                ..mandatoryJAt3WithOtherLettersMisplacedAndImpossible
+            ], false)
         ]);
+        List<LetterWithPosition> expectedSolvedPositions = [
+            new('A', 1),
+            new('D', 4)
+        ];
         WordleSolver wordleSolver = new WordleSolver(MockWordList.Object, guesserStrategyFactory);
-        List<int> result = wordleSolver.SolvedPositions();
+        List<LetterWithPosition> result = wordleSolver.SolvedPositions();
 
         result.Should()
-            .Equal([1, 4], "should return all positions that have an associated Mandatory letter rule");
+            .Equal(expectedSolvedPositions, "should return all positions that have an associated Mandatory letter rule");
     }
 }

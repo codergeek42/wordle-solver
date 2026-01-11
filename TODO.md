@@ -1,19 +1,19 @@
 # C#/.Net Port
-- [x] Finish Solver library
+- [x] Finish Solver library.
 - [ ] Use Unity for dependency injection for filesystem and guesser strategies instead of having to explicitly populate
     them.
 
 
-# CICD Pipeline
-- [x] CodeQL
-- [-] Continuous Integration (build/test/coverage report/etc.)
-- [ ] Daily solver (after implemented)
+# CI/CD Pipeline
+- [x] Add CI pipeline as Github Action.
+- [x] Add CodeQL check.
+- [ ] Add Daily solver to pipeline (after GUI portion implemented).
 
 # Performance
-- [x] Use PLINQ to calculate next highest-scoring word
-- [-] Cache results between guesses and mark a "should run" per strategy:
+- [x] Use PLINQ to calculate next highest-scoring word.
+- [x] Mark a "should run" per strategy:
     * initial strategy should be LetterFrequency or PerLetterElimination; DistinctLetters is always highest at 5
-    at start for words that have no repeated letters, but is not useful if no previous guesses have been made yet;
+    at start for words that have no repeated letters, but is not useful if no previous guesses have been made yet; and
     * no need to (re)calculate RetryMisplacedLetters if no guesses have been made that include one or more Misplaced
     letters.
 
@@ -29,7 +29,6 @@
 # Usage
 Currently, only the basic solving algorithm is implemented alongside some guessing strategies (scoring metrics); but
 future work planned includes the following:
-
 - [x] create a simple guess-and-check text interface for testing and whatnot (i.e, print optimal guess and prompt for
       result);
 - [ ] implement a generator for the dictionary file to download & merge with existing word list(s);
@@ -42,7 +41,6 @@ future work planned includes the following:
 NB: Sure, it would certainly be a lot less complex to write this as just the solver library and some Playwright to
 automate the puzzle -- just the second item on this list alone -- but a huge rationale for this project, like all of my
 hobby projects, is to learn by doing. 🙃
-
 
 # Tests
 - [-] Add unit tests for most of the CLI utility methods.

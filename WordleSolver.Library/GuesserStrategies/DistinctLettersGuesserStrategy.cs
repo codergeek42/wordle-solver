@@ -32,7 +32,7 @@ public class DistinctLettersGuesserStrategy(IWordList wordList) : NextWordGuesse
     /// <returns>True if there is at least one previous guess; False otherwise.</returns>
     public override bool ShouldRun()
     {
-        return PreviousGuesses.Count > 0;
+        return PreviousGuesses.Count(previousGuess => previousGuess.WasValidGuess) > 0;
     }
 
     /// <summary>
@@ -50,5 +50,19 @@ public class DistinctLettersGuesserStrategy(IWordList wordList) : NextWordGuesse
     {
         HashSet<char> alreadyGuessedLetters = GetAlreadyGuessedLetters();
         return guess.ToHashSet().Except(alreadyGuessedLetters).Count();
+    }
+
+    /// <summary>
+    /// Stores the previous guess and result,  rules in order to prioritize
+    /// guessing more letters over trying to match already-known ones; then returns the calling guesser strategy.
+    /// </summary>
+    /// <param name="guessAndResult">The guess and its associated result.</param>
+    /// <returns>The caller.</returns>
+    public override INextWordGuesserStrategy WithPreviousGuess(WordGuessAndResult guessAndResult)
+    {
+        return base.WithPreviousGuess(guessAndResult with
+        {
+            Result = []
+        });
     }
 }

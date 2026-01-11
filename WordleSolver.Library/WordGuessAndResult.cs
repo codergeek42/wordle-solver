@@ -23,42 +23,14 @@ namespace WordleSolver.Library;
 /// <summary>
 /// A pairing of a guessed word with its associated score.
 /// </summary>
-/// <param name="word">The guessed word.</param>
-/// <param name="score">The score for the word.</param>
-public class WordGuessAndScore(string word, double score)
-{
-    /// <summary>
-    /// The guessed word.
-    /// </summary>
-    public string Word { get; set; } = word;
-
-    /// <summary>
-    /// The score for the guessed word.
-    /// </summary>
-    public double Score { get; set; } = score;
-}
-
+/// <param name="Word">The guessed word.</param>
+/// <param name="Score">The score for the word.</param>
+public record WordGuessAndScore(string Word, double Score);
 
 /// <summary>
 /// A pairing of guessed word and its resulting letter-position rules.
 /// </summary>
-/// <param name="word">The guessed word.</param>
-/// <param name="result">The resulting letter-position rules.</param>
-/// <param name="wasValidGuess">Whether or not the guess was valid.</param>
-public class WordGuessAndResult(string word, List<LetterAtPositionInWordRule> result, bool wasValidGuess = true)
-{
-    /// <summary>
-    /// The guessed word.
-    /// </summary>
-    public string Word { get; set; } = word;
-
-    /// <summary>
-    /// Marks if the guess was valid (i.e., in the word list).
-    /// </summary>
-    public bool WasValidGuess { get; set; } = wasValidGuess;
-
-    /// <summary>
-    /// The letter-position rules resulting from the guess.
-    /// </summary>
-    public List<LetterAtPositionInWordRule> Result { get; set; } = result;
-}
+/// <param name="Word">The guessed word.</param>
+/// <param name="Result">The resulting letter-position rules.</param>
+/// <param name="WasValidGuess">Whether or not the guess was valid.</param>
+public record WordGuessAndResult(string Word, List<LetterAtPositionInWordRule> Result, bool WasValidGuess = true);

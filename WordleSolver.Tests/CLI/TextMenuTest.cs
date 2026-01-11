@@ -195,7 +195,7 @@ public class TextMenuTest : MockConsoleFixture
     }
 
     [Fact]
-    public async Task TextMenu_WithAsyncItem_AddsItemAndReturnsCaller()
+    public async Task TextMenu_WithItem_AddsAsyncItemAndReturnsCaller()
     {
         TextMenu testMenu = new TextMenu("test-title");
 
@@ -208,7 +208,7 @@ public class TextMenuTest : MockConsoleFixture
         bool callbackCalled = false;
         Func<Task> asyncCallbackToAdd = async () => await Task.Run(() => callbackCalled = true);
 
-        TextMenu result = testMenu.WithAsyncItem(itemDescription, asyncCallbackToAdd);
+        TextMenu result = testMenu.WithItem(itemDescription, asyncCallbackToAdd);
 
         result.Should()
             .BeSameAs(testMenu, "should return modified calling object");
@@ -397,7 +397,7 @@ public class TextMenuTest : MockConsoleFixture
     }
 
     [Fact]
-    public async Task TextMenu_RunPrompt_ThrowsIfMismatchedItemsAndCallbacks()
+    public async Task TextMenu_RunPromptAsync_ThrowsIfMismatchedItemsAndCallbacks()
     {
         TextMenu testMenu = new("test-title");
         testMenu.Items.AddRange(["first", "second"]);
@@ -406,21 +406,21 @@ public class TextMenuTest : MockConsoleFixture
         testMenu.Items.Should()
             .NotHaveSameCount(testMenu.Callbacks, "Items and Callbacks in test menu should differ in count");
 
-        Func<Task> testCall = async () => await testMenu.RunPrompt();
+        Func<Task> testCall = async () => await testMenu.RunPromptAsync();
 
         await testCall.Should()
                 .ThrowAsync<TextMenuException>("should throw when the Items and Callbacks have mismatched counts");
     }
 
     [Fact]
-    public async Task TextMenu_RunPrompt_ThrowsIfEmpty()
+    public async Task TextMenu_RunPromptAsync_ThrowsIfEmpty()
     {
         TextMenu testMenu = new("test-title");
         testMenu.Items.Should()
             .NotBeNull("Items in test menu should be empty instance")
             .And.BeEmpty("Items in test menu should differ in count");
 
-        Func<Task> testCall = async () => await testMenu.RunPrompt();
+        Func<Task> testCall = async () => await testMenu.RunPromptAsync();
 
         await testCall.Should()
             .ThrowAsync<TextMenuEmptyException>("should throw when the Items is empty");

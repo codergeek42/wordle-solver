@@ -207,7 +207,7 @@ public class WordListTest
     }
 
     [Fact]
-    public async Task WordList_FromFile_CanInstantiateFromLinesOfFile()
+    public async Task WordList_FromFileAsync_CanInstantiateFromLinesOfFile()
     {
         List<string> wordsInFile = Data.GenerateAlphabetWords("ABC");
         string filename = "test.txt";

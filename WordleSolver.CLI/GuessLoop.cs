@@ -49,7 +49,7 @@ public class GuessLoop
     /// </summary>
     /// <param name="cliOpts">Command-line options to use, including dictionary and excluded words files.</param>
     /// <returns>A GuessLoop to run the main solver loop logic.</returns>
-    public static async Task<GuessLoop> Initialize(CommandLineOptions cliOpts)
+    public static async Task<GuessLoop> InitializeAsync(CommandLineOptions cliOpts)
     {
         GuessLoop guesserLoop = new();
         FileSystem fileSystem = new();
@@ -76,13 +76,13 @@ public class GuessLoop
     /// </summary>
     /// <param name="guess">The previously-guessed word.</param>
     /// <returns>The created list of letter-position rules.</returns>
-    public async Task<List<LetterAtPositionInWordRule>> GetResultingRulesFromGuess(string guess)
+    public async Task<List<LetterAtPositionInWordRule>> GetResultingRulesFromGuessAsync(string guess)
     {
         List<LetterAtPositionInWordRule> letterRules = [];
-        List<int> solvedPositions = Solver.SolvedPositions();
+        List<LetterWithPosition> solvedPositions = Solver.SolvedPositions();
         foreach (LetterWithPosition lwp in guess.Enumerate())
         {
-            if (solvedPositions.Contains(lwp.Position))
+            if (solvedPositions.Contains(lwp))
             {
                 Console.WriteLine($"{lwp.Letter} @ index {lwp.Position} is... Required by previous guess!");
                 continue;
@@ -118,7 +118,7 @@ public class GuessLoop
                     IsMultiline = false,
                     ItemSelector = TextMenuItemSelector.FirstLetter
                 });
-            await letterMenu.RunPrompt();
+            await letterMenu.RunPromptAsync();
         }
         return letterRules;
     }
@@ -129,7 +129,7 @@ public class GuessLoop
     /// the word is solved or the solution can no longer be determined (for instance, if the result was
     /// mistakenly entered and caused all remaining words to be excluded).
     /// </summary>
-    public async Task RunGuessLoop()
+    public async Task RunGuessLoopAsync()
     {
         int guessCount = 0;
         while (Solver.HasSolution())
@@ -143,10 +143,10 @@ public class GuessLoop
                 break;
             }
             TextMenu isWordPossibleMenu = new TextMenu($"Is {wordAndScore.Word} a possible solution?")
-                .WithAsyncItem("Yes", async () =>
+                .WithItem("Yes", async () =>
                 {
                     guessCount += 1;
-                    List<LetterAtPositionInWordRule> letterRules = await GetResultingRulesFromGuess(wordAndScore.Word);
+                    List<LetterAtPositionInWordRule> letterRules = await GetResultingRulesFromGuessAsync(wordAndScore.Word);
                     Solver.WithPreviousGuess(new WordGuessAndResult(wordAndScore.Word, letterRules));
                 })
                 .WithItem("No", () =>
@@ -169,7 +169,7 @@ public class GuessLoop
                     IsMultiline = false,
                     ItemSelector = TextMenuItemSelector.FirstLetter
                 });
-            await isWordPossibleMenu.RunPrompt();
+            await isWordPossibleMenu.RunPromptAsync();
         }
         if (!Solver.HasSolution())
         {

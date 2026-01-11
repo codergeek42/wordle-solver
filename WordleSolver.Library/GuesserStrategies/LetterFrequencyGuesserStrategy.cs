@@ -48,10 +48,10 @@ public class LetterFrequencyGuesserStrategy(IWordList wordList) : NextWordGuesse
     /// <returns>The sum of each letter's relative frequency at that position.</returns>
     public override double ScoreForGuess(string guess)
     {
-        List<Dictionary<char, int>> LettersCount = CandidateWordList.CountLetters();
-        var enumerated = guess.Enumerate();
+        List<Dictionary<char, int>> lettersCount = CandidateWordList.CountLetters();
         // Needs double cast to force floating-point division.
-        var summed = enumerated.Sum(lwp => (double)LettersCount[lwp.Position][lwp.Letter] / CandidateWordList.Words.Count);
-        return summed;
+        return guess
+            .Enumerate()
+            .Sum(lwp => (double)lettersCount[lwp.Position][lwp.Letter] / CandidateWordList.Words.Count);
     }
 }

@@ -95,11 +95,12 @@ public abstract class NextWordGuesserStrategyBase(IWordList wordList) : INextWor
     }
 
     /// <summary>
-    /// Proceess the resulting letter-position rules from the previous guess and stores the guess, then
+    /// Processes the resulting letter-position rules from the previous guess and stores the guess, then
     /// returns the calling guesser strategy.
     /// </summary>
+    /// <param name="guessAndResult">The guess and its associated result.</param>
     /// <returns>The caller.</returns>
-    public INextWordGuesserStrategy WithPreviousGuess(WordGuessAndResult guessAndResult)
+    public virtual INextWordGuesserStrategy WithPreviousGuess(WordGuessAndResult guessAndResult)
     {
         if (guessAndResult.WasValidGuess)
         {

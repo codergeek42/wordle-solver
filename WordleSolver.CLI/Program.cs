@@ -37,10 +37,10 @@ public class WordleSolverCommandLineApp
         Console.WriteLine(LegalTexts.WelcomeBanner);
 
         TextMenu mainMenu = new TextMenu("===== Main Menu =====")
-            .WithAsyncItem("Begin guessing!", async () =>
+            .WithItem("Begin guessing!", async () =>
             {
-                GuessLoop mainGuesserLoop = await GuessLoop.Initialize(cliOptions);
-                await mainGuesserLoop.RunGuessLoop();
+                GuessLoop mainGuesserLoop = await GuessLoop.InitializeAsync(cliOptions);
+                await mainGuesserLoop.RunGuessLoopAsync();
             })
             .WithItem("(No) Warranty Information", () => Console.WriteLine(LegalTexts.DisclaimerOfWarranty))
             .WithItem("Copyleft Information", () => Console.WriteLine(LegalTexts.CopyleftInformation))
@@ -53,7 +53,7 @@ public class WordleSolverCommandLineApp
             });
         while (true)
         {
-            await mainMenu.RunPrompt();
+            await mainMenu.RunPromptAsync();
         }
     }
 }
