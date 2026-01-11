@@ -100,7 +100,7 @@ public abstract class NextWordGuesserStrategyBase(IWordList wordList) : INextWor
     /// </summary>
     /// <param name="guessAndResult">The guess and its associated result.</param>
     /// <returns>The caller.</returns>
-    public INextWordGuesserStrategy WithPreviousGuess(WordGuessAndResult guessAndResult)
+    public virtual INextWordGuesserStrategy WithPreviousGuess(WordGuessAndResult guessAndResult)
     {
         if (guessAndResult.WasValidGuess)
         {
