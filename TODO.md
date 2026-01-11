@@ -11,11 +11,14 @@
 
 # Performance
 - [x] Use PLINQ to calculate next highest-scoring word
-- [-] Cache results between guesses and mark a "should run" per strategy:
+- [x] Cache results between guesses and mark a "should run" per strategy:
     * initial strategy should be LetterFrequency or PerLetterElimination; DistinctLetters is always highest at 5
     at start for words that have no repeated letters, but is not useful if no previous guesses have been made yet;
     * no need to (re)calculate RetryMisplacedLetters if no guesses have been made that include one or more Misplaced
-    letters.
+    letters; and
+    * cannot cache results between guesses because guesed result -- whether valid and creates rules or invalid and
+    excludes a word -- will always change the word list and hence letter frequencies/etc., so all of those will need
+    to be recalculated to maintain optimal scoring. 
 
 # Aesthetic 
 - [-] Make Main be invoked from command-line root command handler to only run when not given --version/--help options.
