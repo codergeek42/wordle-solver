@@ -47,7 +47,7 @@ public enum LetterAtPositionInWord
 /// </summary>
 /// <param name="letter">The letter (e.g. 'A', 'Z').</param>
 /// <param name="required">The letter-position requirement.</param>
-public class LetterRule(char letter, LetterAtPositionInWord required)
+public record LetterRule(char letter, LetterAtPositionInWord required)
 {
     /// <summary>
     /// The letter (e.g. 'A', 'Z').
@@ -62,7 +62,7 @@ public class LetterRule(char letter, LetterAtPositionInWord required)
 /// <summary>
 /// Pairing of a <see cref="LetterRule"/> with its associated position (optional).
 /// </summary>
-public class LetterAtPositionInWordRule : LetterRule
+public record LetterAtPositionInWordRule : LetterRule
 {
     public int? Position { get; set; }
 
@@ -89,7 +89,7 @@ public class LetterAtPositionInWordRule : LetterRule
 /// </summary>
 /// <param name="letter">The letter (e.g. 'A', 'Z').</param>
 /// <param name="required">The letter-position requirement.</param>
-public class LetterWithPosition(char letter, int position)
+public record LetterWithPosition(char letter, int position)
 {
     public int Position { get; set; } = position;
 

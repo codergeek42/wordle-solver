@@ -25,7 +25,7 @@ namespace WordleSolver.Library;
 /// </summary>
 /// <param name="word">The guessed word.</param>
 /// <param name="score">The score for the word.</param>
-public class WordGuessAndScore(string word, double score)
+public record WordGuessAndScore(string word, double score)
 {
     /// <summary>
     /// The guessed word.
@@ -45,7 +45,7 @@ public class WordGuessAndScore(string word, double score)
 /// <param name="word">The guessed word.</param>
 /// <param name="result">The resulting letter-position rules.</param>
 /// <param name="wasValidGuess">Whether or not the guess was valid.</param>
-public class WordGuessAndResult(string word, List<LetterAtPositionInWordRule> result, bool wasValidGuess = true)
+public record WordGuessAndResult(string word, List<LetterAtPositionInWordRule> result, bool wasValidGuess = true)
 {
     /// <summary>
     /// The guessed word.
