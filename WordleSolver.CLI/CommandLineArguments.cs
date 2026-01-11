@@ -20,26 +20,14 @@
 
 using System.CommandLine;
 
-using WordleSolver.CLI;
+namespace WordleSolver.CLI;
 
 /// <summary>
 /// Command-line arguments parsed from how the app was invoked.
 /// </summary>
-/// <param name="dictionaryFilePath">The dictionary (file of all possible words, one per line).</param>
-/// <param name="excludedWordsFilePath">The list of words to exclude (one per line).</param>
-public class CommandLineOptions(FileInfo dictionaryFilePath, FileInfo? excludedWordsFilePath)
-{
-    /// <summary>
-    /// The dictionary (file of all possible words, one per line).
-    /// </summary>
-    public FileInfo DictionaryFilePath { get; set; } = dictionaryFilePath;
-
-    /// <summary>
-    /// The list of words to exclude (one per line).
-    /// </summary>
-    public FileInfo? ExcludedWordsFilePath { get; set; } = excludedWordsFilePath;
-
-}
+/// <param name="DictionaryFilePath">The dictionary (file of all possible words, one per line).</param>
+/// <param name="ExcludedWordsFilePath">The list of words to exclude (one per line).</param>
+public record CommandLineOptions(FileInfo DictionaryFilePath, FileInfo? ExcludedWordsFilePath);
 
 /// <summary>
 /// Command-line argument parser.
@@ -88,8 +76,8 @@ public class CommandLineArguments
             throw new WordleSolverUnterminatedExitException();
         }
         return new CommandLineOptions(
-            dictionaryFilePath: parseResult.GetRequiredValue(dictionaryFilePathOption),
-            excludedWordsFilePath: parseResult.GetValue(excludedWordsFilePathOption)
+            DictionaryFilePath: parseResult.GetRequiredValue(dictionaryFilePathOption),
+            ExcludedWordsFilePath: parseResult.GetValue(excludedWordsFilePathOption)
         );
     }
 }
