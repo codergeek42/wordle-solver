@@ -107,4 +107,26 @@ public class DistinctLettersStrategyTest : MockWordListFixture
         result.Should()
             .Be(expectedShouldRun, "should run only if has any previous guesses");
     }
+
+    [Fact]
+    public void DistinctLettersStrategy_WithPreviousGuess_CallsBaseWithEmptyResult()
+    {
+        DistinctLettersGuesserStrategy distinctLettersStrategy = new(MockWordList.Object);
+        distinctLettersStrategy.PreviousGuesses.Should()
+            .BeEmpty("should be empty at start of test");
+
+        WordGuessAndResult previousGuessAndResult = new("ABCDE", [
+            new(null, 'A', LetterAtPositionInWord.Impossible),
+            new(0, 'B', LetterAtPositionInWord.Mandatory),
+            new(0, 'C', LetterAtPositionInWord.Misplaced)
+        ]);
+
+        DistinctLettersGuesserStrategy result = (DistinctLettersGuesserStrategy)distinctLettersStrategy.WithPreviousGuess(previousGuessAndResult);
+        result.PreviousGuesses.Should()
+            .NotBeNullOrEmpty("should have that previous guess value")
+            .And.BeEquivalentTo(
+                [previousGuessAndResult with { Result = [] }],
+                "should contain the guess without its result"
+            );
+    }
 }
