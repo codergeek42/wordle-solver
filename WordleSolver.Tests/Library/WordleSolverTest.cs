@@ -220,10 +220,14 @@ public class WordleSolverTest : MockWordListFixture
                 ..mandatoryDAt4WithOtherLettersMisplacedAndImpossible
             ])
         ]);
+        List<LetterWithPosition> expectedSolvedPositions = [
+            new('A', 1),
+            new('D', 4)
+        ];
         WordleSolver wordleSolver = new WordleSolver(MockWordList.Object, guesserStrategyFactory);
-        List<int> result = wordleSolver.SolvedPositions();
+        List<LetterWithPosition> result = wordleSolver.SolvedPositions();
 
         result.Should()
-            .Equal([1, 4], "should return all positions that have an associated Mandatory letter rule");
+            .Equal(expectedSolvedPositions, "should return all positions that have an associated Mandatory letter rule");
     }
 }
