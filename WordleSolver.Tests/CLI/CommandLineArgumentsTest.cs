@@ -28,7 +28,7 @@ using CommandLineArgumentsParseTestCase = (
     string CaseName,
     string DictionaryArgument,
     string ExcludedWordsArgument,
-    CommandLineOptions ExpectedCommandLineOptions
+    WordleSolver.CLI.CommandLineOptions ExpectedCommandLineOptions
 );
 
 namespace WordleSolver.Tests.CLI;
@@ -59,8 +59,8 @@ public class CommandLineArgumentsTest : MockConsoleFixture
         DictionaryArgument: "",
         ExcludedWordsArgument: "",
         ExpectedCommandLineOptions: new CommandLineOptions(
-            dictionaryFilePath: new FileInfo("/usr/share/dict/words"),
-            excludedWordsFilePath: null
+            DictionaryFilePath: new FileInfo("/usr/share/dict/words"),
+            ExcludedWordsFilePath: null
         )
     );
 
@@ -73,8 +73,8 @@ public class CommandLineArgumentsTest : MockConsoleFixture
         DictionaryArgument: ".",
         ExcludedWordsArgument: "..",
         ExpectedCommandLineOptions: new CommandLineOptions(
-            dictionaryFilePath: new FileInfo("."),
-            excludedWordsFilePath: new FileInfo("..")
+            DictionaryFilePath: new FileInfo("."),
+            ExcludedWordsFilePath: new FileInfo("..")
         )
     );
 
