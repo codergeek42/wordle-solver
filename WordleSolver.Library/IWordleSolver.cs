@@ -70,6 +70,6 @@ public interface IWordleSolver
     /// Determines which positions are already solved (i.e., have an associated Mandatory letter rule).
     /// </summary>
     /// <returns>A list of (0-based) positions that are already solved.</returns>
-    public List<int> SolvedPositions();
+    public List<LetterWithPosition> SolvedPositions();
 
 }

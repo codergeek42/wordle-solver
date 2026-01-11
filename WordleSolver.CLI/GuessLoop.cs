@@ -79,10 +79,10 @@ public class GuessLoop
     public async Task<List<LetterAtPositionInWordRule>> GetResultingRulesFromGuessAsync(string guess)
     {
         List<LetterAtPositionInWordRule> letterRules = [];
-        List<int> solvedPositions = Solver.SolvedPositions();
+        List<LetterWithPosition> solvedPositions = Solver.SolvedPositions();
         foreach (LetterWithPosition lwp in guess.Enumerate())
         {
-            if (solvedPositions.Contains(lwp.Position))
+            if (solvedPositions.Contains(lwp))
             {
                 Console.WriteLine($"{lwp.Letter} @ index {lwp.Position} is... Required by previous guess!");
                 continue;

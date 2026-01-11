@@ -100,17 +100,16 @@ public class WordleSolver(IWordList wordList, INextWordGuesserStrategyFactory gu
     /// Determines which positions are already solved (i.e., have an associated Mandatory letter rule).
     /// </summary>
     /// <returns>A list of (0-based) positions that are already solved.</returns>
-    public List<int> SolvedPositions()
+    public List<LetterWithPosition> SolvedPositions()
     {
-        return Data.WordLength.Repeat(identity => identity).Where(position =>
-            GuesserStrategies.Any(guesserStrategy =>
+        return GuesserStrategies
+            .SelectMany(guesserStrategy =>
                 guesserStrategy.PreviousGuesses
-                    .SelectMany(previousGuess => previousGuess.Result)
-                    .Any(letterPositionWord =>
-                        letterPositionWord.Position == position
-                        && letterPositionWord.Required == LetterAtPositionInWord.Mandatory
-                    )
+                    .Where(guessAndResult => guessAndResult.WasValidGuess)
+                    .SelectMany(previousGuesses => previousGuesses.Result)
             )
-        ).ToList();
+            .Where(rule => rule.Required == LetterAtPositionInWord.Mandatory)
+            .Select(rule => new LetterWithPosition(rule.Letter, (int)rule.Position!))
+            .ToList();
     }
 }
