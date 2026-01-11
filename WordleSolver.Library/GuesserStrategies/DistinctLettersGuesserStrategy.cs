@@ -32,7 +32,7 @@ public class DistinctLettersGuesserStrategy(IWordList wordList) : NextWordGuesse
     /// <returns>True if there is at least one previous guess; False otherwise.</returns>
     public override bool ShouldRun()
     {
-        return PreviousGuesses.Count > 0;
+        return PreviousGuesses.Count(previousGuess => previousGuess.WasValidGuess) > 0;
     }
 
     /// <summary>
