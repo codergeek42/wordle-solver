@@ -19,6 +19,10 @@
  */
 namespace WordleSolver.Playwright;
 
+using Microsoft.Playwright;
+
+using static Microsoft.Playwright.Assertions;
+
 /// <summary>
 /// The main Playwright solver application class.
 /// </summary>
@@ -26,6 +30,16 @@ public class WordleSolverPlaywrightApp
 {
     public static async Task Main(string[] args)
     {
-        await Task.Run(() => Console.WriteLine("Hello World!"));
+        using var playwright = await Playwright.CreateAsync();
+        await using var browser = await playwright.Firefox.LaunchAsync(new()
+        {
+            Headless = false,
+            SlowMo = 500
+        });
+        var page = await browser.NewPageAsync();
+        OverviewPage overview = new OverviewPage(page);
+        await overview.NavigateToOverviewAndClickThroughToPuzzleAsync();
+
+        await page.PauseAsync();
     }
 }
