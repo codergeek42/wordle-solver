@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../WordleSolver.CLI/WordleSolver.CLI.csproj" />    
     <ProjectReference Include="../WordleSolver.Library/WordleSolver.Library.csproj" />
   </ItemGroup>
 

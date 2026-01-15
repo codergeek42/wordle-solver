@@ -18,6 +18,11 @@
         "resolved": "6.0.0",
         "contentHash": "UcSjPsst+DfAdJGVDsu346FX0ci0ah+lw3WRtn18NUwEqRt70HaOQ7lI72vy3+1LxtqI3T5GWwV39rQSrCzAeg=="
       },
+      "System.CommandLine": {
+        "type": "Transitive",
+        "resolved": "2.0.1",
+        "contentHash": "GLc43eDFq8KbpxIb7UhTwV0vC5CzB0NspJvfFbfhoW4O057xCJXuO18KLpVn9x3JykQn2mRske6+I6JXHwqmDg=="
+      },
       "System.ComponentModel.Annotations": {
         "type": "Transitive",
         "resolved": "5.0.0",
@@ -57,6 +62,13 @@
         "type": "Transitive",
         "resolved": "9.0.0",
         "contentHash": "uksk86YlnzAdyfVNu3wICU0X5iXVe9LF7Q3UkngNliHWEvM5gvAlOUr+jmd9JwmbJWISH5+i1vyXE02lEVz7WQ=="
+      },
+      "wordlesolver.cli": {
+        "type": "Project",
+        "dependencies": {
+          "System.CommandLine": "[2.0.1, )",
+          "WordleSolver.Library": "[1.0.0, )"
+        }
       },
       "wordlesolver.library": {
         "type": "Project",
