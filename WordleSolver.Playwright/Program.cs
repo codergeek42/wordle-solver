@@ -21,6 +21,8 @@ namespace WordleSolver.Playwright;
 
 using Microsoft.Playwright;
 
+using WordleSolver.CLI;
+
 using static Microsoft.Playwright.Assertions;
 
 /// <summary>
@@ -36,10 +38,18 @@ public class WordleSolverPlaywrightApp
             Headless = false,
             SlowMo = 500
         });
-        var page = await browser.NewPageAsync();
-        OverviewPage overview = new OverviewPage(page);
-        await overview.NavigateToOverviewAndClickThroughToPuzzleAsync();
 
-        await page.PauseAsync();
+        CommandLineOptions cliOpts = CommandLineArguments.Parse(args, Environment.Exit);
+        GuessLoop guessLoop = await GuessLoop.InitializeAsync(cliOpts);
+
+        IPage browserPage = await browser.NewPageAsync();
+        OverviewPage overviewPage = new(browserPage);
+        GuessPage guessPage = new(browserPage);
+
+
+        await overviewPage.NavigateToOverviewAndClickThroughToPuzzleAsync();
+        await guessPage.SubmitGuessAsync("GUESS");
+        var dummy = await guessPage.ParseGuessRowAsync(1);
+        await browserPage.PauseAsync();
     }
 }
