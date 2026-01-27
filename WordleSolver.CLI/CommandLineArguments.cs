@@ -27,7 +27,12 @@ namespace WordleSolver.CLI;
 /// </summary>
 /// <param name="DictionaryFilePath">The dictionary (file of all possible words, one per line).</param>
 /// <param name="ExcludedWordsFilePath">The list of words to exclude (one per line).</param>
-public record CommandLineOptions(FileInfo DictionaryFilePath, FileInfo? ExcludedWordsFilePath);
+public record CommandLineOptions(
+    FileInfo DictionaryFilePath,
+    FileInfo? ExcludedWordsFilePath,
+    string? StartingWord,
+    bool BrowserDarkMode
+);
 
 /// <summary>
 /// Command-line argument parser.
@@ -56,10 +61,22 @@ public class CommandLineArguments
             Description = "File with words to exclude from the guesser, one per line.",
             HelpName = "/path/to/excluded/words/file"
         };
+        Option<string?> startingWordOption = new("--starting-word", "-s")
+        {
+            Description = "Starting word to use instead of calculating from the entire list.",
+            HelpName = "word"
+        };
+        Option<bool> browserDarkModeOption = new("--browser-dark-mode", "-bd")
+        {
+            DefaultValueFactory = _ => false,
+            Description = "Use dark mode in the browser automation."
+        };
 
         RootCommand rootCommand = new(LegalTexts.AppTitle) {
             dictionaryFilePathOption.AcceptExistingOnly(),
-            excludedWordsFilePathOption.AcceptExistingOnly()
+            excludedWordsFilePathOption.AcceptExistingOnly(),
+            startingWordOption,
+            browserDarkModeOption
         };
 
         ParseResult parseResult = rootCommand.Parse(arguments);
@@ -77,7 +94,9 @@ public class CommandLineArguments
         }
         return new CommandLineOptions(
             DictionaryFilePath: parseResult.GetRequiredValue(dictionaryFilePathOption),
-            ExcludedWordsFilePath: parseResult.GetValue(excludedWordsFilePathOption)
+            ExcludedWordsFilePath: parseResult.GetValue(excludedWordsFilePathOption),
+            StartingWord: parseResult.GetValue(startingWordOption),
+            BrowserDarkMode: parseResult.GetValue(browserDarkModeOption)
         );
     }
 }

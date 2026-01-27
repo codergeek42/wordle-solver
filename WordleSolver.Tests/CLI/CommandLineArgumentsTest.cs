@@ -28,6 +28,8 @@ using CommandLineArgumentsParseTestCase = (
     string CaseName,
     string DictionaryArgument,
     string ExcludedWordsArgument,
+    string StartingWordArgument,
+    string BrowserDarkModeArgument,
     WordleSolver.CLI.CommandLineOptions ExpectedCommandLineOptions
 );
 
@@ -58,9 +60,13 @@ public class CommandLineArgumentsTest : MockConsoleFixture
         CaseName: "Default (empty) arguments",
         DictionaryArgument: "",
         ExcludedWordsArgument: "",
+        StartingWordArgument: "",
+        BrowserDarkModeArgument: "",
         ExpectedCommandLineOptions: new CommandLineOptions(
             DictionaryFilePath: new FileInfo("/usr/share/dict/words"),
-            ExcludedWordsFilePath: null
+            ExcludedWordsFilePath: null,
+            StartingWord: null,
+            BrowserDarkMode: false
         )
     );
 
@@ -72,9 +78,13 @@ public class CommandLineArgumentsTest : MockConsoleFixture
         CaseName: "Specific arguments",
         DictionaryArgument: ".",
         ExcludedWordsArgument: "..",
+        StartingWordArgument: "START",
+        BrowserDarkModeArgument: "--browser-dark-mode",
         ExpectedCommandLineOptions: new CommandLineOptions(
             DictionaryFilePath: new FileInfo("."),
-            ExcludedWordsFilePath: new FileInfo("..")
+            ExcludedWordsFilePath: new FileInfo(".."),
+            StartingWord: "START",
+            BrowserDarkMode: true
         )
     );
 
@@ -85,9 +95,9 @@ public class CommandLineArgumentsTest : MockConsoleFixture
             ParseSpecifiedOptionsTestCase
         ];
 
-        foreach (var (CaseName, DictionaryArgument, ExcludedWordsFilePath, ExpectedCommandLineOptions) in testCases)
+        foreach (var (CaseName, DictionaryArgument, ExcludedWordsFilePath, StartingWordArgument, BrowserDarkMode, ExpectedCommandLineOptions) in testCases)
         {
-            yield return [CaseName, DictionaryArgument, ExcludedWordsFilePath, ExpectedCommandLineOptions];
+            yield return [CaseName, DictionaryArgument, ExcludedWordsFilePath, StartingWordArgument, BrowserDarkMode, ExpectedCommandLineOptions];
         }
     }
 
@@ -102,12 +112,16 @@ public class CommandLineArgumentsTest : MockConsoleFixture
         string caseName,
         string dictionaryArgument,
         string excludedWordsArgument,
+        string? startingWordArgument,
+        string browserDarkModeArgument,
         CommandLineOptions expectedCommandLineOptions
     )
     {
         string[] arguments = [
             ..UseArgumentIfNotEmpty(dictionaryArgument, "--dictionary"),
-            ..UseArgumentIfNotEmpty(excludedWordsArgument, "--excluded-words")
+            ..UseArgumentIfNotEmpty(excludedWordsArgument, "--excluded-words"),
+            ..UseArgumentIfNotEmpty(startingWordArgument, "--starting-word"),
+            ..UseArgumentIfNotEmpty(browserDarkModeArgument, "--browser-dark-mode")
         ];
 
         CommandLineOptions result = CommandLineArguments.Parse(arguments, MockExitCallback.Object);
