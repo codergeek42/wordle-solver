@@ -27,7 +27,8 @@ namespace WordleSolver.Library.GuesserStrategies;
 public class DistinctLettersGuesserStrategy(IWordList wordList) : NextWordGuesserStrategyBase(wordList)
 {
     /// <summary>
-    /// Only run this guesser strategy if there are any previous guesses.
+    /// Only run this guesser strategy if there are any previous guesses; otherwise, it's at best the same
+    /// score as PerLetterEliminationStrategy.
     /// </summary>
     /// <returns>True if there is at least one previous guess; False otherwise.</returns>
     public override bool ShouldRun()
