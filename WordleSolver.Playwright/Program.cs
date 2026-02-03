@@ -23,8 +23,6 @@ using Microsoft.Playwright;
 
 using WordleSolver.CLI;
 
-using static Microsoft.Playwright.Assertions;
-
 /// <summary>
 /// The main Playwright solver application class.
 /// </summary>
@@ -33,23 +31,28 @@ public class WordleSolverPlaywrightApp
     public static async Task Main(string[] args)
     {
         using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Firefox.LaunchAsync(new()
+        await using var browser = await playwright.Chromium.LaunchAsync(new()
         {
             Headless = false,
-            SlowMo = 500
+            SlowMo = 200
         });
 
         CommandLineOptions cliOpts = CommandLineArguments.Parse(args, Environment.Exit);
-        GuessLoop guessLoop = await GuessLoop.InitializeAsync(cliOpts);
-
-        IPage browserPage = await browser.NewPageAsync();
+        IBrowserContext browserContext = await browser.NewContextAsync();
+        // FIXME: Only needed for some browsers; adjust for parameterized browser usage at some point.
+        await browserContext.GrantPermissionsAsync([
+            "clipboard-read", "clipboard-write"
+        ]);
+        IPage browserPage = await browserContext.NewPageAsync();
         OverviewPage overviewPage = new(browserPage);
         GuessPage guessPage = new(browserPage);
 
+        BrowserGuessLoop browserGuessLoop = await BrowserGuessLoop.InitializeAsync(cliOpts, guessPage);
 
         await overviewPage.NavigateToOverviewAndClickThroughToPuzzleAsync();
-        await guessPage.SubmitGuessAsync("GUESS");
-        var dummy = await guessPage.ParseGuessRowAsync(1);
-        await browserPage.PauseAsync();
+        await guessPage.SetSettingToggleAsync(guessPage.DarkModeToggle, cliOpts.BrowserDarkMode);
+        await browserGuessLoop.RunGuessLoopAsync();
+        string results = await guessPage.CopyAndScreenshotResultsAsync();
+        Console.WriteLine($"*** Results: \n{results}");
     }
 }

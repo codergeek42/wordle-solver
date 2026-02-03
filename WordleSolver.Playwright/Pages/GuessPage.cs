@@ -18,13 +18,10 @@
  * see <https://www.gnu.org/licenses/gpl-3.0     .html>.
  */
 
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-
 using Microsoft.Playwright;
 
 using WordleSolver.Library;
-using WordleSolver.Library.Extensions;
+using WordleSolver.Playwright.Extensions;
 
 namespace WordleSolver.Playwright;
 /// <summary>
@@ -33,6 +30,7 @@ namespace WordleSolver.Playwright;
 public class GuessPage(IPage Page)
 {
     public ILocator NotInWordListMessage => Page.GetByText("Not in word list");
+    public ILocator GeniusMessage => Page.GetByText("Genius");
 
     public ILocator SettingsButton => Page.GetByTestId("settings-button");
 
@@ -46,8 +44,17 @@ public class GuessPage(IPage Page)
     public ILocator OnScreenKeyboardBackspace => OnScreenKeyboard.GetByLabel("backspace");
     public ILocator OnScreenKeyboardEnter => OnScreenKeyboard.GetByLabel("enter");
 
+    public ILocator CreateFreeAccountModal => Page.GetByRole(AriaRole.Dialog, new() { Name = "loginPromptCongrats Modal", Exact = true });
+    public ILocator CreateFreeAccountModalCloseButton => CreateFreeAccountModal.GetByRole(AriaRole.Button, new() { Name = "Close " });
 
-    public ILocator LetterKey(char letter) => OnScreenKeyboard.GetByLabel($"add {char.ToLower(letter)}");
+    public ILocator CongratsModal => Page.GetByRole(AriaRole.Dialog, new() { Name = "regiwallCongrats Modal", Exact = true });
+    public ILocator CongratsModalShareButton => CongratsModal.GetByRole(AriaRole.Button, new() { Name = "Share" });
+    public ILocator CongratsModalCloseButton => CongratsModal.GetByRole(AriaRole.Button, new() { Name = "Close " });
+    public ILocator ResultsCopiedMessage => Page.GetByText("Copied results to clipboard");
+
+    public ILocator MainGameArea => Page.GetByRole(AriaRole.Main);
+
+    public ILocator LetterKey(char letter) => OnScreenKeyboard.GetByText($"{char.ToLower(letter)}", new() { Exact = true });
 
 
     public async Task OpenSettingsModalAsync()
@@ -117,7 +124,6 @@ public class GuessPage(IPage Page)
             );
         }
         return new LetterAtPositionInWordRule(position, letter, requiredFromDataState);
-
     }
 
     public async Task SubmitGuessAsync(string guess)
@@ -129,15 +135,15 @@ public class GuessPage(IPage Page)
         await OnScreenKeyboardEnter.ClickAsync();
     }
 
-    public async Task<WordGuessAndResult?> ParseGuessRowAsync(int rowNum)
+    /// <summary>
+    /// Assuming the guess was a valid one, parses the resulting row states and returns the matching
+    /// letter-position exclusion rules for the guessed word.
+    /// </summary>
+    /// <param name="rowNum">1-based row index in the guess</param>
+    /// <returns></returns>
+    public async Task<WordGuessAndResult> ParseGuessRowAsync(int rowNum)
     {
-        // TODO: Assume guess is valid; will be checked upon submission before calling this.
-
         ILocator guessRow = Page.GetByLabel($"Row {rowNum}");
-        if (!await guessRow.IsVisibleAsync())
-        {
-            return null;
-        }
         IReadOnlyList<ILocator> guessLetterItems = await guessRow.GetByTestId("tile").AllAsync();
 
         IEnumerable<Task<LetterAtPositionInWordRule>> letterAtPositionInWordRulesTasks = guessLetterItems
@@ -145,11 +151,13 @@ public class GuessPage(IPage Page)
 
         // The letter-flip animation upon guess submission happens sequentially, so waiting for those must also
         // be sequential; otherwise the other letters will already have idle animation status but "tbd" state
-        // attributes, making the ParseGuessedLetterAsync call erroneously throw for being invalid.
+        // attributes, making the ParseGuessedLetterAsync call erroneously throw for being unknown.
         foreach (Task<LetterAtPositionInWordRule> parseTask in letterAtPositionInWordRulesTasks)
         {
             await parseTask;
         }
+
+        bool wasValidGuess = !await NotInWordListMessage.IsVisibleAsync();
 
         List<LetterAtPositionInWordRule> resultRules = letterAtPositionInWordRulesTasks
             .Select(finishedTask => finishedTask.Result)
@@ -157,7 +165,22 @@ public class GuessPage(IPage Page)
 
         string guessedWord = string.Join(string.Empty, resultRules.Select(rule => rule.Letter));
 
-        // FIXME
-        return new WordGuessAndResult(guessedWord, resultRules, true);
+        return new WordGuessAndResult(
+            guessedWord,
+            wasValidGuess ? resultRules : [],
+            wasValidGuess
+        );
+    }
+
+    public async Task<string> CopyAndScreenshotResultsAsync()
+    {
+        await CreateFreeAccountModalCloseButton.ClickAsync();
+        await CongratsModalShareButton.ClickAsync();
+        string clipboardText = await Page.ReadFromClipboardAsync();
+        await CongratsModalCloseButton.ClickAsync();
+        await ResultsCopiedMessage.WaitForAsync(new() { State = WaitForSelectorState.Hidden });
+        // FIXME: Remember to parameterize filename for hard mode option.
+        await MainGameArea.ScreenshotAsync(new() { Path = "screenshot.png" });
+        return clipboardText;
     }
 }
