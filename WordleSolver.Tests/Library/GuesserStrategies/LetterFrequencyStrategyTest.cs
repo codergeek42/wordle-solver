@@ -46,7 +46,7 @@ public class LetterFrequencyStrategyTest : MockWordListFixture
     [Fact]
     public void LetterFrequencyGuesserStrategy_ScoreForGuess_ScoresGuessBasedOnLetterFrequency()
     {
-        List<string> TestWords = ["BREAD", "BROOD", "BLOOD", "CROOK"];
+        List<string> testWords = ["BREAD", "BROOD", "BLOOD", "CROOK"];
         MockWordList
             .SetupCountLettersMockReturnValue([
                 new() { ['B'] = 3, ['C'] = 1 },
@@ -55,11 +55,11 @@ public class LetterFrequencyStrategyTest : MockWordListFixture
                 new() { ['A'] = 1, ['O'] = 3 },
                 new() { ['D'] = 3, ['K'] = 1 }
             ])
-            .SetupWordsMockReturnValue(TestWords);
+            .SetupWordsMockReturnValue(testWords);
 
         LetterFrequencyGuesserStrategy letterFrequencyStrategy = new(MockWordList.Object);
 
-        List<WordGuessAndScore> results = TestWords
+        List<WordGuessAndScore> results = testWords
             .ConvertAll(word => new WordGuessAndScore(word, letterFrequencyStrategy.ScoreForGuess(word)));
 
         results.Should()
