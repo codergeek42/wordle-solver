@@ -54,8 +54,8 @@ public class DistinctLettersGuesserStrategy(IWordList wordList) : NextWordGuesse
     }
 
     /// <summary>
-    /// Stores the previous guess and result,  rules in order to prioritize
-    /// guessing more letters over trying to match already-known ones; then returns the calling guesser strategy.
+    /// Stores the previous guess and resulting rules in order to prioritize guessing more letters
+    /// over trying to match already-known ones; then returns the calling guesser strategy.
     /// </summary>
     /// <param name="guessAndResult">The guess and its associated result.</param>
     /// <returns>The caller.</returns>
