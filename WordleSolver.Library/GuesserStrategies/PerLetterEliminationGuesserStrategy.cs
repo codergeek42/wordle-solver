@@ -71,4 +71,16 @@ public class PerLetterEliminationGuesserStrategy(IWordList wordList) : NextWordG
     {
         return guess.Enumerate().ConvertAll(lwp => new LetterAtPositionInWordRule(lwp.Position, lwp.Letter, LetterAtPositionInWord.Misplaced));
     }
+
+    /// <summary>
+    /// To help increase reproducibility of results and improve initial performance, only run this guesser strategy if
+    /// there is at least one guess already made. Otherwise, almost every word gives a score of 5 or more, leading to
+    /// one of them essentially being chosen at random (through whichever of the same value `MaxBy` takes).
+    /// </summary>
+    /// <returns>True if there is at least one valid guess already made; False otherwise.</returns>
+    public override bool ShouldRun()
+    {
+        return PreviousGuesses.Count(previousGuess => previousGuess.WasValidGuess) > 0;
+    }
+
 }
