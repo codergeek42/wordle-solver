@@ -17,10 +17,10 @@
  * along with this program, namely the "LICENSE.txt" text file.  If not,
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
+namespace WordleSolver.CLI;
 
 using System.IO.Abstractions;
 
-using WordleSolver.CLI;
 using WordleSolver.Library;
 using WordleSolver.Library.Extensions;
 using WordleSolver.Library.GuesserStrategies;
@@ -32,7 +32,7 @@ using WordleSolver.Library.GuesserStrategies;
 public class GuessLoop
 {
     public WordList CandidateWordList { get; private set; }
-    public WordleSolver.Library.WordleSolver Solver { get; private set; }
+    public WordleSolver Solver { get; private set; }
 
 
     /// <summary>
