@@ -69,6 +69,10 @@ public abstract class NextWordGuesserStrategyBase(IWordList wordList) : INextWor
             throw new NoMoreGuessesException();
         }
         return CandidateWordList.Words
+            .Except(PreviousGuesses
+                .Where(previous => previous.WasValidGuess)
+                .Select(previous => previous.Word)
+            )
             .AsParallel()
             .Select(word => new WordGuessAndScore(word, ScoreForGuess(word)))
             // NB: Not null because the word list is certainly non-empty here, as
