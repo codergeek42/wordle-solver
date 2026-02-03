@@ -3,6 +3,13 @@
 - [ ] Use Unity for dependency injection for filesystem and guesser strategies instead of having to explicitly populate
     them.
 
+# Automated GUI Solver
+- [x] Create GUI project. 
+- [x] Add Playwright & browser packages.
+- [x] Setup initial app to open Wordle homepage.
+- [x] Click through Overview and "How to play" screens to get to puzzle entry.
+- [ ] Implement the full guessers looping.
+- [ ] Enable hard mode. (#151)
 
 # CI/CD Pipeline
 - [x] Add CI pipeline as Github Action.

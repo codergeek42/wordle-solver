@@ -126,9 +126,19 @@ public class WordList : IWordList
     /// not an Impossible rule but yet has a null Position.</exception>
     public void ProcessExclusionsFromRules(List<LetterAtPositionInWordRule> lettersAtPositionInWordRules)
     {
-        foreach (LetterAtPositionInWordRule rule in lettersAtPositionInWordRules.OrderBy(rule => rule.Required))
+        var sortedRules = lettersAtPositionInWordRules.OrderBy(rule => rule.Required);
+        foreach (LetterAtPositionInWordRule rule in sortedRules)
         {
-            if (rule.Required == LetterAtPositionInWord.Impossible)
+            // Only exclude the Impossible letters that have no additive rule, as UI will show
+            // only one non-Impossible result per letter in the result, even if that same letter is repeated.
+            // For example, if the guess is SLEEP and the correct word is STONE, the first E will be shown as
+            // Misplaced and the second E will be shown as Impossible. 
+            if (
+                rule.Required == LetterAtPositionInWord.Impossible
+                && !lettersAtPositionInWordRules
+                    .Where(otherRuleForLetter => otherRuleForLetter.Letter == rule.Letter)
+                    .Any(otherRuleForLetter => otherRuleForLetter.Required != LetterAtPositionInWord.Impossible)
+            )
             {
                 PossibleLetters.ForEach(possibleLettersAtPos => possibleLettersAtPos.ExceptWith([rule.Letter]));
             }

@@ -20,26 +20,19 @@
 
 using System.CommandLine;
 
-using WordleSolver.CLI;
+namespace WordleSolver.CLI;
 
 /// <summary>
 /// Command-line arguments parsed from how the app was invoked.
 /// </summary>
-/// <param name="dictionaryFilePath">The dictionary (file of all possible words, one per line).</param>
-/// <param name="excludedWordsFilePath">The list of words to exclude (one per line).</param>
-public class CommandLineOptions(FileInfo dictionaryFilePath, FileInfo? excludedWordsFilePath)
-{
-    /// <summary>
-    /// The dictionary (file of all possible words, one per line).
-    /// </summary>
-    public FileInfo DictionaryFilePath { get; set; } = dictionaryFilePath;
-
-    /// <summary>
-    /// The list of words to exclude (one per line).
-    /// </summary>
-    public FileInfo? ExcludedWordsFilePath { get; set; } = excludedWordsFilePath;
-
-}
+/// <param name="DictionaryFilePath">The dictionary (file of all possible words, one per line).</param>
+/// <param name="ExcludedWordsFilePath">The list of words to exclude (one per line).</param>
+public record CommandLineOptions(
+    FileInfo DictionaryFilePath,
+    FileInfo? ExcludedWordsFilePath,
+    string? StartingWord,
+    bool BrowserDarkMode
+);
 
 /// <summary>
 /// Command-line argument parser.
@@ -68,10 +61,22 @@ public class CommandLineArguments
             Description = "File with words to exclude from the guesser, one per line.",
             HelpName = "/path/to/excluded/words/file"
         };
+        Option<string?> startingWordOption = new("--starting-word", "-s")
+        {
+            Description = "Starting word to use instead of calculating from the entire list.",
+            HelpName = "word"
+        };
+        Option<bool> browserDarkModeOption = new("--browser-dark-mode", "-bd")
+        {
+            DefaultValueFactory = _ => false,
+            Description = "Use dark mode in the browser automation."
+        };
 
         RootCommand rootCommand = new(LegalTexts.AppTitle) {
             dictionaryFilePathOption.AcceptExistingOnly(),
-            excludedWordsFilePathOption.AcceptExistingOnly()
+            excludedWordsFilePathOption.AcceptExistingOnly(),
+            startingWordOption,
+            browserDarkModeOption
         };
 
         ParseResult parseResult = rootCommand.Parse(arguments);
@@ -88,8 +93,10 @@ public class CommandLineArguments
             throw new WordleSolverUnterminatedExitException();
         }
         return new CommandLineOptions(
-            dictionaryFilePath: parseResult.GetRequiredValue(dictionaryFilePathOption),
-            excludedWordsFilePath: parseResult.GetValue(excludedWordsFilePathOption)
+            DictionaryFilePath: parseResult.GetRequiredValue(dictionaryFilePathOption),
+            ExcludedWordsFilePath: parseResult.GetValue(excludedWordsFilePathOption),
+            StartingWord: parseResult.GetValue(startingWordOption),
+            BrowserDarkMode: parseResult.GetValue(browserDarkModeOption)
         );
     }
 }

@@ -18,7 +18,8 @@
  * see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
-using WordleSolver.Library.Extensions;
+using System.Diagnostics;
+
 using WordleSolver.Library.GuesserStrategies;
 
 namespace WordleSolver.Library;
@@ -66,10 +67,17 @@ public class WordleSolver(IWordList wordList, INextWordGuesserStrategyFactory gu
         var result = GuesserStrategies
             .Where(guesserStrategy => guesserStrategy.ShouldRun())
             .AsParallel()
-            .Select(guesserStrategy => (
-                GuesserStrategy: guesserStrategy.GetType().Name,
-                GuessAndScore: guesserStrategy.GuessNextWordAndScore()
-            ))
+            .Select(guesserStrategy =>
+            {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+                var guesserStrategyAndScore = (
+                    GuesserStrategy: guesserStrategy.GetType().Name,
+                    GuessAndScore: guesserStrategy.GuessNextWordAndScore()
+                );
+                stopwatch.Stop();
+                Console.WriteLine($"Potential guess: {guesserStrategyAndScore.GuesserStrategy} \t: {guesserStrategyAndScore.GuessAndScore.Word} = {guesserStrategyAndScore.GuessAndScore.Score,6:F3} ({stopwatch.Elapsed.TotalSeconds,7:F3} seconds)");
+                return guesserStrategyAndScore;
+            })
             .MaxBy(guesserStrategy => guesserStrategy.GuessAndScore.Score);
         return result;
     }
@@ -110,6 +118,14 @@ public class WordleSolver(IWordList wordList, INextWordGuesserStrategyFactory gu
             )
             .Where(rule => rule.Required == LetterAtPositionInWord.Mandatory)
             .Select(rule => new LetterWithPosition(rule.Letter, (int)rule.Position!))
+            .ToList();
+    }
+
+    public List<string> PreviousGuesses()
+    {
+        return GuesserStrategies
+            .SelectMany(guesserStrategy => guesserStrategy.PreviousGuesses)
+            .Select(previousGuesses => previousGuesses.Word)
             .ToList();
     }
 }

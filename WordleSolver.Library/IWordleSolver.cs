@@ -72,4 +72,5 @@ public interface IWordleSolver
     /// <returns>A list of (0-based) positions that are already solved.</returns>
     public List<LetterWithPosition> SolvedPositions();
 
+    public List<string> PreviousGuesses();
 }
